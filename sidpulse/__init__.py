@@ -1,3 +1,3 @@
 """SIDpulse Tracker: an homage to Impulse Tracker."""
 
-__version__ = "0.2.10"
+__version__ = "0.2.11"

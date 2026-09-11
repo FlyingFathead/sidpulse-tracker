@@ -1,4 +1,4 @@
-# Remaining placeholders and disabled features in v0.2.10
+# Remaining placeholders and disabled features in v0.2.11
 
 The existing tracker layout is retained. The later reference mockup was withdrawn;
 no mockup inspector, extra voice or new decorative controls were added. Voice

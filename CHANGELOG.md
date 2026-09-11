@@ -1,3 +1,19 @@
+# v0.2.11
+
+- Show the startup splash by default until the user explicitly opts out. Add
+  OK / Play demo song buttons and a small, initially unchecked lower-left
+  "Don't show this on startup" checkbox. Keep the version beneath the logo.
+- Save both checkbox states as hide_welcome_on_startup in preferences.json.
+  Only boolean true hides the splash; missing or invalid values show it.
+  Ignore legacy first-run markers. --welcome can reopen it and undo the opt-out.
+- OK/Escape dismiss without playback. Play starts Autumn at five, waiting for
+  audio or startup notices as before. Preserve unrelated preferences and report
+  save failures. Keep explicit project/example/export/headless startup behavior.
+- Keep the logo, version, buttons and checkbox within small windows at high zoom.
+- Fix installation examples that used --example and bypassed the splash.
+- Add regression checks for default/repeated startup, legacy state, opt-out and
+  re-enabling, mouse/keyboard actions, preference preservation and save failures.
+
 # v0.2.10
 
 - Add direct PRG export in File > Export PRG and --export-prg. The BASIC-loadable

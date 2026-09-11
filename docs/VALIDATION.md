@@ -1,3 +1,32 @@
+# Checkpoint v0.2.11 validation
+
+Linux, Python 3.12, pygame-ce 2.5.7, pyresidfp 0.17.0, SDL dummy video/audio.
+**274 tests pass**, including 39 startup/audio-settings checks.
+
+- Normal startup shows the splash repeatedly until explicit opt-out. Both OK
+  and Play save the checked and unchecked states while preserving unrelated
+  preferences. Missing, malformed and non-boolean flags default to showing it.
+- Upgrades with v0.2.4/v0.2.10 first-run markers still show the new splash with
+  an unchecked box. Existing markers are left intact and no longer consulted.
+- --welcome overrides opt-out, displays its saved state and allows re-enabling.
+  Keyboard focus, Shift+Tab, Space, Escape, mouse controls and preference-write
+  failure handling are covered. Failed writes show a notice before demo playback.
+- The real application entry point (without --headless-smoke or --welcome) was
+  launched with clean settings and SDL dummy drivers. Its splash rendered;
+  clicking Play demo song started native reSIDfp playback of Autumn at five.
+- Actual screenshots were inspected at 1280x900 and at 480x360/360x360 with 300%
+  UI zoom. Logo, version, both buttons and the small lower-left checkbox fit.
+- Both source archives are assembled from the supplied v0.2.10 file set plus the
+  splash preview. Overlaying the incremental reproduces the full release files;
+  no removals, user preferences, songs, environments or Git state are included.
+- Bundled song assets, native audio modules and export modules are byte-identical
+  to the supplied source. Application version is 0.2.11; project format stays 6.
+
+Windows and physical audio-device execution remain untested here. Dummy SDL
+checks validate the UI/native playback path, not an actual sound device.
+
+## Previous validation
+
 # Checkpoint v0.2.10 validation
 
 Linux, Python 3.12, SDL dummy video/audio. **255 tests pass.**

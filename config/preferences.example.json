@@ -25,5 +25,6 @@
   "autosave_enabled": true,
   "autosave_minutes": 5,
   "autosave_directory": "",
-  "restart_on_f5": false
+  "restart_on_f5": false,
+  "hide_welcome_on_startup": false
 }

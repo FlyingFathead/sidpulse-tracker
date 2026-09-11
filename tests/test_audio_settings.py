@@ -1,10 +1,11 @@
+import json
 from copy import deepcopy
 
 import pygame as pg
 import pytest
 
 from sidpulse.app import App
-from sidpulse.preferences import BUFFERS, config_path, load_preferences, save_buffer
+from sidpulse.preferences import BUFFERS, config_path, load_preferences, save_buffer, save_preferences
 from sidpulse.ui.keyboard import Command
 from sidpulse.ui.audio_buffer import open_dialog
 from sidpulse.ui import welcome
@@ -86,18 +87,67 @@ def test_modal_controls_fit_after_resizing(app, size, zoom):
             assert app.screen.get_rect().contains(rect)
 
 
-def test_welcome_skip_remembers_first_launch(app):
-    assert welcome.first_run()
+def test_welcome_ok_defaults_to_no_playback_and_repeats(app, monkeypatch):
+    starts = []
+    monkeypatch.setattr(app, 'start_playback', starts.append)
     welcome.open_dialog(app)
-    click(app, 'welcome_button', False)
-    assert app.dialog is None and not welcome.first_run() and not app.intro_pending
-    assert welcome.marker_path().name == 'first-run.json'
+    key(app, pg.K_RETURN)
+    assert app.dialog is None and welcome.show_on_startup()
+    assert not starts and not app.intro_pending
+    assert json.loads(config_path().read_text())['hide_welcome_on_startup'] is False
+
+
+@pytest.mark.parametrize('play', [False, True])
+def test_checkbox_persists_both_values_and_preserves_other_preferences(app, monkeypatch, play):
+    save_preferences({'audio_buffer': 4096, 'restart_on_f5': True})
+    starts = []
+    monkeypatch.setattr(app, 'start_playback', starts.append)
+    app.audio.ready = True
+    for hide in (True, False):
+        welcome.open_dialog(app)
+        click(app, 'welcome_checkbox')
+        assert app.dialog['hide_on_startup'] is hide
+        click(app, 'welcome_button', play)
+        assert app.dialog is None and welcome.show_on_startup() is not hide
+        stored = json.loads(config_path().read_text())
+        assert stored['hide_welcome_on_startup'] is hide
+        assert stored['audio_buffer'] == 4096 and stored['restart_on_f5'] is True
+    assert starts == (['song', 'song'] if play else [])
+
+
+def test_checkbox_keyboard_focus_space_toggle_and_escape(app):
+    welcome.open_dialog(app)
+    key(app, pg.K_TAB, pg.KMOD_SHIFT)  # OK -> checkbox
+    assert app.dialog['focus'] == 2
+    key(app, pg.K_SPACE)
+    assert app.dialog['hide_on_startup'] and not config_path().exists()
+    key(app, pg.K_TAB)  # checkbox -> OK
+    key(app, pg.K_ESCAPE)  # dismiss without playback and save draft
+    assert app.dialog is None and not welcome.show_on_startup() and not app.intro_pending
+
+
+def test_checkbox_save_error_keeps_playback_behind_notice(app, monkeypatch):
+    starts = []
+    def fail(updates):
+        raise OSError('Read-only preferences')
+    monkeypatch.setattr(welcome, 'save_preferences', fail)
+    monkeypatch.setattr(app, 'start_playback', starts.append)
+    app.audio.ready = True
+    welcome.open_dialog(app)
+    click(app, 'welcome_checkbox')
+    click(app, 'welcome_button', True)
+    assert app.dialog['kind'] == 'notice' and 'Read-only' in app.dialog['message']
+    app.sync_audio()
+    assert not starts and welcome.show_on_startup()
+    key(app, pg.K_RETURN)
+    app.sync_audio()
+    assert starts == ['song'] and not app.intro_pending
 
 
 def test_welcome_play_waits_for_audio_then_starts_once(app, monkeypatch):
     app.audio.thread = object()  # simulate startup without creating a device
     welcome.open_dialog(app)
-    key(app, pg.K_LEFT)
+    key(app, pg.K_RIGHT)
     key(app, pg.K_RETURN)
     assert app.intro_pending and app.dialog is None
     starts = []

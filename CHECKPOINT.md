@@ -1,3 +1,24 @@
+# SIDpulse Tracker v0.2.11
+
+Startup-splash update over the supplied v0.2.10 snapshot. A normal launch shows
+it by default: SVG logo, version beneath it, OK / Play demo song, and a small
+unchecked "Don't show this on startup" checkbox in the lower-left corner.
+
+Either button (or Escape, like OK) saves the checkbox state in preferences.json
+as hide_welcome_on_startup. Only boolean true hides it. Missing, false or invalid
+values show it, regardless of old first-run.json files. --welcome reopens the
+splash with its saved state, so unchecking and confirming restores normal startup.
+
+Play starts Autumn at five; OK dismisses without playback. Both retain the
+editable demo. Explicit project/example/export/headless launches keep their
+existing behavior. Installation examples now launch without --example.
+
+Autumn at five, First light, audio and exports are unchanged. Native format is 6.
+Full and incremental ZIPs contain no user data, environments or Git history.
+The incremental overlays v0.2.10 without file deletions. See docs/VALIDATION.md.
+
+## Previous checkpoint
+
 # SIDpulse Tracker v0.2.10
 
 Autumn at five is the new welcome track. It is a native, editable .sidpulse

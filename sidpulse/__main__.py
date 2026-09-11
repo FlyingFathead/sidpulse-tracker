@@ -44,8 +44,8 @@ def main():
         if len(size) != 2 or min(size) < 360:
             raise ValueError("Use WIDTHxHEIGHT with dimensions at least 360")
         metadata = {}
-        from sidpulse.ui.welcome import first_run, open_dialog, play_intro
-        welcome = not (args.project or args.example or args.play_welcome_song or args.export_sid or args.export_prg or args.headless_smoke) and (args.welcome or first_run())
+        from sidpulse.ui.welcome import show_on_startup, open_dialog, play_intro
+        welcome = not (args.project or args.example or args.play_welcome_song or args.export_sid or args.export_prg or args.headless_smoke) and (args.welcome or show_on_startup())
         if args.project:
             song, metadata = load(args.project)
         else:

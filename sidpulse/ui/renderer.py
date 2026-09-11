@@ -52,6 +52,7 @@ class Renderer:
         self.hits = []
         self.text_cache = OrderedDict()
         self.logo_cache = {}
+        self.welcome_font_cache = {}
         self.top_row = 0
         self.first_voice = 0
 
@@ -68,6 +69,7 @@ class Renderer:
             self.signature = signature
             self.text_cache.clear()
             self.logo_cache.clear()
+            self.welcome_font_cache.clear()
             self.layout = Layout(*screen.get_size(), zoom*self.appearance["font_size"]/16)
             font_path = Path(__file__).resolve().parents[1] / "assets" / "DejaVuSansMono.ttf"
             custom=self.appearance.get('font_file')

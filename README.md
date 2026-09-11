@@ -8,7 +8,27 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
-## v0.2.10: Autumn at five and PRG export
+## v0.2.11: Startup splash
+
+The splash appears on every normal startup by default, with the version number
+beneath the logo and **OK / Play demo song** buttons. OK closes it without
+playing; Play starts **Autumn at five**. The arrangement stays editable.
+
+A small **[ ] Don't show this on startup** checkbox sits in the lower-left corner.
+It starts unchecked when there is no saved choice. Either button saves its state
+as `hide_welcome_on_startup` in the per-user `preferences.json`: `true` hides the
+splash; `false`, a missing flag or an invalid value shows it. Old `first-run.json`
+markers no longer suppress the splash. Escape works like OK.
+
+Use `bash run.sh --welcome` or `.\run.cmd --welcome` to reopen it, even when
+hidden. Uncheck the box and choose OK to restore the splash on future startups.
+The preference survives replacing the checkout and subsequent application updates.
+Launch without arguments for the normal flow; `--example` explicitly opens
+First light and bypasses the splash, as does opening a saved project.
+
+![Startup splash](docs/preview-welcome-0211.png)
+
+## Features retained from v0.2.10: Autumn at five and PRG export
 
 The new welcome track is **Autumn at five**: 96 seconds of quiet, early-morning
 woodland music at 80 BPM, with soft triangle swells, gentle arpeggios and delayed
@@ -22,7 +42,7 @@ bash run.sh --play-welcome-song
 ```
 
 On Windows: `.\run.cmd --play-welcome-song`. **F8** stops; **F2** opens the patterns.
-`--welcome` shows the Play / Skip screen again. `--silent --play-welcome-song`
+`--welcome` shows the startup splash again. `--silent --play-welcome-song`
 opens the arrangement without an audio device. The bundled source is
 `sidpulse/assets/autumn-at-five.sidpulse`; opening it through the welcome flow
 creates a fresh editor document, so saving asks for your own filename.
@@ -122,9 +142,8 @@ separate from songs. Existing installations default to OFF when the key is absen
   Default **1024 samples**; existing chosen buffer preferences are retained.
 - Prepare scheduled SID attacks before retriggering, avoiding the reproduced
   ADSR counter delay in First light. Preview and PSID use the same register writes.
-- First launch now loads Autumn at five and shows the SVG logo with **Play intro song /
-  Skip intro song**. A per-user `first-run.json` remembers that welcome was shown.
-  Use `--welcome` to see it again. Opening a project bypasses the welcome.
+- The SVG-logo welcome now uses the startup splash controls described above.
+  Use `--welcome` to see it again. Opening a project bypasses the splash.
 - Header field values are vertically centered. Order/Pattern/Row values are also
   horizontally centered; Song Name/File Name/Instrument have extra inner padding.
 
@@ -187,19 +206,19 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 Download the full ZIP and checksum file into the same directory. Both ZIPs extract into the same `sidpulse-tracker/` directory.
 
 ```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.10-SHA256SUMS.txt
-unzip sidpulse-tracker-v0.2.10-full.zip
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.11-SHA256SUMS.txt
+unzip sidpulse-tracker-v0.2.11-full.zip
 cd sidpulse-tracker
-bash run.sh --example
+bash run.sh
 ```
 
-For an existing cleaned v0.2.9 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
+For an existing v0.2.10 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
 
 ```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.10-SHA256SUMS.txt
-unzip -o sidpulse-tracker-v0.2.10-incremental.zip
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.11-SHA256SUMS.txt
+unzip -o sidpulse-tracker-v0.2.11-incremental.zip
 cd sidpulse-tracker
-bash run.sh --example
+bash run.sh
 ```
 
 The launcher creates `.venv` and installs the pinned `pygame-ce` and `pyresidfp` dependencies if needed. Python 3.10+ is required; Linux Python 3.12 has been tested. Ubuntu systems may require `python3-venv` if virtual-environment creation is unavailable. `pyresidfp` wheels support common Linux and Windows configurations; building from source requires a C++20 compiler and Python development headers.
@@ -362,7 +381,7 @@ launched process. It does not persistently change your execution policy or need
 an administrator terminal. Microsoft documents the process-specific option in
 [about_PowerShell_exe](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1#-executionpolicy-executionpolicy).
 
-For an existing cleaned v0.2.9 install, extract the v0.2.10 incremental ZIP beside the
+For an existing v0.2.10 install, extract the v0.2.11 incremental ZIP beside the
 existing `sidpulse-tracker` folder and allow overwrites. Your `user_songs`, `autosave` and `.venv`
 folders are not in the archive.
 
@@ -371,7 +390,7 @@ If you prefer manual setup:
 ```powershell
 py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m sidpulse --example
+.\.venv\Scripts\python.exe -m sidpulse
 ```
 
 Direct `run.ps1` remains available where script execution is already enabled.
@@ -388,8 +407,8 @@ python -m sidpulse --headless-smoke --example
 python -m sidpulse --log-keys keys.log
 ```
 
-Each update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.10
-incremental contains only changed/new files against the cleaned v0.2.9 snapshot;
+This update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.11
+incremental contains only changed/new files against the supplied v0.2.10 snapshot;
 no deletions are needed. Neither archive includes Git history bundles, private
 project notes or user data, or overwrites an existing `.git`. Clone the GitHub
 repository when you want its current Git history.
