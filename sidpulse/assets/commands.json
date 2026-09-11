@@ -1,0 +1,6642 @@
+{
+  "registry_version": 1,
+  "source_reference": "schismtracker 84d2c46c1d3b5660edbc3eca259bf1219e59623e",
+  "commands": [
+    {
+      "id": "audio.reset_stats",
+      "command": "audio_reset_stats",
+      "description": "Reset audio diagnostics",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "settings.f5_restart",
+      "command": "f5_restart_settings",
+      "description": "Restart on repeated F5: optional, off by default",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "audio.settings",
+      "command": "audio_settings",
+      "description": "Audio buffer settings",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "playback.follow",
+      "command": "follow",
+      "description": "Toggle playback tracing",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Scroll Lock",
+        "Ctrl+F"
+      ],
+      "key_rules": [
+        {
+          "key": "K_SCROLLLOCK",
+          "modifiers": []
+        },
+        {
+          "key": "K_f",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "audio.mute.3",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt+F3"
+      ],
+      "description": "Toggle SID voice 3 monitor mute",
+      "command": "mute",
+      "value": 2,
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_F3",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "",
+      "source": "Schism global Alt-F1..F8; one-SID subset"
+    },
+    {
+      "id": "audio.mute.2",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt+F2"
+      ],
+      "description": "Toggle SID voice 2 monitor mute",
+      "command": "mute",
+      "value": 1,
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_F2",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "",
+      "source": "Schism global Alt-F1..F8; one-SID subset"
+    },
+    {
+      "id": "audio.mute.1",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt+F1"
+      ],
+      "description": "Toggle SID voice 1 monitor mute",
+      "command": "mute",
+      "value": 0,
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_F1",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "",
+      "source": "Schism global Alt-F1..F8; one-SID subset"
+    },
+    {
+      "id": "page.help",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F1"
+      ],
+      "description": "Context help",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F1",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "help"
+    },
+    {
+      "id": "page.pattern",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F2"
+      ],
+      "description": "Pattern editor",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F2",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "pattern"
+    },
+    {
+      "id": "page.samples",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F3"
+      ],
+      "description": "Sample bank",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F3",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "samples"
+    },
+    {
+      "id": "page.instrument",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F4"
+      ],
+      "description": "SID instrument bank",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F4",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "instrument"
+    },
+    {
+      "id": "page.info",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Info page",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "info"
+    },
+    {
+      "id": "page.orders",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F11"
+      ],
+      "description": "Order list / pattern bank",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F11",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "orders"
+    },
+    {
+      "id": "page.settings",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F12"
+      ],
+      "description": "Song and SID settings",
+      "command": "page",
+      "target": "App.change_page",
+      "key_rules": [
+        {
+          "key": "K_F12",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "settings"
+    },
+    {
+      "id": "file.open",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F9",
+        "Ctrl+L"
+      ],
+      "description": "Open native project",
+      "command": "open",
+      "target": "App.browse",
+      "key_rules": [
+        {
+          "key": "K_F9",
+          "modifiers": []
+        },
+        {
+          "key": "K_l",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.save",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F10",
+        "Ctrl+W",
+        "Ctrl+S"
+      ],
+      "description": "Save native project",
+      "command": "save",
+      "target": "App.save_project",
+      "key_rules": [
+        {
+          "key": "K_F10",
+          "modifiers": []
+        },
+        {
+          "key": "K_w",
+          "modifiers": [
+            "ctrl"
+          ]
+        },
+        {
+          "key": "K_s",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.save_as",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F10",
+        "Ctrl+Shift+S"
+      ],
+      "description": "Save project as",
+      "command": "save_as",
+      "target": "App.browse",
+      "key_rules": [
+        {
+          "key": "K_F10",
+          "modifiers": [
+            "shift"
+          ]
+        },
+        {
+          "key": "K_s",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.new",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+N"
+      ],
+      "description": "New project",
+      "command": "new",
+      "target": "App.new_project",
+      "key_rules": [
+        {
+          "key": "K_n",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.quit",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Q"
+      ],
+      "description": "Quit with unsaved-work check",
+      "command": "quit",
+      "target": "App.confirm_discard",
+      "key_rules": [
+        {
+          "key": "K_q",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.comments",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F9"
+      ],
+      "description": "Edit song comments",
+      "command": "comments",
+      "target": "App.text_dialog",
+      "key_rules": [
+        {
+          "key": "K_F9",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "ui.escape",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Escape"
+      ],
+      "description": "Return / main menu",
+      "command": "escape",
+      "target": "App.open_menu",
+      "key_rules": [
+        {
+          "key": "K_ESCAPE",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "ui.fullscreen",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Alt+Enter",
+        "Ctrl+Enter"
+      ],
+      "description": "Toggle fullscreen",
+      "command": "fullscreen",
+      "target": "App.execute",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": [
+            "ctrl",
+            "alt"
+          ]
+        },
+        {
+          "key": "K_RETURN",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "ui.zoom",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Alt +/-",
+        "Ctrl+Alt+0"
+      ],
+      "description": "Adjust/reset UI zoom",
+      "command": "zoom",
+      "target": "App.zoom",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "audio.stop",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F8"
+      ],
+      "description": "Silence SID audition",
+      "command": "panic",
+      "target": "AudioEngine.send",
+      "key_rules": [
+        {
+          "key": "K_F8",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "editor.undo",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Backspace"
+      ],
+      "description": "Undo edit",
+      "command": "undo",
+      "target": "History.undo",
+      "key_rules": [
+        {
+          "key": "K_BACKSPACE",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "editor.redo",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Shift+Backspace"
+      ],
+      "description": "Redo edit",
+      "command": "redo",
+      "target": "History.redo",
+      "key_rules": [
+        {
+          "key": "K_BACKSPACE",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "future.midi",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F1"
+      ],
+      "description": "MIDI configuration",
+      "command": "future_midi",
+      "target": "future.midi",
+      "key_rules": [
+        {
+          "key": "K_F1",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "MIDI configuration"
+    },
+    {
+      "id": "future.system",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+F1"
+      ],
+      "description": "System configuration",
+      "command": "future_system",
+      "target": "future.system",
+      "key_rules": [
+        {
+          "key": "K_F1",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "System configuration"
+    },
+    {
+      "id": "future.palette",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+F12"
+      ],
+      "description": "Colour themes",
+      "command": "appearance_settings",
+      "target": "settings.theme",
+      "key_rules": [
+        {
+          "key": "K_F12",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Palette editor",
+      "value": 17
+    },
+    {
+      "id": "future.font",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F12"
+      ],
+      "description": "Font settings",
+      "command": "appearance_settings",
+      "target": "settings.font",
+      "key_rules": [
+        {
+          "key": "K_F12",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Font editor",
+      "value": 18
+    },
+    {
+      "id": "future.samples",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+F3"
+      ],
+      "description": "Sample library",
+      "command": "future_samples",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_F3",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Sample library"
+    },
+    {
+      "id": "future.instruments",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+F4"
+      ],
+      "description": "Instrument library",
+      "command": "future_instruments",
+      "target": "future.instruments",
+      "key_rules": [
+        {
+          "key": "K_F4",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Instrument library"
+    },
+    {
+      "id": "future.play_song",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F5",
+        "Ctrl+F5"
+      ],
+      "description": "Song playback",
+      "command": "play",
+      "target": "App.start_playback",
+      "key_rules": [
+        {
+          "key": "K_F5",
+          "modifiers": [
+            "ctrl"
+          ]
+        },
+        {
+          "key": "K_F5",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Song playback",
+      "value": "song"
+    },
+    {
+      "id": "future.play_pattern",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F6"
+      ],
+      "description": "Pattern playback",
+      "command": "play",
+      "target": "App.start_playback",
+      "key_rules": [
+        {
+          "key": "K_F6",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Pattern playback",
+      "value": "pattern"
+    },
+    {
+      "id": "future.play_order",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F6"
+      ],
+      "description": "Playback from order",
+      "command": "play",
+      "target": "App.start_playback",
+      "key_rules": [
+        {
+          "key": "K_F6",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Playback from order",
+      "value": "order"
+    },
+    {
+      "id": "future.play_cursor",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F7"
+      ],
+      "description": "Playback from cursor",
+      "command": "play",
+      "target": "App.start_playback",
+      "key_rules": [
+        {
+          "key": "K_F7",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Playback from cursor",
+      "value": "cursor"
+    },
+    {
+      "id": "future.pause",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Shift+F8"
+      ],
+      "description": "Pause/resume",
+      "command": "pause",
+      "target": "App.execute",
+      "key_rules": [
+        {
+          "key": "K_F8",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Pause/resume"
+    },
+    {
+      "id": "future.logging",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+F11"
+      ],
+      "description": "Logging view",
+      "command": "future_logging",
+      "target": "future.logging",
+      "key_rules": [
+        {
+          "key": "K_F11",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Logging view"
+    },
+    {
+      "id": "future.psid",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Shift+E"
+      ],
+      "description": "Export .sid (PSID); offer native project save",
+      "command": "export",
+      "target": "App.begin_export",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "PSID export"
+    },
+    {
+      "id": "future.prg",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Export runnable C64 .prg; offer native project save",
+      "command": "export_prg",
+      "target": "App.begin_export",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "PRG export"
+    },
+    {
+      "id": "future.remap",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "SID remapping",
+      "command": "future_remap",
+      "target": "future.remap",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "SID remapping"
+    },
+    {
+      "id": "future.macros",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Macro editor",
+      "command": "instrument_programs",
+      "target": "F4 Motion / tables",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Macro editor"
+    },
+    {
+      "id": "future.programs",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Instrument programs",
+      "command": "instrument_programs",
+      "target": "F4 Motion / tables",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Instrument programs"
+    },
+    {
+      "id": "future.pcm",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "PCM sample import",
+      "command": "future_pcm",
+      "target": "future.pcm",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "PCM sample import"
+    },
+    {
+      "id": "future.digi",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Digi conversion",
+      "command": "future_digi",
+      "target": "future.digi",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "feature": "Digi conversion"
+    },
+    {
+      "id": "pattern.piano",
+      "contexts": [
+        "pattern",
+        "instrument"
+      ],
+      "shortcuts": [
+        "Z S X D C V G B H N J M",
+        "Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P"
+      ],
+      "description": "Physical piano rows; Caps Lock auditions only",
+      "command": "piano",
+      "target": "Editor.enter_note / AudioEngine.send",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.cut",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "1"
+      ],
+      "description": "Note cut",
+      "command": "note",
+      "target": "Editor.enter_note",
+      "key_rules": [
+        {
+          "scancode": 30,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": -2
+    },
+    {
+      "id": "pattern.off",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Grave / non-US hash"
+      ],
+      "description": "Note off",
+      "command": "note",
+      "target": "Editor.enter_note",
+      "key_rules": [
+        {
+          "scancode": 53,
+          "modifiers": []
+        },
+        {
+          "scancode": 50,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": -1
+    },
+    {
+      "id": "pattern.clear",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "."
+      ],
+      "description": "Clear current field",
+      "command": "clear",
+      "target": "Editor.clear_field",
+      "key_rules": [
+        {
+          "scancode": 55,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.mask",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        ","
+      ],
+      "description": "Toggle field-copy mask",
+      "command": "mask",
+      "target": "Editor.edit_mask",
+      "key_rules": [
+        {
+          "scancode": 54,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.digits",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "0..9",
+        "A..F"
+      ],
+      "description": "Numeric field entry / hex effect parameters",
+      "command": "digit",
+      "target": "Editor.enter_digit",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.letters",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "A..Z"
+      ],
+      "description": "Effect letter entry",
+      "command": "digit",
+      "target": "Editor.enter_digit",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.arrows",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Arrows",
+        "Shift+Arrows"
+      ],
+      "description": "Arrows",
+      "command": "step_move",
+      "target": "Editor.move",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.page_move",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "PgUp/PgDn",
+        "Ctrl+Home/End"
+      ],
+      "description": "Page move",
+      "command": "move",
+      "target": "Editor.move",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.voice",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Tab/Shift+Tab",
+        "Alt+Left/Right",
+        "Ctrl+Left/Right"
+      ],
+      "description": "Voice",
+      "command": "channel",
+      "target": "Editor.voice",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.home_end",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Home/End"
+      ],
+      "description": "Home end",
+      "command": "home_end",
+      "target": "Editor cursor",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.edge",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+PgUp/PgDn"
+      ],
+      "description": "Edge",
+      "command": "edge",
+      "target": "Editor.row",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.pattern",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "+/-",
+        "Shift+keypad +/-"
+      ],
+      "description": "Pattern",
+      "command": "pattern",
+      "target": "Editor.select_pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.order_pattern",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl +/-"
+      ],
+      "description": "Order pattern",
+      "command": "order_pattern",
+      "target": "Editor.select_pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.octave",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Keypad / and *",
+        "Alt+Home/End"
+      ],
+      "description": "Octave",
+      "command": "octave",
+      "target": "Editor.octave",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.instrument",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Up/Down",
+        "< / >"
+      ],
+      "description": "Instrument",
+      "command": "instrument",
+      "target": "Editor.select_instrument",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.skip",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+0..9"
+      ],
+      "description": "Skip",
+      "command": "skip",
+      "target": "Editor.skip",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.repeat",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Space"
+      ],
+      "description": "Repeat",
+      "command": "repeat",
+      "target": "Editor.repeat_field",
+      "key_rules": [
+        {
+          "key": "K_SPACE",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.pick",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Enter"
+      ],
+      "description": "Pick",
+      "command": "pick",
+      "target": "Editor.last_cell",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.center",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+C"
+      ],
+      "description": "Center",
+      "command": "center",
+      "target": "Editor.centered",
+      "key_rules": [
+        {
+          "key": "K_c",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.highlight",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+H"
+      ],
+      "description": "Highlight",
+      "command": "highlight",
+      "target": "Editor.highlight",
+      "key_rules": [
+        {
+          "key": "K_h",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.pattern_length",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+F2"
+      ],
+      "description": "Pattern length",
+      "command": "pattern_length",
+      "target": "Editor pattern rows",
+      "key_rules": [
+        {
+          "key": "K_F2",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.snapshot",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+Enter"
+      ],
+      "description": "Snapshot",
+      "command": "store_pattern",
+      "target": "Editor.stored_pattern",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.restore",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+Backspace"
+      ],
+      "description": "Restore",
+      "command": "restore_pattern",
+      "target": "Editor.edit",
+      "key_rules": [
+        {
+          "key": "K_BACKSPACE",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.start",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+B"
+      ],
+      "description": "Block start",
+      "command": "mark",
+      "target": "Editor.mark",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "start"
+    },
+    {
+      "id": "pattern.end",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+E"
+      ],
+      "description": "Block end",
+      "command": "mark",
+      "target": "Editor.mark",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "end"
+    },
+    {
+      "id": "pattern.all",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+L"
+      ],
+      "description": "Select voice / whole pattern",
+      "command": "mark",
+      "target": "Editor.mark",
+      "key_rules": [
+        {
+          "key": "K_l",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "all"
+    },
+    {
+      "id": "pattern.unmark",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+U"
+      ],
+      "description": "Clear selection and clipboard",
+      "command": "mark",
+      "target": "Editor.mark",
+      "key_rules": [
+        {
+          "key": "K_u",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "clear"
+    },
+    {
+      "id": "pattern.copy",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+C"
+      ],
+      "description": "Copy block",
+      "command": "copy",
+      "target": "Editor.copy",
+      "key_rules": [
+        {
+          "key": "K_c",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": false
+    },
+    {
+      "id": "pattern.cut_block",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+Z"
+      ],
+      "description": "Cut block",
+      "command": "copy",
+      "target": "Editor.copy",
+      "key_rules": [
+        {
+          "key": "K_z",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": true
+    },
+    {
+      "id": "pattern.paste_insert",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+P"
+      ],
+      "description": "Insert paste",
+      "command": "paste",
+      "target": "Editor.paste",
+      "key_rules": [
+        {
+          "key": "K_p",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "insert"
+    },
+    {
+      "id": "pattern.paste_overwrite",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+O"
+      ],
+      "description": "Overwrite paste",
+      "command": "paste",
+      "target": "Editor.paste",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "overwrite"
+    },
+    {
+      "id": "pattern.paste_mix",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+M"
+      ],
+      "description": "Mix into empty cells",
+      "command": "paste",
+      "target": "Editor.paste",
+      "key_rules": [
+        {
+          "key": "K_m",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": "mix"
+    },
+    {
+      "id": "pattern.set_instrument",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+S"
+      ],
+      "description": "Set selected instrument on block",
+      "command": "block_instrument",
+      "target": "Editor.block_instrument",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "value": null
+    },
+    {
+      "id": "pattern.transpose",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt+Q/A",
+        "Alt+Shift+Q/A"
+      ],
+      "description": "Transpose semitone / octave",
+      "command": "transpose",
+      "target": "Editor.transpose",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.insert",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Insert",
+        "Alt+Insert"
+      ],
+      "description": "Insert voice / whole row",
+      "command": "insert_row",
+      "target": "Editor.insert_delete",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.delete",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Delete",
+        "Alt+Delete"
+      ],
+      "description": "Delete voice / whole row",
+      "command": "delete_row",
+      "target": "Editor.insert_delete",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.roll",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+Insert/Delete"
+      ],
+      "description": "Roll selected block",
+      "command": "roll",
+      "target": "Editor.roll",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.audition_cell",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "4"
+      ],
+      "description": "Audition cell while held",
+      "command": "audition_cell",
+      "target": "AudioEngine.send",
+      "key_rules": [
+        {
+          "scancode": 33,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.audition_row",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "8"
+      ],
+      "description": "Audition row while held",
+      "command": "audition_row",
+      "target": "AudioEngine.send",
+      "key_rules": [
+        {
+          "scancode": 37,
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "instrument.navigation",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Arrows",
+        "Tab",
+        "Enter",
+        "Insert",
+        "PgUp/PgDn: General / Motion"
+      ],
+      "description": "Bank / properties / buttons / new instrument; click yellow values to type",
+      "command": "page_key",
+      "target": "App.page_key",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        },
+        {
+          "key": "K_UP",
+          "modifiers": []
+        },
+        {
+          "key": "K_DOWN",
+          "modifiers": []
+        },
+        {
+          "key": "K_LEFT",
+          "modifiers": []
+        },
+        {
+          "key": "K_RIGHT",
+          "modifiers": []
+        },
+        {
+          "key": "K_TAB",
+          "modifiers": []
+        },
+        {
+          "key": "K_INSERT",
+          "modifiers": []
+        },
+        {
+          "key": "K_PAGEUP",
+          "modifiers": []
+        },
+        {
+          "key": "K_PAGEDOWN",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "samples.navigation",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Up/Down"
+      ],
+      "description": "Select sample slot",
+      "command": "page_key",
+      "target": "App.sample_index",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "orders.navigation",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Up/Down",
+        "Enter",
+        "N",
+        "Shift+N",
+        "Insert/Delete",
+        "PgUp/PgDn",
+        "Home/End"
+      ],
+      "description": "Select and edit orders; browse all patterns, Enter opens in F2",
+      "command": "page_key",
+      "target": "Editor.order_edit",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        },
+        {
+          "key": "K_UP",
+          "modifiers": []
+        },
+        {
+          "key": "K_DOWN",
+          "modifiers": []
+        },
+        {
+          "key": "K_INSERT",
+          "modifiers": []
+        },
+        {
+          "key": "K_DELETE",
+          "modifiers": []
+        },
+        {
+          "key": "K_n",
+          "modifiers": []
+        },
+        {
+          "key": "K_n",
+          "modifiers": [
+            "shift"
+          ]
+        },
+        {
+          "key": "K_PAGEUP",
+          "modifiers": []
+        },
+        {
+          "key": "K_PAGEDOWN",
+          "modifiers": []
+        },
+        {
+          "key": "K_HOME",
+          "modifiers": []
+        },
+        {
+          "key": "K_END",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "help.navigation",
+      "contexts": [
+        "help"
+      ],
+      "shortcuts": [
+        "1..8",
+        "Left/Right",
+        "Tab",
+        "Up/Down",
+        "PgUp/PgDn"
+      ],
+      "description": "Select help topic / scroll",
+      "command": "page_key",
+      "target": "App.help_topic",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "files.navigation",
+      "contexts": [
+        "files"
+      ],
+      "shortcuts": [
+        "Arrows",
+        "Enter",
+        "Tab",
+        "Backspace"
+      ],
+      "description": "Browse projects / enter filename",
+      "command": "page_key",
+      "target": "App.select_file",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "settings.navigation",
+      "contexts": [
+        "settings"
+      ],
+      "shortcuts": [
+        "Arrows",
+        "Enter"
+      ],
+      "description": "Edit song / SID settings",
+      "command": "page_key",
+      "target": "App.change_property",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "legacy.global.001",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "2*F11"
+      ],
+      "description": "Order List and Channel Volume",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.002",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "{ }"
+      ],
+      "description": "Decrease/Increase playback speed",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.003",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-[ ]"
+      ],
+      "description": "Decrease/Increase playback tempo",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.004",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "[ ]"
+      ],
+      "description": "Decrease/Increase global volume",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.005",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt-F1 -> Alt-F8"
+      ],
+      "description": "Toggle channels 1->8",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.006",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-D"
+      ],
+      "description": "DOS Shell",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.007",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-E"
+      ],
+      "description": "Refresh screen and reset cache identification",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.008",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-G"
+      ],
+      "description": "Go to order/pattern/row given time",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_g",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.009",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-I"
+      ],
+      "description": "Reinitialise sound driver",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_i",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.010",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-M"
+      ],
+      "description": "Toggle mouse cursor",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_m",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.011",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-P"
+      ],
+      "description": "Calculate approximate song length",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_p",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.012",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl-Shift-Q"
+      ],
+      "description": "Quit without confirmation",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [
+        {
+          "key": "K_q",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.global.013",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl, Ctrl"
+      ],
+      "description": "Digraph entry:",
+      "command": "unimplemented",
+      "target": "future.global",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/global-keys"
+    },
+    {
+      "id": "legacy.pattern.014",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "<x Panning slide to left by x"
+      ],
+      "description": "[$D0-$DF]",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.015",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        ">x Panning slide to right by x"
+      ],
+      "description": "[$E0-$EF]",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.016",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Shift-`"
+      ],
+      "description": "Note fade (~~~)",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.017",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-Up/Down"
+      ],
+      "description": "Slide pattern up/down by 1 row",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.018",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Shift-A/F"
+      ],
+      "description": "Move to previous/next note/instrument/volume/effect",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.019",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-N"
+      ],
+      "description": "Toggle Multichannel mode for current channel",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_n",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.020",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "2*Alt-N"
+      ],
+      "description": "Multichannel Selection menu",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.021",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-V"
+      ],
+      "description": "Toggle default volume display",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_v",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.022",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-O"
+      ],
+      "description": "Export current pattern to selected sample",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.023",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Shift-O"
+      ],
+      "description": "Export current pattern to unused samples by channel",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.024",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-B"
+      ],
+      "description": "Bind current pattern to selected sample",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.025",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Shift-B"
+      ],
+      "description": "Bind current pattern to unused samples by channel",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.026",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-T"
+      ],
+      "description": "Cycle current track's view",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_t",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.027",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-R"
+      ],
+      "description": "Clear all track views",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.028",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-H"
+      ],
+      "description": "Toggle track view divisions",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_h",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.029",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-0"
+      ],
+      "description": "Deselect current track",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.030",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-1 - Ctrl-5"
+      ],
+      "description": "View current track in scheme 1-5",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.031",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-1 - Ctrl-6"
+      ],
+      "description": "View current track in scheme 1-6",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.032",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Left/Right"
+      ],
+      "description": "Move left/right between track view columns",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.033",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Shift 1-6"
+      ],
+      "description": "Quick view scheme setup",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.034",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-T"
+      ],
+      "description": "Toggle View-Channel cursor-tracking",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_t",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.035",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-D"
+      ],
+      "description": "Quick mark n/2n/4n/... lines (n=Row Hilight Major)",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.036",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-V"
+      ],
+      "description": "Set volume/panning",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_v",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.037",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-W"
+      ],
+      "description": "Wipe vol/pan not associated with a note/instrument",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_w",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.038",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-K"
+      ],
+      "description": "Slide volume/panning column",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_k",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.039",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "2*Alt-K"
+      ],
+      "description": "Wipe all volume/panning controls",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.040",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-J"
+      ],
+      "description": "Volume amplifier   / Fast volume attenuate",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_j",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.041",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-Y"
+      ],
+      "description": "Swap block",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_y",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.042",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-X"
+      ],
+      "description": "Slide effect value",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_x",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.043",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "2*Alt-X"
+      ],
+      "description": "Wipe all effect data",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.044",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Shift-L"
+      ],
+      "description": "Copy block to clipboard honoring current mute-settings",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_l",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.045",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "2*Alt-O"
+      ],
+      "description": "Grow pattern to clipboard length",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.046",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "2*Alt-M"
+      ],
+      "description": "Mix each field from clipboard with pattern data",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.047",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-F"
+      ],
+      "description": "Double block length",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_f",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.048",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-G"
+      ],
+      "description": "Halve block length",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_g",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.049",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-I"
+      ],
+      "description": "Select Template mode / Fast volume amplify",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_i",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.050",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-J"
+      ],
+      "description": "Toggle fast volume mode",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_j",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.051",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-U"
+      ],
+      "description": "Selection volume vary / Fast volume vary",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_u",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.052",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Y"
+      ],
+      "description": "Selection panning vary / Fast panning vary",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_y",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.053",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-K"
+      ],
+      "description": "Selection effect vary / Fast effect vary",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_k",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.054",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-F6"
+      ],
+      "description": "Play from current row",
+      "command": "play",
+      "target": "App.start_playback",
+      "key_rules": [
+        {
+          "key": "K_F6",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/pattern-editor",
+      "value": "pattern_cursor"
+    },
+    {
+      "id": "legacy.pattern.055",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-F7"
+      ],
+      "description": "Set/Clear playback mark (for use with F7)",
+      "command": "playback_mark",
+      "target": "App.execute",
+      "key_rules": [
+        {
+          "key": "K_F7",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.056",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt-F9"
+      ],
+      "description": "Toggle current channel",
+      "command": "mute",
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_F9",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.057",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Alt-F10"
+      ],
+      "description": "Solo current channel",
+      "command": "solo",
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_F10",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.058",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl-Z"
+      ],
+      "description": "Change MIDI playback trigger",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [
+        {
+          "key": "K_z",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.pattern.059",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Alt-Scroll Lock"
+      ],
+      "description": "Toggle MIDI input",
+      "command": "unimplemented",
+      "target": "future.pattern",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/pattern-editor"
+    },
+    {
+      "id": "legacy.samples.060",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Enter"
+      ],
+      "description": "Load new sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.061",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Tab"
+      ],
+      "description": "Move between options",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.062",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "PgUp/PgDn"
+      ],
+      "description": "Move up/down (when not on list)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.063",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-A"
+      ],
+      "description": "Convert Signed to/from Unsigned samples",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_a",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.064",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-B"
+      ],
+      "description": "Pre-Loop cut sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.065",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-C"
+      ],
+      "description": "Clear Sample Name & Filename (Used in Sample Name window)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_c",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.066",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-D"
+      ],
+      "description": "Delete Sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.067",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Shift-D"
+      ],
+      "description": "Downmix stereo sample to mono",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "alt",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.068",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-E"
+      ],
+      "description": "Resize Sample (with interpolation)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.069",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Shift-E"
+      ],
+      "description": "Resample Sample (with interpolation)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "alt",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.070",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-F"
+      ],
+      "description": "Resize Sample (without interpolation)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_f",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.071",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Shift-F"
+      ],
+      "description": "Resample Sample (without interpolation)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_f",
+          "modifiers": [
+            "alt",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.072",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-G"
+      ],
+      "description": "Reverse Sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_g",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.073",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-H"
+      ],
+      "description": "Centralise Sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_h",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.074",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-I"
+      ],
+      "description": "Invert Sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_i",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.075",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-L"
+      ],
+      "description": "Post-Loop cut sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_l",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.076",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-M"
+      ],
+      "description": "Sample amplifier",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_m",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.077",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-N"
+      ],
+      "description": "Toggle Multichannel playback",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_n",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.078",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-O"
+      ],
+      "description": "Save current sample to disk (IT Format)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.079",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-P"
+      ],
+      "description": "Copy sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_p",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.080",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Q"
+      ],
+      "description": "Toggle sample quality",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_q",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.081",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-R"
+      ],
+      "description": "Replace current sample in song",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.082",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-S"
+      ],
+      "description": "Swap sample (in song also)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.083",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-T"
+      ],
+      "description": "Save current sample to disk (Export Format)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_t",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.084",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-V"
+      ],
+      "description": "Crossfade sample loop",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_v",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.085",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-W"
+      ],
+      "description": "Save current sample to disk (RAW Format)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_w",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.086",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-X"
+      ],
+      "description": "Exchange sample (only in Sample List)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_x",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.087",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Y"
+      ],
+      "description": "Text to sample data",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_y",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.088",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Z"
+      ],
+      "description": "Edit/create AdLib (FM) sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_z",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.089",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Shift-Z"
+      ],
+      "description": "Load predefined AdLib sample by MIDI patch number",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_z",
+          "modifiers": [
+            "alt",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable to the current single-SID target",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.090",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Ins"
+      ],
+      "description": "Insert sample slot (updates pattern data)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_INSERT",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.091",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Del"
+      ],
+      "description": "Remove sample slot (updates pattern data)",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_DELETE",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.092",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Up/Down"
+      ],
+      "description": "Swap sample with previous/next",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.093",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-F9"
+      ],
+      "description": "Toggle current sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_F9",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.094",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-F10"
+      ],
+      "description": "Solo current sample",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [
+        {
+          "key": "K_F10",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.095",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "< >"
+      ],
+      "description": "Decrease/Increase playback channel",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.096",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Grey +"
+      ],
+      "description": "Increase C-5 Frequency by 1 octave",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.097",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Alt-Grey -"
+      ],
+      "description": "Decrease C-5 Frequency by 1 octave",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.098",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Ctrl-Grey +"
+      ],
+      "description": "Increase C-5 Frequency by 1 semitone",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.samples.099",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "Ctrl-Grey -"
+      ],
+      "description": "Decrease C-5 Frequency by 1 semitone",
+      "command": "unimplemented",
+      "target": "future.samples",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/sample-list"
+    },
+    {
+      "id": "legacy.instrument.100",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Enter"
+      ],
+      "description": "Load new instrument",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": false,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.101",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Ctrl-PgUp/PgDn"
+      ],
+      "description": "Move instrument up/down (when not on list)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.102",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-C"
+      ],
+      "description": "Clear instrument name & filename",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_c",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.103",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-W"
+      ],
+      "description": "Wipe instrument data",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_w",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.104",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Spacebar"
+      ],
+      "description": "Edit instrument name (ESC to exit)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_SPACE",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.105",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-D"
+      ],
+      "description": "Delete instrument & all related samples",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.106",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-Shift-D"
+      ],
+      "description": "Delete instrument & all related unused samples",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_d",
+          "modifiers": [
+            "alt",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.107",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-L"
+      ],
+      "description": "Post-Loop cut envelope",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_l",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.108",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-N"
+      ],
+      "description": "Toggle Multichannel playback",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_n",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.109",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-O"
+      ],
+      "description": "Save current instrument to disk (IT Format)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.110",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-P"
+      ],
+      "description": "Copy instrument",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_p",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.111",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-R"
+      ],
+      "description": "Replace current instrument in song",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.112",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-S"
+      ],
+      "description": "Swap instruments (in song also)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.113",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-T"
+      ],
+      "description": "Save current instrument to disk (Export Format)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_t",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.114",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-U"
+      ],
+      "description": "Update pattern data",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_u",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.115",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-X"
+      ],
+      "description": "Exchange instruments (only in Instrument List)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_x",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.116",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-Ins"
+      ],
+      "description": "Insert instrument slot (updates pattern data)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_INSERT",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.117",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "Alt-Del"
+      ],
+      "description": "Remove instrument slot (updates pattern data)",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [
+        {
+          "key": "K_DELETE",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.118",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [
+        "< >"
+      ],
+      "description": "Decrease/Increase playback channel",
+      "command": "unimplemented",
+      "target": "future.instrument",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.119",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Enter"
+      ],
+      "description": "Pickup sample number & default play note",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.120",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "< >"
+      ],
+      "description": "Decrease/Increase sample number",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.121",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Alt-A"
+      ],
+      "description": "Change all samples",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [
+        {
+          "key": "K_a",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.122",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Alt-N"
+      ],
+      "description": "Enter next note",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [
+        {
+          "key": "K_n",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.123",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Alt-P"
+      ],
+      "description": "Enter previous note",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [
+        {
+          "key": "K_p",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.124",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Alt-Up/Down"
+      ],
+      "description": "Transpose all notes a semitone up/down",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.note_map.125",
+      "contexts": [
+        "instrument.note_map"
+      ],
+      "shortcuts": [
+        "Alt-Ins/Del"
+      ],
+      "description": "Insert/Delete a row from the table",
+      "command": "unimplemented",
+      "target": "future.instrument.note_map",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.126",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Enter"
+      ],
+      "description": "Pick up/Drop current node",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.127",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Insert"
+      ],
+      "description": "Add node",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_INSERT",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.128",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Delete"
+      ],
+      "description": "Delete node",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_DELETE",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.129",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-Arrow Keys"
+      ],
+      "description": "Move node (fast)",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.130",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-B"
+      ],
+      "description": "Pre-Loop cut envelope",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.131",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-F"
+      ],
+      "description": "Double envelope length",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_f",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.132",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-G"
+      ],
+      "description": "Halve envelope length",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_g",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.133",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-E"
+      ],
+      "description": "Resize envelope",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_e",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.134",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Alt-Z"
+      ],
+      "description": "Generate envelope from ADSR values",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [
+        {
+          "key": "K_z",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.135",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Press Spacebar"
+      ],
+      "description": "Play default note",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.instrument.envelope.136",
+      "contexts": [
+        "instrument.envelope"
+      ],
+      "shortcuts": [
+        "Release Space"
+      ],
+      "description": "Note off command",
+      "command": "unimplemented",
+      "target": "future.instrument.envelope",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/instrument-list"
+    },
+    {
+      "id": "legacy.orders.137",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "N"
+      ],
+      "description": "Insert next pattern",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": false,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.138",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Shift-N"
+      ],
+      "description": "Copy current pattern to new pattern, and insert order",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": false,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.139",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "-"
+      ],
+      "description": "End of song mark",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.140",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "+"
+      ],
+      "description": "Skip to next Order mark",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.141",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Tab/Shift-Tab"
+      ],
+      "description": "Switch order list / pattern bank",
+      "command": "page_key",
+      "target": "App.page_key",
+      "key_rules": [
+        {
+          "key": "K_TAB",
+          "modifiers": []
+        },
+        {
+          "key": "K_TAB",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.142",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Ctrl-F7"
+      ],
+      "description": "Play this Order next",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_F7",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.143",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Alt-F11"
+      ],
+      "description": "Lock/unlock order list",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_F11",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.144",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Alt-R"
+      ],
+      "description": "Sort order list",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.145",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Alt-U"
+      ],
+      "description": "Search for unused patterns",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_u",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.146",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Ctrl-B"
+      ],
+      "description": "Link (diskwriter) this pattern to the current sample",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_b",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.147",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Ctrl-O"
+      ],
+      "description": "Copy (diskwriter) this pattern to the current sample",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_o",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.148",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "C"
+      ],
+      "description": "Continue to next position of current pattern",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_c",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.149",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Alt-Enter"
+      ],
+      "description": "Save order list",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.orders.150",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "Alt-Backspace"
+      ],
+      "description": "Swap order list with saved order list",
+      "command": "unimplemented",
+      "target": "future.orders",
+      "key_rules": [
+        {
+          "key": "K_BACKSPACE",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/orderlist-vol"
+    },
+    {
+      "id": "legacy.info.151",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Insert"
+      ],
+      "description": "Add a new window",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_INSERT",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.152",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Delete"
+      ],
+      "description": "Delete current window",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_DELETE",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.153",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Tab/Shift-Tab"
+      ],
+      "description": "Move between windows",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.154",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "PgUp/PgDn"
+      ],
+      "description": "Change window type",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.155",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Alt-Up/Down"
+      ],
+      "description": "Move window base up/down",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.156",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "I"
+      ],
+      "description": "Toggle between sample/instrument names",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_i",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.157",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Q"
+      ],
+      "description": "Mute/Unmute current channel",
+      "command": "mute",
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_q",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.158",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "S"
+      ],
+      "description": "Solo current channel",
+      "command": "solo",
+      "target": "App.toggle_monitor",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.159",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Grey +, Grey -"
+      ],
+      "description": "Move forwards/backwards one pattern in song",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.160",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Alt-S"
+      ],
+      "description": "Toggle Stereo playback",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable: the current single-SID target has mono output",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.161",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "Alt-R"
+      ],
+      "description": "Reverse output channels",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
+      "applicable": false,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not applicable: the current single-SID target has mono output",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "legacy.info.162",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "G"
+      ],
+      "description": "Goto pattern currently playing",
+      "command": "unimplemented",
+      "target": "future.info",
+      "key_rules": [
+        {
+          "key": "K_g",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": false,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Not implemented yet",
+      "source": "Schism helptext/info-page"
+    },
+    {
+      "id": "ui.helper",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Toggle bottom context helper",
+      "command": "helper_toggle",
+      "target": "App.helper_strip",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.control_focus",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+Shift+F2"
+      ],
+      "description": "Toggle CTRL CH / FILTER row editor",
+      "command": "control_focus",
+      "target": "App.edit_control",
+      "key_rules": [
+        {
+          "key": "K_F2",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "SIDpulse addition; Ctrl+F2 retains Schism pattern length."
+    },
+    {
+      "id": "app.about",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "About SIDpulse Tracker / vector logo",
+      "command": "about",
+      "target": "App about dialog",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    }
+  ]
+}

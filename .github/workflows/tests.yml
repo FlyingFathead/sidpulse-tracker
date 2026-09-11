@@ -1,0 +1,39 @@
+name: Native editor checks
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.12']
+    runs-on: ${{ matrix.os }}
+    env:
+      SDL_VIDEODRIVER: dummy
+      SDL_AUDIODRIVER: dummy
+      PYGAME_HIDE_SUPPORT_PROMPT: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest -q
+      - run: python -m sidpulse --headless-smoke --example
+      - run: python -m sidpulse --headless-smoke --play-welcome-song
+      - name: Windows setup cancellation leaves the environment untouched
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          echo n| run.cmd --headless-smoke --example
+          if errorlevel 1 exit /b 1
+          if exist .venv exit /b 1
+      - name: Windows setup approval and ready-environment launch
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          echo y| run.cmd --headless-smoke --example --screenshot first-launch.png
+          if errorlevel 1 exit /b 1
+          if not exist first-launch.png exit /b 1
+          echo n| run.cmd --headless-smoke --example --screenshot next-launch.png
+          if errorlevel 1 exit /b 1
+          if not exist next-launch.png exit /b 1

@@ -1,0 +1,402 @@
+# SIDpulse Tracker
+
+![SIDpulse Tracker logo](sidpulse/assets/sidpulse-tracker-logo.svg)
+
+**The official site of SIDpulse Tracker, a homage to Impulse Tracker, reimagined as a modern SID-native tracker.**
+
+Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Python + pygame-ce desktop application, with Impulse Tracker and Schism Tracker as the main keyboard keymap and visual reference.
+
+> NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
+
+## v0.2.10: Autumn at five and PRG export
+
+The new welcome track is **Autumn at five**: 96 seconds of quiet, early-morning
+woodland music at 80 BPM, with soft triangle swells, gentle arpeggios and delayed
+vibrato. The triangles pass through the SID low-pass filter for a rounded,
+sine-like tone. All three voices, patterns and instruments remain editable.
+
+Start the tracker and play the welcome song directly:
+
+```bash
+bash run.sh --play-welcome-song
+```
+
+On Windows: `.\run.cmd --play-welcome-song`. **F8** stops; **F2** opens the patterns.
+`--welcome` shows the Play / Skip screen again. `--silent --play-welcome-song`
+opens the arrangement without an audio device. The bundled source is
+`sidpulse/assets/autumn-at-five.sidpulse`; opening it through the welcome flow
+creates a fresh editor document, so saving asks for your own filename.
+
+**First light remains included**, with its original editable and PAL/NTSC SID
+files in `examples/`. Use `--example` to open it.
+
+**File > Export PRG** now saves a C64 program you can load and `RUN`. Choose the
+matching PAL/NTSC setting before exporting; RUN/STOP returns to BASIC. The PRG
+uses the same music player as SID export, including the welcome track's arps,
+envelopes, filter and vibrato. No assembler or c1541 is needed for export.
+
+```bash
+bash run.sh --play-welcome-song --export-prg autumn-at-five.prg
+bash run.sh path/to/song.sidpulse --export-prg song.prg
+```
+
+CLI export also saves an editable `.sidpulse` beside the program. PAL and NTSC
+welcome examples are included in `examples/`. See [PRG export](docs/PRG_EXPORT.md)
+for loading instructions and limits.
+
+## Previous checkpoint v0.2.9: README and docs update
+
+v0.2.9 is a documentation/packaging-metadata cleanup over v0.2.8. Public
+installation examples and tracked project notes use repository-relative or generic
+paths rather than developer-machine checkout locations. There are no functional
+runtime, audio, dependency or project-format changes in this patch.
+
+### Pattern-length controls retained from v0.2.8
+
+**Ctrl+F2** opens a linked **1–256 row slider** with a yellow **three-digit
+value field centered underneath**. Drag the slider, or click the value itself
+and enter up to three decimal digits. The field and slider update together.
+Typing starts only after clicking the value field. **OK** applies the length;
+**Cancel / Escape** leaves the pattern unchanged. Shortening can be undone,
+including removed notes and filter rows.
+
+![Pattern length dialog](docs/preview-pattern-length-028.png)
+
+### Configurable F5 restart retained from v0.2.7
+
+**Restart on repeated F5** is a saved setting, **OFF by default**. Find it in
+F12, or **Settings Menu > F5 restart option**. With it off, F5 starts a stopped
+song and opens Info during playback without restarting. With it on, every F5
+press starts the song from the beginning. **Ctrl+F5 always restarts**.
+
+The preference is stored as `restart_on_f5` (true/false) in `preferences.json`,
+separate from songs. Existing installations default to OFF when the key is absent.
+
+### Playback stability and recovery retained from v0.2.6
+
+- Fix a reproduced SDL/Python deadlock when starting, restarting, pausing or
+  closing audio. F5 restart behavior follows the setting described above.
+- The complete QWERTY piano range works in both parts of the F2 NOTE field.
+  Caps Lock previews notes from any voice field without writing pattern data.
+- **F11** shows the order list and complete pattern bank, with names and row
+  counts. Click the black order-number column and type three decimal digits:
+  each completed number applies and advances to the next row. Delete removes
+  an order and shifts later entries up. Tab switches panels; Enter in the bank
+  opens the selected pattern in F2. Unused patterns remain in the bank.
+- **Autosave is On by default, every five minutes.** Settings > Autosave settings
+  changes the interval (1–60 minutes), folder or On/Off state. Recovery copies
+  go into `autosave/` beside the launchers. The folder is created and checked;
+  an OK warning explains if it is unavailable. Settings can create/retry it.
+- An unclean exit offers the previous session’s latest recovery copy on startup.
+  Autosave never overwrites the working project or clears its unsaved status.
+- Persistent crash reports include Python/native tracebacks, recent input and
+  playback state. A 15-second watchdog records thread stacks if the UI hangs.
+  The Windows launcher keeps its console open after a failure. See
+  [recovery and crash reports](docs/RECOVERY.md) for locations and limitations.
+
+### Editing controls retained from v0.2.5
+
+- QWERTY note keys remain available while adjusting instrument parameters.
+  **Only clicking a yellow value field opens manual entry.** Sliders, graph
+  handles, field labels and Enter on a parameter never open a typing prompt.
+- New project, Clear all pattern data and Clear all instruments each ask for
+  **OK / Cancel**, starting on Cancel. Both clear operations can be undone.
+- Every quit request asks for confirmation, including a clean project and the
+  window close button. Choices include **Discard & Quit**, with Cancel selected.
+- Help uses aligned shortcut/description columns with ruled category headings.
+  Instrument labels have inner padding, and Save user preset has a solid dock
+  below the list, separated from the status bar.
+- The file browser shows green modified dates on the right. **File timestamps**
+  in F12, or `file_browser_show_modified` in preferences.json, toggles them.
+
+### Playback and controls retained from v0.2.4
+
+- Continuous SDL audio stream replaces the chain of short mixer sounds. The
+  sample-clocked sequencer feeds a bounded reserve; UI redraws never set tempo.
+- Separate native waveform monitors in the SID VOICE 1/2/3 panels. These show
+  each voice before the shared filter; mute/solo is reflected in the displays.
+- General now shows a mouse-editable ADSR envelope beside its linked sliders.
+  The larger ADSR tab remains available. Menus use outlined, bevelled buttons;
+  horizontal rules separate the bottom status/help groups.
+- Audio buffer: a mouse/keyboard slider, current samples/ms, **OK / Cancel**.
+  Default **1024 samples**; existing chosen buffer preferences are retained.
+- Prepare scheduled SID attacks before retriggering, avoiding the reproduced
+  ADSR counter delay in First light. Preview and PSID use the same register writes.
+- First launch now loads Autumn at five and shows the SVG logo with **Play intro song /
+  Skip intro song**. A per-user `first-run.json` remembers that welcome was shown.
+  Use `--welcome` to see it again. Opening a project bypasses the welcome.
+- Header field values are vertically centered. Order/Pattern/Row values are also
+  horizontally centered; Song Name/File Name/Instrument have extra inner padding.
+
+### Windows launcher (retained from 0.2.3)
+
+Windows now starts with `run.cmd`, a thin wrapper that calls `run.ps1` and
+forwards arguments and its exit code. The PowerShell launcher still owns Python
+virtual-environment setup, dependency installation and starting the tracker.
+Its first-run dependency probe now handles missing packages without a traceback.
+
+The following instrument improvements were introduced in v0.2.2:
+
+The previous patch fixed the empty-slot hover crash, including mouse clicks and window
+resizing that put an empty slot under the pointer. All button labels are centered
+horizontally and vertically inside a one-pixel outline and raised/pressed bevel.
+
+Motion / tables has On/Off buttons for arpeggio, wave/pitch sequences, pulse
+motion, vibrato, automatic gate-off and retrigger. Off preserves parameters and
+drawings. The switches work in audition, playback and PSID export, and survive
+project saves and user presets. Tab to buttons, arrows to select, Enter to toggle.
+
+Run `bash run.sh --example` on Linux or `.\run.cmd --example` on Windows. **F5** plays First light on loop; **F8** stops.
+**F4** opens the instrument bank with real raised buttons, sliders and typed values.
+
+- Browse slots **01–99**, including grey empty slots. Enter on an empty slot opens
+  **Choose preset / No preset / Manual**. Add/Delete buttons are above the list.
+- **39 built-in presets**, including all nine First light instruments, grouped by
+  Melodic, Percussive, Bass, Leads, Major arps, Minor arps, Fifths, Noise and FX.
+  Built-in and User lists are separate. Save user preset stores your own sounds.
+- General, Motion / tables, Arp / pitch and ADSR are mouse and keyboard buttons.
+  Every numeric instrument parameter has a slider and an editable numeric field.
+  Arps/pitch have a drawable piano grid. **ADSR sliders and draggable envelope
+  handles stay synchronized**, including native saves and keyboard audition.
+- **PAL / NTSC** changes the SID clock, pitch calculation, and PSID CIA timing.
+  The selected musical tempo stays the same. F12 controls song/export looping.
+- Clear separators between every voice in both editing and playback views.
+  Three sound voices, with a separate shared CTRL CH / FILTER lane in F2.
+- Readable dark text on beige, a heavier font, crimson sliders and scope,
+  three editable colour themes, and persistent font settings.
+  **Ctrl+F12** opens theme settings; **Shift+F12** opens font settings.
+- Visible mouse/keyboard Save / Discard / Cancel buttons and a framed, centred
+  About window. Cancel remains the default for instrument deletion.
+- The existing Schism-style editing, effects, native reSIDfp sound, buffer
+  settings, lossless native saving, song notes, PSID export and M/S buttons remain.
+
+[Controls and preset guide](docs/INSTRUMENTS.md) ·
+[Theme/font configuration](docs/APPEARANCE.md) ·
+[Remaining placeholders](docs/PLACEHOLDERS.md) ·
+[Validation](docs/VALIDATION.md)
+
+![Instrument editor](docs/preview-instruments-025.png)
+
+PSID export targets one PAL or NTSC 6581/8580 at $1000. Native projects save as
+**.sidpulse format 6**, reading formats 1–5. It preserves empty instrument banks
+and pattern references to empty slots. New saves require 0.2.5 or later.
+SID import, PCM/digi, MIDI and remaining legacy effects are future work.
+
+### Linux: install or update
+
+Download the full ZIP and checksum file into the same directory. Both ZIPs extract into the same `sidpulse-tracker/` directory.
+
+```bash
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.10-SHA256SUMS.txt
+unzip sidpulse-tracker-v0.2.10-full.zip
+cd sidpulse-tracker
+bash run.sh --example
+```
+
+For an existing cleaned v0.2.9 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
+
+```bash
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.10-SHA256SUMS.txt
+unzip -o sidpulse-tracker-v0.2.10-incremental.zip
+cd sidpulse-tracker
+bash run.sh --example
+```
+
+The launcher creates `.venv` and installs the pinned `pygame-ce` and `pyresidfp` dependencies if needed. Python 3.10+ is required; Linux Python 3.12 has been tested. Ubuntu systems may require `python3-venv` if virtual-environment creation is unavailable. `pyresidfp` wheels support common Linux and Windows configurations; building from source requires a C++20 compiler and Python development headers.
+
+To open saved work, use F9 or:
+
+```bash
+bash run.sh path/to/song.sidpulse
+```
+
+Song formats 1–5 load with defaults for newer fields. New saves use format 6; older SIDpulse Tracker builds reject them safely. Keep songs in `user_songs/` or another location of your choice; checkpoint ZIPs never include that folder.
+
+## Keyboard transport
+
+| Key | Action |
+|---|---|
+| F5 | Start song; show Info if already playing. Restart on repeated F5 is optional, default OFF. |
+| Ctrl+F5 | Restart the complete song. |
+| F6 | Loop current pattern from row zero. |
+| Shift+F6 | Play song from current order. |
+| Ctrl+F6 | Loop current pattern from the current row. |
+| Ctrl+F7 | Set/clear the separate playback mark in F2. |
+| F7 | Play from that mark, otherwise the current pattern/row. |
+| F8 | Stop song and audition. |
+| Shift+F8 | Pause/resume. |
+| Scroll Lock / Ctrl+F | Toggle tracing in the pattern editor. Default off keeps editing cursor independent. |
+
+F2 returns to the pattern editor while the song keeps playing. The green row
+and left `>` mark indicate playback; the outlined cell remains your edit cursor.
+A `*` in the row gutter marks the F7 playback position. F5 loops according to F12 Song / PSID loop (on for new songs and First light).
+An explicit loop=false in older projects stays off. F6 keeps looping until F8.
+An unsequenced pattern selected with F7 plays as a pattern loop.
+
+F4 selects SID instruments. Tab cycles bank/buttons/properties. Enter in the bank
+opens the instrument chooser; click a yellow parameter field to type its value.
+Keyboard jazz works while stopped: Caps Lock in F2, or
+normal note keys in F4. F2 audition uses the selected physical SID voice; F4
+allocates three voices. During song playback, note entry edits the source without
+stealing its voices for separate audition. Use F8 before auditioning instruments.
+
+F10/Ctrl+W saves; Shift+F10 saves as. Ctrl+Alt +/- zooms; Ctrl+Enter toggles
+fullscreen. Schism block keys are Alt+C/Alt+P/Alt+O. Ctrl+C centers the cursor;
+Ctrl+Backspace undoes and Ctrl+Shift+Backspace redoes.
+
+## Instruments, filter rows, song notes and export
+
+In F4, switch to properties with Tab, then use PgUp/PgDn or click the General /
+Motion tabs. Click a yellow field to type; sliders and envelope handles change
+values directly while note keys remain available. Arpeggio and pitch sequences use signed decimal
+semitone offsets, e.g. `0 3 7 12`; waveform sequences use `10 20 40 80` hex.
+An empty sequence disables it. Arps loop at the chosen ticks/step; wave and pitch
+sequences advance each tick and hold their last step. Motion parameters use
+decimal values; General SID registers use hexadecimal values.
+
+Press **Ctrl+Shift+F2** for filter focus, move to a row and press Enter. A row has
+six values: cutoff, resonance, routing, mode, volume (hex), then signed cutoff
+slide (decimal). A dot keeps the previous value; a zero explicitly sets zero.
+Example: `380 A 2 10 F -3` routes voice 2 through a resonant low-pass filter and
+lowers cutoff by three units each tick. Tab returns to voice editing. Ctrl+F2
+continues to edit pattern length. Alt+Insert/Delete moves all voices and filter
+rows together; voice/block editing operates on its selected voice lanes.
+
+**Shift+F9** opens song notes. Shift+Enter inserts a line; Enter commits. Notes
+remain in `.sidpulse`, including Unicode and line breaks.
+
+**Ctrl+Shift+E**, or Escape > File > Export PSID, compiles the current document.
+Choose S to save `.sidpulse` and export, E to export only, or Escape to cancel.
+An export alone never marks unsaved edits as saved. F12 offers PSID released text
+and whole-song loop. Existing export files get an overwrite prompt and backup.
+
+For a command-line export that also saves a native source:
+
+```bash
+bash run.sh --example --export-sid user_songs/first-light.sid
+# Or export an existing project; a sibling .sidpulse is always saved:
+python -m sidpulse user_songs/song.sidpulse --export-sid exports/song.sid
+```
+
+`--save-project PATH` changes the native-save destination for a CLI export.
+The bundled 6510 player requires no assembler, emulator executable or extra
+runtime package on your machine.
+
+## Clear commands and file dates
+
+Escape > File starts with New project, Clear all pattern data, and Clear all
+instruments. Each asks for OK / Cancel and defaults to Cancel. Clearing patterns
+empties their voice cells and filter rows while keeping pattern numbers, names,
+lengths, the order list, instruments and song notes. Clearing instruments removes
+the whole bank while retaining patterns and their instrument numbers. Both are
+single undoable edits. Empty slots play silently until repopulated. PSID export
+reports an empty bank or a used empty slot instead of silently omitting its notes;
+native .sidpulse saving remains available.
+
+The file browser's Modified column uses local time, `YYYY-MM-DD HH:MM`, for files
+and folders. Its default is on. Toggle **File timestamps** in F12, or set
+`"file_browser_show_modified": false` in preferences.json. Narrow views hide the
+date column to keep filenames readable. Selected dates stay green on black.
+
+## Audio buffers and diagnostics
+
+Open Escape > Settings > Audio buffer settings, or choose Audio buffer in F12.
+Drag the slider from Less delay to More stability, or use Left/Right. The current
+sample count and milliseconds update as you move. OK applies and saves; Cancel
+or Escape keeps the original setting. Tab reaches the two buttons; Enter activates
+the focused button. There is no numeric-entry prompt. Available steps are 256,
+512, 1024, 2048, 4096 and 8192 samples. Default: **1024 samples / 21.3 ms per buffer**.
+Existing explicitly saved values are retained; use the slider to change them.
+Larger values help tolerate busy or slower PCs but add latency. This displayed
+buffer duration is not total output latency:
+up to two PCM blocks are queued and the device adds its own buffering.
+
+Applying a buffer setting briefly reopens SDL and resumes from the next generated
+position; already queued audio is discarded. The setting persists per machine,
+not in your song. `--audio-buffer 4096` overrides it for one launch. Linux config
+is `$XDG_CONFIG_HOME/sidpulse-tracker/preferences.json` (normally under `~/.config`);
+Windows uses `%LOCALAPPDATA%/SIDpulse/preferences.json`.
+
+The Info page shows **Audio gaps**: continuous episodes where the SDL callback
+requests PCM during playback/audition and none is ready. Each episode counts once,
+including a long starvation; normal startup, pauses and idle silence do not count.
+The old `gaps` counter polled short-Sound queue state, so its numbers are not directly
+comparable. Counters accumulate until Reset audio counters (Settings); reopening
+the device also starts a fresh gap count. Late worker wakes, current/peak render
+budget and over-budget blocks help distinguish scheduling and rendering pressure.
+These are application measurements, not whole-PC CPU usage or definitive proof
+of every driver/hardware underrun. A quiet native emulator startup is explicitly
+muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
+
+## Windows
+
+Extract the full ZIP, open PowerShell or Command Prompt in the inner `sidpulse-tracker` folder
+(the one containing `run.cmd` and `run.ps1`), then run:
+
+```powershell
+.\run.cmd
+```
+
+To start with First light or open your own project:
+
+```powershell
+.\run.cmd --example
+.\run.cmd "C:\Music\My song.sidpulse"
+```
+
+`run.cmd` calls the adjacent `run.ps1`, forwards arguments, and returns its exit
+code. If setup is needed, `run.ps1` lists Python, the local environment and the
+contents of `requirements.txt` under "The following Python dependencies are
+required and need to be downloaded", then asks **Continue? [Y/n]** before making
+changes. Enter or Y accepts; N cancels installation. Missing 64-bit Python is installed as Python
+3.12 through WinGet for the current user; if WinGet is unavailable, the launcher
+prints the official Python download address. Packages are installed into `.venv`.
+An internet connection is needed for installation. Later runs reuse the ready
+environment and skip the setup prompt. The WinGet options follow Microsoft's
+[install command documentation](https://learn.microsoft.com/en-us/windows/package-manager/winget/install).
+
+If calling `.\run.ps1` directly reports "running scripts is disabled", use
+`.\run.cmd`. The wrapper starts Windows PowerShell with
+`-NoProfile -ExecutionPolicy Bypass -File`; that override applies only to the
+launched process. It does not persistently change your execution policy or need
+an administrator terminal. Microsoft documents the process-specific option in
+[about_PowerShell_exe](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1#-executionpolicy-executionpolicy).
+
+For an existing cleaned v0.2.9 install, extract the v0.2.10 incremental ZIP beside the
+existing `sidpulse-tracker` folder and allow overwrites. Your `user_songs`, `autosave` and `.venv`
+folders are not in the archive.
+
+If you prefer manual setup:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m sidpulse --example
+```
+
+Direct `run.ps1` remains available where script execution is already enabled.
+The Windows launcher has been reviewed against Microsoft's command-line syntax;
+execution on Windows remains untested here. The CI matrix now includes the full
+CMD-to-PowerShell first-run path, but has not been run on GitHub.
+
+## Development, Git and checkpoint delivery
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest -q
+python -m sidpulse --headless-smoke --example
+python -m sidpulse --log-keys keys.log
+```
+
+Each update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.10
+incremental contains only changed/new files against the cleaned v0.2.9 snapshot;
+no deletions are needed. Neither archive includes Git history bundles, private
+project notes or user data, or overwrites an existing `.git`. Clone the GitHub
+repository when you want its current Git history.
+
+Repository: [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker).
+
+See [PLACEHOLDERS.md](docs/PLACEHOLDERS.md), [CHECKPOINT.md](CHECKPOINT.md), [VALIDATION.md](docs/VALIDATION.md),
+[IT_KEY_COMPAT.md](docs/IT_KEY_COMPAT.md), [COMMANDS.md](docs/COMMANDS.md),
+[EFFECTS.md](docs/EFFECTS.md), [PSID_EXPORT.md](docs/PSID_EXPORT.md), [PLAYBACK.md](docs/PLAYBACK.md), [SIDPULSE_FORMAT.md](docs/SIDPULSE_FORMAT.md),
+[DECISIONS.md](docs/DECISIONS.md), and the unchanged [v4 roadmap](docs/ROADMAP.md).

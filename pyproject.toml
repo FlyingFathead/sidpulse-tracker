@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sidpulse-tracker"
+version = "0.2.10"
+description = "An homage to Impulse Tracker, reimagined as a modern SID-native tracker"
+requires-python = ">=3.10"
+authors = [{name = "Harry Horsperg (FlyingFathead)"}]
+dependencies = ["pygame-ce==2.5.7", "pyresidfp==0.17.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "py65==1.2.0"]
+
+[project.scripts]
+sidpulse = "sidpulse.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["sidpulse*"]
+
+[tool.setuptools.package-data]
+sidpulse = ["assets/*.ttf", "assets/*LICENSE.txt", "assets/*.json", "assets/*.bin", "assets/*.svg", "assets/*.sidpulse", "export/*.asm"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

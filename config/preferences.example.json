@@ -1,0 +1,29 @@
+{
+  "audio_buffer": 1024,
+  "file_browser_show_modified": true,
+  "theme": "Classic crimson",
+  "font_size": 16,
+  "font_bold": true,
+  "font_file": "",
+  "colors": {
+    "BG": "#b09277",
+    "PANEL": "#b09277",
+    "EDGE": "#715240",
+    "TEXT": "#0c0a08",
+    "DIM": "#493728",
+    "ACCENT": "#69b96a",
+    "YELLOW": "#f5f450",
+    "CYAN": "#14100c",
+    "PURPLE": "#c390dc",
+    "CURSOR": "#eaeac6",
+    "SELECT": "#56403a",
+    "WELL": "#000000",
+    "CREAM": "#e9e8c8",
+    "SLIDER": "#a92e42",
+    "SCOPE": "#cb4557"
+  },
+  "autosave_enabled": true,
+  "autosave_minutes": 5,
+  "autosave_directory": "",
+  "restart_on_f5": false
+}

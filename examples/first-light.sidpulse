@@ -1,0 +1,5740 @@
+{
+  "format": "SIDPULSE",
+  "format_version": 4,
+  "song": {
+    "title": "First light / After the reset",
+    "author": "Harry Horsperg / SIDpulse",
+    "comments": "First light, reimagined for one SID.\n12 orders: opening, theme, lift, breakdown, return and ending.\nVoice 1: clocked chord arps and singing pulse lead.\nVoice 2: short saw bass through the shared filter.\nVoice 3: triangle kick, noise snare and tight hats, time-shared.\nF4 edits the instrument programs; Ctrl+Shift+F2 edits filter rows.\nAll musical data and these notes stay in the .sidpulse source.",
+    "sid_model": "8580",
+    "clock": "PAL",
+    "speed": 6,
+    "tempo": 125,
+    "patterns": {
+      "0": {
+        "name": "Opening / A minor",
+        "rows": [
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 304,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "1": {
+        "name": "Opening / F major",
+        "rows": [
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 53,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 53,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 304,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "2": {
+        "name": "Theme / A minor",
+        "rows": [
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "J",
+              "parameter": 55
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 7,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 640,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "3": {
+        "name": "Theme / F major",
+        "rows": [
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 53,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 41,
+              "instrument": 3,
+              "effect": "J",
+              "parameter": 71
+            },
+            {
+              "note": 17,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 53,
+              "instrument": 3,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "Q",
+              "parameter": 3
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 29,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "Q",
+              "parameter": 2
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 640,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "4": {
+        "name": "Lift / C major",
+        "rows": [
+          [
+            {
+              "note": 48,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 24,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 55,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 60,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 24,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 58,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 55,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 24,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 52,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 50,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 24,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 55,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 7,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 640,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "5": {
+        "name": "Answer / G major",
+        "rows": [
+          [
+            {
+              "note": 43,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 19,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 50,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 31,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 55,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 19,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 53,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 31,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 50,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 19,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 47,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 31,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": 19,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 50,
+              "instrument": 8,
+              "effect": "H",
+              "parameter": 52
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "Q",
+              "parameter": 3
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 31,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "Q",
+              "parameter": 2
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 640,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "6": {
+        "name": "Breakdown / A minor",
+        "rows": [
+          [
+            {
+              "note": 45,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 52,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 52,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 52,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 52,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 304,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -5
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 0
+          }
+        }
+      },
+      "7": {
+        "name": "Last light",
+        "rows": [
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 45,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 48,
+              "instrument": 5,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 33,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 78,
+              "instrument": 6,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": 57,
+              "instrument": 9,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 21,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 36,
+              "instrument": 4,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ]
+        ],
+        "controls": {
+          "0": {
+            "cutoff": 640,
+            "resonance": 9,
+            "routing": 2,
+            "mode": 16,
+            "volume": 15,
+            "slide": 0
+          },
+          "8": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": 9
+          },
+          "16": {
+            "cutoff": 1152,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": null,
+            "slide": -10
+          },
+          "24": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": 10,
+            "slide": 0
+          },
+          "28": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": 5,
+            "slide": null
+          },
+          "31": {
+            "cutoff": null,
+            "resonance": null,
+            "routing": null,
+            "mode": null,
+            "volume": 0,
+            "slide": null
+          }
+        }
+      }
+    },
+    "orders": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      2,
+      3,
+      6,
+      4,
+      5,
+      7
+    ],
+    "instruments": {
+      "1": {
+        "name": "Neon minor arp",
+        "waveform": 64,
+        "attack": 0,
+        "decay": 7,
+        "sustain": 9,
+        "release": 3,
+        "pulse_width": 1600,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [
+          0,
+          3,
+          7,
+          12
+        ],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 640,
+        "pulse_rate": 12,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 20,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "2": {
+        "name": "Rubber saw bass",
+        "waveform": 32,
+        "attack": 0,
+        "decay": 6,
+        "sustain": 7,
+        "release": 2,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 9,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "3": {
+        "name": "Glass major arp",
+        "waveform": 64,
+        "attack": 0,
+        "decay": 7,
+        "sustain": 8,
+        "release": 3,
+        "pulse_width": 1856,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [
+          0,
+          4,
+          7,
+          12
+        ],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 576,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 20,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "4": {
+        "name": "Triangle kick",
+        "waveform": 16,
+        "attack": 0,
+        "decay": 7,
+        "sustain": 0,
+        "release": 2,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [
+          64,
+          16
+        ],
+        "pitch_sequence": [
+          24,
+          12,
+          4,
+          0,
+          -5,
+          -9,
+          -12
+        ],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 10,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "5": {
+        "name": "Noise / pulse snare",
+        "waveform": 128,
+        "attack": 0,
+        "decay": 6,
+        "sustain": 0,
+        "release": 2,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [
+          128,
+          128,
+          64,
+          128
+        ],
+        "pitch_sequence": [
+          12,
+          7,
+          0,
+          -5
+        ],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 8,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "6": {
+        "name": "Closed noise hat",
+        "waveform": 128,
+        "attack": 0,
+        "decay": 2,
+        "sustain": 0,
+        "release": 1,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 2,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "7": {
+        "name": "Open noise hat",
+        "waveform": 128,
+        "attack": 0,
+        "decay": 5,
+        "sustain": 0,
+        "release": 2,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 7,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "8": {
+        "name": "Afterglow lead",
+        "waveform": 64,
+        "attack": 0,
+        "decay": 7,
+        "sustain": 10,
+        "release": 5,
+        "pulse_width": 1280,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 512,
+        "pulse_rate": 20,
+        "vibrato_speed": 3,
+        "vibrato_depth": 4,
+        "vibrato_delay": 8,
+        "gate_ticks": 22,
+        "retrigger": 0,
+        "macros": {}
+      },
+      "9": {
+        "name": "Falling glass",
+        "waveform": 16,
+        "attack": 0,
+        "decay": 10,
+        "sustain": 0,
+        "release": 7,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [
+          0,
+          7,
+          12
+        ],
+        "arp_speed": 2,
+        "wave_sequence": [],
+        "pitch_sequence": [
+          12,
+          7,
+          0
+        ],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 20,
+        "retrigger": 0,
+        "macros": {}
+      }
+    },
+    "samples": {},
+    "macros": {},
+    "filter_programs": {},
+    "filter": {
+      "cutoff": 640,
+      "resonance": 9,
+      "routing": 2,
+      "mode": 16,
+      "volume": 15
+    },
+    "export_config": {
+      "released": "2026 SIDpulse First light",
+      "loop": true
+    }
+  },
+  "editor": {}
+}

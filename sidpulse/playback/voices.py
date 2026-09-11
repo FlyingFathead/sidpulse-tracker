@@ -1,0 +1,177 @@
+"""SID-native tick programs shared by song playback, keyboard jazz and export.
+
+IT letter meanings are retained. Pitch slide magnitudes are SID frequency
+register units (normal/fine x4, extra-fine x1); vibrato depth is 1/16 semitone.
+"""
+from copy import deepcopy
+from dataclasses import dataclass, field, replace
+import math
+
+from sidpulse.sid.backend_residfp import frequency, note_on, note_off, PAL_CLOCK
+from sidpulse.song.model import OFF, CUT
+
+
+def supported(effect, value):
+    if not effect or effect in 'ABCEFGHJT':
+        return effect != 'T' or value >= 0x20
+    if effect == 'Q':
+        return value < 0x10  # gate retrigger only; no fictional per-voice volume
+    if effect == 'S':
+        return value >> 4 in (0xC, 0xD)
+    return False
+
+
+@dataclass
+class Voice:
+    note: int | None = None
+    instrument: object = None
+    age: int = 0
+    freq: int = 0
+    target: int = 0
+    phase: int = 0
+    effect: str = ''
+    parameter: int = 0
+    memory: dict = field(default_factory=dict)
+    delayed: object = None
+    gate: bool = False
+    restarting: bool = False
+
+
+class VoicePrograms:
+    def __init__(self, sid):
+        self.sid = sid
+        self.voices = [Voice() for _ in range(3)]
+
+    def frequency(self, note):
+        return frequency(note, getattr(self.sid,"clock_hz",PAL_CLOCK))
+
+    def write(self, register, value):
+        value = int(value)
+        if self.sid.registers[register] != value:
+            self.sid.write(register, value)
+
+    def trigger(self, voice, note, inst):
+        v = self.voices[voice]
+        # A transport/loop reset replaces Voice objects, but the chip may
+        # already hold the settled zero envelope from startup or lookahead.
+        base = voice * 7
+        prepared = v.restarting or self.sid.registers[base + 5:base + 7] == bytes(2)
+        v.note, v.instrument, v.age = note, deepcopy(inst), 0
+        v.freq = v.target = self.frequency(note)
+        v.phase, v.gate = 0, True
+        v.restarting = False
+        pitch = (inst.arpeggio[0] if inst.arpeggio_enabled and inst.arpeggio else 0) + (inst.pitch_sequence[0] if inst.pitch_sequence_enabled and inst.pitch_sequence else 0)
+        initial = replace(inst, waveform=inst.wave_sequence[0] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform)
+        note_on(self.sid, voice, note+pitch, initial, hard_restart=prepared)
+
+    def prepare_restart(self, voice):
+        v = self.voices[voice]
+        if v.instrument is None or v.restarting:
+            return
+        v.restarting = True
+        base = voice * 7
+        self.write(base + 4, self.sid.registers[base + 4] & 0xFE)
+        self.write(base + 5, 0)
+        self.write(base + 6, 0)
+
+    def release(self, voice, cut=False):
+        v = self.voices[voice]
+        note_off(self.sid, voice, cut)
+        v.gate = False
+        if cut:
+            v.note = None
+
+    def row(self, voice, cell, inst):
+        v = self.voices[voice]
+        effect, value = cell.effect, cell.parameter or 0
+        if effect in ('E','F','G','H','J','Q'):
+            previous = v.memory.get(effect,0)
+            if effect == 'H':
+                value = (value & 0xF0 or previous & 0xF0) | (value & 15 or previous & 15)
+            elif value == 0:
+                value = previous
+            v.memory[effect] = value
+        v.effect, v.parameter, v.delayed = effect, value, None
+        if effect == 'S' and value >> 4 == 0xD and value & 15:
+            v.delayed = (cell.note,deepcopy(inst))
+            return
+        if cell.note == OFF:
+            self.release(voice)
+        elif cell.note == CUT:
+            self.release(voice,True)
+        elif cell.note is not None:
+            if effect == 'G' and v.note is not None and v.gate:
+                v.target = self.frequency(cell.note)  # no gate/instrument restart
+            else:
+                self.trigger(voice,cell.note,inst)
+
+    def tick(self, tick):
+        for voice,v in enumerate(self.voices):
+            effect,value=v.effect,v.parameter
+            hi,lo=value>>4,value&15
+            if effect=='S' and hi==0xD and tick==lo and v.delayed:
+                note,inst=v.delayed
+                if note==OFF:self.release(voice)
+                elif note==CUT:self.release(voice,True)
+                elif note is not None:self.trigger(voice,note,inst)
+                v.delayed=None
+            if effect=='S' and hi==0xC and tick==lo:
+                self.release(voice,True)
+            if v.note is None or v.instrument is None:
+                continue
+            inst=v.instrument
+            retrigger=(lo if effect=='Q' and hi==0 else 0)
+            if v.gate and ((retrigger and tick>0 and tick%retrigger==0) or
+                           (inst.retrigger_enabled and inst.retrigger and v.age>=inst.retrigger)):
+                self.trigger(voice,v.note,inst)
+            if inst.gate_enabled and inst.gate_ticks and v.age>=inst.gate_ticks and v.gate:
+                self.release(voice)
+            if effect in ('E','F'):
+                amount = lo*(1 if hi==0xE else 4) if hi in (0xE,0xF) and tick==0 else (value*4 if hi<0xE and tick>0 else 0)
+                v.freq=max(0,min(65535,v.freq+amount*(1 if effect=='F' else -1)))
+            elif effect=='G' and tick>0:
+                amount=value*4
+                v.freq=min(v.target,v.freq+amount) if v.freq<v.target else max(v.target,v.freq-amount)
+            pitch=inst.arpeggio[(v.age//inst.arp_speed)%len(inst.arpeggio)] if inst.arpeggio_enabled and inst.arpeggio else 0
+            if effect=='J' and value:
+                pitch=(0,hi,lo)[tick%3]  # row command replaces instrument arp
+            if inst.pitch_sequence_enabled and inst.pitch_sequence:
+                pitch+=inst.pitch_sequence[min(v.age,len(inst.pitch_sequence)-1)]
+            speed,depth=(hi,lo) if effect=='H' else (inst.vibrato_speed,inst.vibrato_depth) if inst.vibrato_enabled else (0,0)
+            if (effect=='H' or v.age>=inst.vibrato_delay) and speed and depth:
+                pitch += math.sin(v.phase*math.tau/256)*depth/16
+                v.phase=(v.phase+speed*4)%256
+            freq=max(0,min(65535,round(v.freq*2**(pitch/12))))
+            base=voice*7
+            self.write(base,freq&255);self.write(base+1,freq>>8)
+            wave=inst.wave_sequence[min(v.age,len(inst.wave_sequence)-1)] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform
+            control=wave|(2 if inst.sync else 0)|(4 if inst.ring else 0)|int(v.gate and not v.restarting)
+            self.write(base+4,control)
+            phase=v.age%(4*inst.pulse_rate)
+            # Triangle starts at centre, then rises/falls smoothly.
+            triangle=(phase if phase<=inst.pulse_rate else 2*inst.pulse_rate-phase if phase<=3*inst.pulse_rate else phase-4*inst.pulse_rate)/inst.pulse_rate
+            pw=max(0,min(4095,round(inst.pulse_width+(inst.pulse_depth*triangle if inst.pulse_enabled else 0))))
+            self.write(base+2,pw&255);self.write(base+3,pw>>8)
+            v.age+=1
+
+
+class Audition(VoicePrograms):
+    """Free keyboard notes use the same instrument programs at song-tempo ticks."""
+    def __init__(self,sid,tempo=125):
+        super().__init__(sid)
+        self.tempo=tempo
+        self.remaining=0
+        self.fraction=0.0
+
+    def render(self,frames):
+        out=bytearray()
+        while frames:
+            if not self.remaining:
+                self.tick(0)
+                self.fraction += self.sid.sample_rate*2.5/self.tempo
+                self.remaining=int(self.fraction)
+                self.fraction -= self.remaining
+            count=min(frames,self.remaining)
+            out.extend(self.sid.render(count))
+            self.remaining-=count;frames-=count
+        return bytes(out)
