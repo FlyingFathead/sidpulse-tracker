@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 BUFFERS = (256, 512, 1024, 2048, 4096, 8192)
-DEFAULT_BUFFER = 1024
+DEFAULT_BUFFER = 2048
 
 
 def config_path():

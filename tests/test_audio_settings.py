@@ -29,7 +29,7 @@ def click(app, action, value=None):
 
 
 def test_default_buffer_and_saved_override(app):
-    assert app.audio_buffer == app.audio.buffer_frames == load_preferences() == 1024
+    assert app.audio_buffer == app.audio.buffer_frames == load_preferences() == 2048
     save_buffer(4096)
     assert load_preferences() == 4096
 
@@ -45,14 +45,14 @@ def test_slider_draft_cancel_and_apply_do_not_change_song(app, monkeypatch):
     app.handle(pg.event.Event(pg.MOUSEMOTION, pos=(track.right + 100, track.centery)))
     app.handle(pg.event.Event(pg.MOUSEBUTTONUP, button=1, pos=(track.right + 100, track.centery)))
     assert BUFFERS[app.dialog['index']] == 8192
-    assert app.audio_buffer == 1024 and not config_path().exists()
+    assert app.audio_buffer == 2048 and not config_path().exists()
     click(app, 'buffer_button', 'cancel')
-    assert app.dialog is None and app.audio_buffer == 1024
+    assert app.dialog is None and app.audio_buffer == 2048
     open_dialog(app)
     key(app, pg.K_RIGHT)
     click(app, 'buffer_button', 'ok')
-    assert app.dialog is None and app.audio_buffer == load_preferences() == 2048
-    assert [message for message in sent if message[0] == 'buffer'] == [('buffer', 2048)]
+    assert app.dialog is None and app.audio_buffer == load_preferences() == 4096
+    assert [message for message in sent if message[0] == 'buffer'] == [('buffer', 4096)]
     assert app.editor.song == before
 
 
@@ -62,7 +62,7 @@ def test_slider_keyboard_focus_and_preference_failure(app, monkeypatch):
     key(app, pg.K_TAB)
     key(app, pg.K_RIGHT)
     key(app, pg.K_RETURN)  # focused Cancel
-    assert app.dialog is None and app.audio_buffer == 1024
+    assert app.dialog is None and app.audio_buffer == 2048
     open_dialog(app)
     key(app, pg.K_HOME)
     def fail(value):
@@ -70,7 +70,7 @@ def test_slider_keyboard_focus_and_preference_failure(app, monkeypatch):
     monkeypatch.setattr('sidpulse.app.save_buffer', fail)
     key(app, pg.K_RETURN)
     assert 'Read-only preferences' in app.dialog['error']
-    assert app.audio_buffer == 1024
+    assert app.audio_buffer == 2048
     key(app, pg.K_ESCAPE)
     assert app.dialog is None
 

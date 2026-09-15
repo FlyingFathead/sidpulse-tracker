@@ -1,3 +1,26 @@
+# Checkpoint v0.2.12 validation
+
+Validation for the 2048-sample default-buffer patch. Project format remains 6.
+
+- Fresh/missing/invalid audio-buffer preferences resolve through
+  `DEFAULT_BUFFER = 2048`; an explicitly saved supported value still wins.
+- The staged slider still cancels without changing machine state and applies the
+  next step from the new default (2048 -> 4096) when requested.
+- Current help, README and the example preferences file report 2048 samples /
+  approximately 42.7 ms per 48 kHz block.
+- Existing v0.2.11 startup-splash behavior and historical validation remain
+  unchanged below.
+
+Validation:
+
+- `python -m compileall -q sidpulse tests` passes.
+- A direct isolated-preferences regression passes: no file -> 2048; explicitly
+  saved 1024/4096 values are retained; invalid or malformed values -> 2048.
+- The full pytest suite was rerun on the updated v0.2.12 tree after installing
+  the declared development dependencies: 274 tests passed.
+
+## Previous validation
+
 # Checkpoint v0.2.11 validation
 
 Linux, Python 3.12, pygame-ce 2.5.7, pyresidfp 0.17.0, SDL dummy video/audio.

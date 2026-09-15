@@ -127,7 +127,7 @@ GUIDE = [
     ]),
     ('AUDIO', [
         ('F12', 'Select 6581/8580, PAL/NTSC and the shared filter'),
-        ('Settings > Audio buffer', 'Choose buffer size with a slider. 1024 samples is the default.'),
+        ('Settings > Audio buffer', 'Choose buffer size with a slider. 2048 samples is the default.'),
         ('Buffer milliseconds', 'Duration of one block. Queued blocks and the device add to total latency.'),
         ('Audio gaps', 'Cumulative PCM starvation episodes during playback/audition; excludes startup, pauses and idle silence.'),
         ('Late wakes', 'Worker scheduling delays longer than one buffer'),

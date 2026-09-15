@@ -1,5 +1,5 @@
 {
-  "audio_buffer": 1024,
+  "audio_buffer": 2048,
   "file_browser_show_modified": true,
   "theme": "Classic crimson",
   "font_size": 16,

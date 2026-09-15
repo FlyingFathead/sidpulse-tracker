@@ -8,7 +8,13 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
-## v0.2.11: Startup splash
+## v0.2.12: 2048-sample default audio buffer
+
+Fresh installs and machines without an explicit saved audio-buffer preference now
+start at **2048 samples / 42.7 ms per buffer**, twice the previous 1024-sample
+default. Existing explicitly saved buffer preferences are retained unchanged.
+
+## Features retained from v0.2.11: Startup splash
 
 The splash appears on every normal startup by default, with the version number
 beneath the logo and **OK / Play demo song** buttons. OK closes it without
@@ -139,7 +145,7 @@ separate from songs. Existing installations default to OFF when the key is absen
   The larger ADSR tab remains available. Menus use outlined, bevelled buttons;
   horizontal rules separate the bottom status/help groups.
 - Audio buffer: a mouse/keyboard slider, current samples/ms, **OK / Cancel**.
-  Default **1024 samples**; existing chosen buffer preferences are retained.
+  Default **2048 samples**; existing chosen buffer preferences are retained.
 - Prepare scheduled SID attacks before retriggering, avoiding the reproduced
   ADSR counter delay in First light. Preview and PSID use the same register writes.
 - The SVG-logo welcome now uses the startup splash controls described above.
@@ -206,17 +212,17 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 Download the full ZIP and checksum file into the same directory. Both ZIPs extract into the same `sidpulse-tracker/` directory.
 
 ```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.11-SHA256SUMS.txt
-unzip sidpulse-tracker-v0.2.11-full.zip
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.12-SHA256SUMS.txt
+unzip sidpulse-tracker-v0.2.12-full.zip
 cd sidpulse-tracker
 bash run.sh
 ```
 
-For an existing v0.2.10 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
+For an existing v0.2.11 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
 
 ```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.11-SHA256SUMS.txt
-unzip -o sidpulse-tracker-v0.2.11-incremental.zip
+sha256sum --ignore-missing -c sidpulse-tracker-v0.2.12-SHA256SUMS.txt
+unzip -o sidpulse-tracker-v0.2.12-incremental.zip
 cd sidpulse-tracker
 bash run.sh
 ```
@@ -324,7 +330,7 @@ Drag the slider from Less delay to More stability, or use Left/Right. The curren
 sample count and milliseconds update as you move. OK applies and saves; Cancel
 or Escape keeps the original setting. Tab reaches the two buttons; Enter activates
 the focused button. There is no numeric-entry prompt. Available steps are 256,
-512, 1024, 2048, 4096 and 8192 samples. Default: **1024 samples / 21.3 ms per buffer**.
+512, 1024, 2048, 4096 and 8192 samples. Default: **2048 samples / 42.7 ms per buffer**.
 Existing explicitly saved values are retained; use the slider to change them.
 Larger values help tolerate busy or slower PCs but add latency. This displayed
 buffer duration is not total output latency:
@@ -381,7 +387,7 @@ launched process. It does not persistently change your execution policy or need
 an administrator terminal. Microsoft documents the process-specific option in
 [about_PowerShell_exe](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1#-executionpolicy-executionpolicy).
 
-For an existing v0.2.10 install, extract the v0.2.11 incremental ZIP beside the
+For an existing v0.2.11 install, extract the v0.2.12 incremental ZIP beside the
 existing `sidpulse-tracker` folder and allow overwrites. Your `user_songs`, `autosave` and `.venv`
 folders are not in the archive.
 
@@ -407,8 +413,8 @@ python -m sidpulse --headless-smoke --example
 python -m sidpulse --log-keys keys.log
 ```
 
-This update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.11
-incremental contains only changed/new files against the supplied v0.2.10 snapshot;
+This update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.12
+incremental contains only changed/new files against the supplied v0.2.11 snapshot;
 no deletions are needed. Neither archive includes Git history bundles, private
 project notes or user data, or overwrites an existing `.git`. Clone the GitHub
 repository when you want its current Git history.

@@ -1,3 +1,12 @@
+# v0.2.12
+
+- Double the first-run/default audio buffer from 1024 to **2048 samples**
+  (about 42.7 ms at 48 kHz) to provide more scheduling headroom by default.
+- Keep existing explicitly saved per-machine audio-buffer preferences unchanged.
+  The CLI override and all selectable buffer sizes remain unchanged.
+- Update the preferences example, UI help, README and audio-settings regression
+  checks for the new default. Project format remains 6.
+
 # v0.2.11
 
 - Show the startup splash by default until the user explicitly opts out. Add

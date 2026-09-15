@@ -1,3 +1,15 @@
+# SIDpulse Tracker v0.2.12
+
+Small audio-default patch over v0.2.11. On a fresh machine, or when
+`preferences.json` contains no valid `audio_buffer`, SIDpulse now selects
+**2048 samples** instead of 1024. At 48 kHz that is about 42.7 ms per PCM block.
+
+Existing explicit per-machine choices are preserved, including a previously saved
+1024-sample setting. The available 256/512/1024/2048/4096/8192 steps and the
+`--audio-buffer` one-launch override are unchanged. No song/project format changes.
+
+## Previous checkpoint
+
 # SIDpulse Tracker v0.2.11
 
 Startup-splash update over the supplied v0.2.10 snapshot. A normal launch shows
