@@ -37,6 +37,23 @@ def test_default_startup_repeats_splash_and_saves_unchecked_choice(monkeypatch):
         assert json.loads(config_path().read_text())['hide_welcome_on_startup'] is False
 
 
+def test_new_song_choice_replaces_loaded_demo_with_blank_project(monkeypatch):
+    app = App(welcome_song(), audio=False)
+    starts = []
+    try:
+        monkeypatch.setattr(app, 'start_playback', starts.append)
+        welcome.open_dialog(app)
+        welcome.finish(app, False)
+        assert app.dialog is None
+        assert app.editor.song == Song()
+        assert app.path is None
+        assert app.browser.name.text == 'untitled.sidpulse'
+        assert app.page == 'pattern'
+        assert not starts and not app.intro_pending
+    finally:
+        app.close()
+
+
 @pytest.mark.parametrize('config', [
     b'', b'{', b'[]', b'null', b'\xff', b'{}',
     b'{"audio_buffer": 2048}',

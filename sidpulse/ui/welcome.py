@@ -32,6 +32,8 @@ def finish(app, play):
     except OSError as exc:
         save_error = str(exc)
     app.dialog = None
+    if not play:
+        app.new_project()
     if save_error:
         app.notice('Welcome preference could not be saved', save_error)
     if play:
@@ -116,12 +118,12 @@ def draw(r, app):
     logo = r.logo_cache[size]
     r.screen.blit(logo, logo.get_rect(midtop=(frame.centerx, round(frame.top + unit))))
     for row, text in ((7.2, f'Version {__version__}'),
-                      (9.3, f'{app.editor.song.title} is ready to explore.')):
+                      (9.3, 'Start a new song or explore the demo.')):
         label(text, (frame.centerx, round(frame.top + row * unit)))
     label('F2: patterns | F4: instruments | F8: stop',
           (frame.centerx, round(frame.top + 10.8 * unit)), small=True)
     bw = (frame.width - 5 * unit) / 2
-    for i, (text, play) in enumerate((('OK', False), ('Play demo song', True))):
+    for i, (text, play) in enumerate((('New song', False), ('Play demo song', True))):
         rect = pg.Rect(round(frame.left + 2 * unit + i * (bw + unit)),
                        round(frame.top + 13 * unit), round(bw), round(1.5 * unit))
         selected = app.dialog['focus'] == i

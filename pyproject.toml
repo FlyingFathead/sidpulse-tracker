@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sidpulse-tracker"
-version = "0.2.16"
+version = "0.2.17"
 description = "An homage to Impulse Tracker, reimagined as a modern SID-native tracker"
 requires-python = ">=3.10"
 authors = [{name = "Harry Horsperg (FlyingFathead)"}]

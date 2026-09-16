@@ -62,7 +62,7 @@ cat VERSION
 grep -nE 'version|__version__' pyproject.toml sidpulse/__init__.py
 ```
 
-For v0.2.16, each application-version declaration must resolve to `0.2.16`.
+For v0.2.17, each application-version declaration must resolve to `0.2.17`.
 
 ## 6. Interactive tracker checks
 
@@ -70,6 +70,8 @@ Automated tests do not replace a short desktop run. Before release, verify at
 minimum:
 
 - application starts normally;
+- startup **New song** opens a blank Untitled project and does not leave the demo loaded;
+- startup **Play demo song** keeps and plays the editable welcome project;
 - example/welcome project loads and plays;
 - pattern editor accepts normal note input;
 - typing `0`..`7` on the octave digit edits only the octave;

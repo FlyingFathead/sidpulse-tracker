@@ -1,3 +1,14 @@
+# v0.2.17
+
+- Rename the startup splash's ambiguous `OK` action to **New song**.
+- Make New song and Escape create a genuinely blank `Untitled` project instead
+  of leaving the preloaded `Autumn at five` demo in the editor.
+- Keep **Play demo song** loading/playing the bundled editable demo as before.
+- Keep the startup opt-out preference, explicit `--play-welcome-song` path, audio
+  startup handling, native song format and dependencies unchanged.
+- Add regression coverage for replacing the loaded demo with a blank project and
+  for the default New song keyboard action.
+
 # v0.2.16
 
 - Use one visible directory-list browser for Load, F10 Save, Save As and SID/PRG

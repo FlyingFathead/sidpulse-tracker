@@ -87,12 +87,15 @@ def test_modal_controls_fit_after_resizing(app, size, zoom):
             assert app.screen.get_rect().contains(rect)
 
 
-def test_welcome_ok_defaults_to_no_playback_and_repeats(app, monkeypatch):
+def test_welcome_new_song_defaults_to_blank_project_no_playback_and_repeats(app, monkeypatch):
     starts = []
     monkeypatch.setattr(app, 'start_playback', starts.append)
+    app.editor.song.title = 'Demo still loaded'
     welcome.open_dialog(app)
     key(app, pg.K_RETURN)
     assert app.dialog is None and welcome.show_on_startup()
+    assert app.editor.song.title == 'Untitled' and app.path is None
+    assert app.browser.name.text == 'untitled.sidpulse'
     assert not starts and not app.intro_pending
     assert json.loads(config_path().read_text())['hide_welcome_on_startup'] is False
 
@@ -117,12 +120,12 @@ def test_checkbox_persists_both_values_and_preserves_other_preferences(app, monk
 
 def test_checkbox_keyboard_focus_space_toggle_and_escape(app):
     welcome.open_dialog(app)
-    key(app, pg.K_TAB, pg.KMOD_SHIFT)  # OK -> checkbox
+    key(app, pg.K_TAB, pg.KMOD_SHIFT)  # New song -> checkbox
     assert app.dialog['focus'] == 2
     key(app, pg.K_SPACE)
     assert app.dialog['hide_on_startup'] and not config_path().exists()
-    key(app, pg.K_TAB)  # checkbox -> OK
-    key(app, pg.K_ESCAPE)  # dismiss without playback and save draft
+    key(app, pg.K_TAB)  # checkbox -> New song
+    key(app, pg.K_ESCAPE)  # New song without playback and save draft
     assert app.dialog is None and not welcome.show_on_startup() and not app.intro_pending
 
 

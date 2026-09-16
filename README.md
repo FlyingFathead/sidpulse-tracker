@@ -8,7 +8,15 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
-## v0.2.16: one file browser and editable filenames
+## v0.2.17: startup splash now makes the choice explicit
+
+The startup splash now offers **New song / Play demo song**. **New song** (and
+Escape) creates a genuinely blank `Untitled` project instead of leaving the
+bundled **Autumn at five** demo in the editor. **Play demo song** keeps the demo
+loaded and starts it as before. The saved **Don't show this on startup** preference
+and explicit `--play-welcome-song` behavior are unchanged.
+
+## Retained from v0.2.16: one file browser and editable filenames
 
 **F9 Load, F10 Save, Save As, SID export and PRG export share the same directory
 browser.** Filename and Directory are inline fields, not popups hiding the list.
@@ -28,11 +36,11 @@ native project's path and saved/dirty state unchanged.
 browser; **Alt+Up** goes to its parent; Enter submits; Escape cancels. Directories
 and optional modified dates stay visible. See [browser guide](docs/FILE_BROWSER.md).
 
-All features below are included in the **v0.2.16 full source release**; earlier
+All features below are included in the **v0.2.17 full source release**; earlier
 incremental patches are not required. Download the full ZIP and its checksum
 from [GitHub Releases](https://github.com/FlyingFathead/sidpulse-tracker/releases).
-The public release assets are `sidpulse-tracker-v0.2.16-full.zip` and
-`sidpulse-tracker-v0.2.16-SHA256SUMS.txt`. Incremental/checkpoint update packages
+The public release assets are `sidpulse-tracker-v0.2.17-full.zip` and
+`sidpulse-tracker-v0.2.17-SHA256SUMS.txt`. Incremental/checkpoint update packages
 are a separate local-maintenance workflow, not required release downloads.
 Song files, preferences, audio-buffer settings and dependencies are unchanged
 by the file-browser update. See [issue/fix report](docs/ISSUES-v0.2.16.md) and
@@ -102,17 +110,17 @@ default. Existing explicitly saved buffer preferences are retained unchanged.
 ## Features retained from v0.2.11: Startup splash
 
 The splash appears on every normal startup by default, with the version number
-beneath the logo and **OK / Play demo song** buttons. OK closes it without
-playing; Play starts **Autumn at five**. The arrangement stays editable.
+beneath the logo and **New song / Play demo song** buttons. New song creates a
+blank **Untitled** project; Play starts **Autumn at five** and keeps the arrangement editable.
 
 A small **[ ] Don't show this on startup** checkbox sits in the lower-left corner.
 It starts unchecked when there is no saved choice. Either button saves its state
 as `hide_welcome_on_startup` in the per-user `preferences.json`: `true` hides the
 splash; `false`, a missing flag or an invalid value shows it. Old `first-run.json`
-markers no longer suppress the splash. Escape works like OK.
+markers no longer suppress the splash. Escape works like New song.
 
 Use `bash run.sh --welcome` or `.\run.cmd --welcome` to reopen it, even when
-hidden. Uncheck the box and choose OK to restore the splash on future startups.
+hidden. Uncheck the box and choose New song to restore the splash on future startups.
 The preference survives replacing the checkout and subsequent application updates.
 Launch without arguments for the normal flow; `--example` explicitly opens
 First light and bypasses the splash, as does opening a saved project.
@@ -296,13 +304,13 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 
 ### Linux: install or update
 
-Download `sidpulse-tracker-v0.2.16-full.zip` and
-`sidpulse-tracker-v0.2.16-SHA256SUMS.txt` from the same GitHub release into one
+Download `sidpulse-tracker-v0.2.17-full.zip` and
+`sidpulse-tracker-v0.2.17-SHA256SUMS.txt` from the same GitHub release into one
 directory. The full ZIP extracts under `sidpulse-tracker/`.
 
 ```bash
-sha256sum -c sidpulse-tracker-v0.2.16-SHA256SUMS.txt &&
-unzip sidpulse-tracker-v0.2.16-full.zip &&
+sha256sum -c sidpulse-tracker-v0.2.17-SHA256SUMS.txt &&
+unzip sidpulse-tracker-v0.2.17-full.zip &&
 cd sidpulse-tracker &&
 bash run.sh
 ```
@@ -449,14 +457,14 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.16 full ZIP and SHA-256 checksum file** from GitHub Releases.
+Download the **v0.2.17 full ZIP and SHA-256 checksum file** from GitHub Releases.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.16-full.zip"
-$checksums = ".\sidpulse-tracker-v0.2.16-SHA256SUMS.txt"
+$zip = ".\sidpulse-tracker-v0.2.17-full.zip"
+$checksums = ".\sidpulse-tracker-v0.2.17-SHA256SUMS.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
-    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.16-full\.zip$'
+    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.17-full\.zip$'
 })
 if ($lines.Count -ne 1) { throw "Missing or ambiguous full-ZIP checksum." }
 $expected = ($lines[0] -split '\s+')[0]
@@ -533,7 +541,7 @@ Local cumulative patches are not public release assets. Do not include Git
 history bundles, private project notes, environments, backups or user projects.
 Clone the repository for Git history. See [RELEASING.md](docs/RELEASING.md) for
 the commit, CI, tag, archive and release-review sequence, and
-[release notes](docs/RELEASE_NOTES-v0.2.16.md) for the user-facing change summary.
+[release notes](docs/RELEASE_NOTES-v0.2.17.md) for the user-facing change summary.
 
 Repository: [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker).
 

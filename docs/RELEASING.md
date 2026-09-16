@@ -58,9 +58,9 @@ git diff --check
 
 If the generated references change, review those changes and rerun validation.
 Also do a short interactive desktop check of the current release's user-facing
-changes. For v0.2.16 that includes F9/F10 browser editing, Save As, overwrite
-cancel, octave entry, activity dots, ADSR attack-00 display, F11 song looping and
-actual audio playback.
+changes. For v0.2.17 that includes the startup **New song / Play demo song** choice,
+verifying New song/Escape opens a blank Untitled project and Play demo song keeps
+the bundled demo, plus a short sanity check of file browsing and actual audio playback.
 
 The stable checklist lives in `docs/VALIDATION.md`.
 
@@ -73,7 +73,7 @@ git add -A
 git diff --cached --check
 git diff --cached --name-status
 git diff --cached --stat
-git commit -m "Release v0.2.16"
+git commit -m "Release v0.2.17"
 git push origin main
 ```
 
@@ -112,18 +112,18 @@ the Windows launcher path.
 
 ## 5. Tag the verified commit
 
-Make sure `v0.2.16` does not already point somewhere else:
+Make sure `v0.2.17` does not already point somewhere else:
 
 ```bash
-git show-ref --tags --verify --quiet refs/tags/v0.2.16 && git show v0.2.16 || true
-git ls-remote --tags origin refs/tags/v0.2.16
+git show-ref --tags --verify --quiet refs/tags/v0.2.17 && git show v0.2.17 || true
+git ls-remote --tags origin refs/tags/v0.2.17
 ```
 
 If no conflicting tag exists:
 
 ```bash
-git tag -a v0.2.16 -m "SIDpulse Tracker v0.2.16" "$commit"
-git push origin v0.2.16
+git tag -a v0.2.17 -m "SIDpulse Tracker v0.2.17" "$commit"
+git push origin v0.2.17
 ```
 
 Do not move or force-update an existing release tag. Check the tag-triggered CI
@@ -139,19 +139,19 @@ set -euo pipefail
 git archive \
   --format=zip \
   --prefix=sidpulse-tracker/ \
-  --output=../sidpulse-tracker-v0.2.16-full.zip \
-  v0.2.16
+  --output=../sidpulse-tracker-v0.2.17-full.zip \
+  v0.2.17
 
 cd ..
-sha256sum sidpulse-tracker-v0.2.16-full.zip > sidpulse-tracker-v0.2.16-SHA256SUMS.txt
-sha256sum -c sidpulse-tracker-v0.2.16-SHA256SUMS.txt
+sha256sum sidpulse-tracker-v0.2.17-full.zip > sidpulse-tracker-v0.2.17-SHA256SUMS.txt
+sha256sum -c sidpulse-tracker-v0.2.17-SHA256SUMS.txt
 ```
 
 Inspect the tagged tree and archive before publishing:
 
 ```bash
-git -C sidpulse-tracker ls-tree -r --name-only v0.2.16 | less
-unzip -l sidpulse-tracker-v0.2.16-full.zip | less
+git -C sidpulse-tracker ls-tree -r --name-only v0.2.17 | less
+unzip -l sidpulse-tracker-v0.2.17-full.zip | less
 ```
 
 Extract the ZIP into a fresh temporary directory and verify `VERSION`, launchers,
@@ -163,13 +163,13 @@ under an already-published immutable release identity.
 From the directory containing the two assets:
 
 ```bash
-gh release create v0.2.16 \
-  sidpulse-tracker-v0.2.16-full.zip \
-  sidpulse-tracker-v0.2.16-SHA256SUMS.txt \
+gh release create v0.2.17 \
+  sidpulse-tracker-v0.2.17-full.zip \
+  sidpulse-tracker-v0.2.17-SHA256SUMS.txt \
   --verify-tag \
   --draft \
-  --title "SIDpulse Tracker v0.2.16" \
-  --notes-file sidpulse-tracker/docs/RELEASE_NOTES-v0.2.16.md
+  --title "SIDpulse Tracker v0.2.17" \
+  --notes-file sidpulse-tracker/docs/RELEASE_NOTES-v0.2.17.md
 ```
 
 Review the draft target, notes and the two uploaded assets before publishing.
