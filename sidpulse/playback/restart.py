@@ -33,6 +33,7 @@ def prepare_restarts(seq):
         return
     future = copy(seq)
     future._predicting = True
+    future.activity = None  # future loop restarts must never publish real note activity
     if seq.restart_loop is not None:
         future.loop_override = seq.restart_loop
     future.sid = ProbeSID(seq.sid)

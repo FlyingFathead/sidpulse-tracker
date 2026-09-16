@@ -35,11 +35,13 @@ class Voice:
     delayed: object = None
     gate: bool = False
     restarting: bool = False
+    instrument_id: int | None = None
 
 
 class VoicePrograms:
-    def __init__(self, sid):
+    def __init__(self, sid, activity=None):
         self.sid = sid
+        self.activity = activity
         self.voices = [Voice() for _ in range(3)]
 
     def frequency(self, note):
@@ -50,19 +52,22 @@ class VoicePrograms:
         if self.sid.registers[register] != value:
             self.sid.write(register, value)
 
-    def trigger(self, voice, note, inst):
+    def trigger(self, voice, note, inst, instrument_id=None):
         v = self.voices[voice]
         # A transport/loop reset replaces Voice objects, but the chip may
         # already hold the settled zero envelope from startup or lookahead.
         base = voice * 7
         prepared = v.restarting or self.sid.registers[base + 5:base + 7] == bytes(2)
         v.note, v.instrument, v.age = note, deepcopy(inst), 0
+        v.instrument_id = instrument_id
         v.freq = v.target = self.frequency(note)
         v.phase, v.gate = 0, True
         v.restarting = False
         pitch = (inst.arpeggio[0] if inst.arpeggio_enabled and inst.arpeggio else 0) + (inst.pitch_sequence[0] if inst.pitch_sequence_enabled and inst.pitch_sequence else 0)
         initial = replace(inst, waveform=inst.wave_sequence[0] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform)
         note_on(self.sid, voice, note+pitch, initial, hard_restart=prepared)
+        if self.activity is not None:
+            self.activity.note_on(voice, instrument_id)
 
     def prepare_restart(self, voice):
         v = self.voices[voice]
@@ -81,7 +86,7 @@ class VoicePrograms:
         if cut:
             v.note = None
 
-    def row(self, voice, cell, inst):
+    def row(self, voice, cell, inst, instrument_id=None):
         v = self.voices[voice]
         effect, value = cell.effect, cell.parameter or 0
         if effect in ('E','F','G','H','J','Q'):
@@ -93,7 +98,7 @@ class VoicePrograms:
             v.memory[effect] = value
         v.effect, v.parameter, v.delayed = effect, value, None
         if effect == 'S' and value >> 4 == 0xD and value & 15:
-            v.delayed = (cell.note,deepcopy(inst))
+            v.delayed = (cell.note,deepcopy(inst),instrument_id)
             return
         if cell.note == OFF:
             self.release(voice)
@@ -103,17 +108,17 @@ class VoicePrograms:
             if effect == 'G' and v.note is not None and v.gate:
                 v.target = self.frequency(cell.note)  # no gate/instrument restart
             else:
-                self.trigger(voice,cell.note,inst)
+                self.trigger(voice,cell.note,inst,instrument_id)
 
     def tick(self, tick):
         for voice,v in enumerate(self.voices):
             effect,value=v.effect,v.parameter
             hi,lo=value>>4,value&15
             if effect=='S' and hi==0xD and tick==lo and v.delayed:
-                note,inst=v.delayed
+                note,inst,instrument_id=v.delayed
                 if note==OFF:self.release(voice)
                 elif note==CUT:self.release(voice,True)
-                elif note is not None:self.trigger(voice,note,inst)
+                elif note is not None:self.trigger(voice,note,inst,instrument_id)
                 v.delayed=None
             if effect=='S' and hi==0xC and tick==lo:
                 self.release(voice,True)
@@ -123,7 +128,7 @@ class VoicePrograms:
             retrigger=(lo if effect=='Q' and hi==0 else 0)
             if v.gate and ((retrigger and tick>0 and tick%retrigger==0) or
                            (inst.retrigger_enabled and inst.retrigger and v.age>=inst.retrigger)):
-                self.trigger(voice,v.note,inst)
+                self.trigger(voice,v.note,inst,v.instrument_id)
             if inst.gate_enabled and inst.gate_ticks and v.age>=inst.gate_ticks and v.gate:
                 self.release(voice)
             if effect in ('E','F'):
@@ -157,8 +162,8 @@ class VoicePrograms:
 
 class Audition(VoicePrograms):
     """Free keyboard notes use the same instrument programs at song-tempo ticks."""
-    def __init__(self,sid,tempo=125):
-        super().__init__(sid)
+    def __init__(self,sid,tempo=125,activity=None):
+        super().__init__(sid,activity)
         self.tempo=tempo
         self.remaining=0
         self.fraction=0.0

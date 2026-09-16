@@ -44,7 +44,7 @@ def _dispatch_unchecked(event, page="pattern", column=0):
     if ctrl and alt and key in (pg.K_EQUALS, pg.K_PLUS, pg.K_KP_PLUS, pg.K_MINUS, pg.K_KP_MINUS, pg.K_0):
         return Command("zoom", 0 if key == pg.K_0 else (-1 if key in (pg.K_MINUS, pg.K_KP_MINUS) else 1))
     if ctrl and key in (pg.K_s, pg.K_w):
-        return Command("save_as" if shift else "save")
+        return Command("save_as" if shift else "quick_save")
     if ctrl and key == pg.K_l:
         return Command("open")
     if ctrl and key == pg.K_n:
@@ -135,8 +135,20 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command("mask")
         if scan == 55 and not shift:
             return Command("clear")
-        # Both parts of NOTE are a piano input target. Caps Lock auditions
-        # from any voice field without turning note keys into parameter digits.
+        # The octave digit is a numeric field: do not let top-row piano
+        # scancodes consume 0/2/3/5/6/7/9 before Editor.enter_digit sees them.
+        # Use the typed character (also supports Num Lock keypad input), not
+        # physical position. Caps Lock keeps its audition-without-writing role.
+        text = getattr(event, "unicode", "")
+        if column == 1 and len(text) == 1 and text in "0123456789":
+            if mod & pg.KMOD_CAPS:
+                if not shift and scan in NOTE_SCANCODES:
+                    return Command("piano", (scan, NOTE_SCANCODES[scan], True))
+                return None
+            return Command("digit", text)
+        # The note-name slot retains the full physical piano range. Letter
+        # piano keys also still work in the octave slot; digits there edit it.
+        # Caps Lock auditions from any voice field without writing notes.
         if not shift and scan in NOTE_SCANCODES and (column in (0, 1) or mod & pg.KMOD_CAPS):
             return Command('piano', (scan, NOTE_SCANCODES[scan], bool(mod & pg.KMOD_CAPS)))
         if column != 0:

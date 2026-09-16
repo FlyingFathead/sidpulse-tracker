@@ -55,6 +55,9 @@ class Renderer:
         self.welcome_font_cache = {}
         self.top_row = 0
         self.first_voice = 0
+        from sidpulse.ui.activity import ActivityLights
+        self.activity_lights = ActivityLights()
+        self.instrument_levels = {}
 
     def configure(self, screen, zoom, appearance=None):
         from sidpulse.preferences import APPEARANCE
@@ -183,8 +186,16 @@ class Renderer:
 
     def render(self, app):
         self.configure(app.screen, app.zoom, app.appearance)
+        # File fields/buttons must remain reachable even at large tracker zoom.
+        # Fit this page only; do not mutate the saved zoom or audio/song state.
+        if app.page == "files" and (self.cols < 64 or self.lines < 24):
+            fit = min(1.0, self.cols / 64, self.lines / 24) * .92
+            self.configure(app.screen, app.zoom * fit, app.appearance)
         ed, audio = app.editor, app.audio
         playback = audio.playback
+        from sidpulse.audio.activity import ActivitySnapshot
+        snapshot = getattr(audio, 'activity', ActivitySnapshot()) if audio.ready else ActivitySnapshot()
+        self.instrument_levels = self.activity_lights.levels(snapshot)
         self.screen.fill(BG)
         title = f"SIDpulse Tracker {__version__}"
         self.text(max(1, (self.cols - len(title)) / 2), .3, title, TEXT)
@@ -192,7 +203,7 @@ class Renderer:
             self.text(1, 1, f"P{ed.pattern_id:02X} R{ed.row:03d} I{ed.instrument:02d}", TEXT, self.cols - 10)
             self.meter(audio, max(1, self.cols - 9), 0, 8, 2)
             top = 4
-        elif self.cols >= 80:
+        elif self.cols >= 80 and (app.page != "files" or self.lines >= 32):
             right = self.cols // 2 + 1
             self.text(2, 2, "Song Name")
             self.header_field(12, 2, right - 14, f"{'*' if ed.dirty else ''}{ed.song.title}", YELLOW)
@@ -226,7 +237,10 @@ class Renderer:
         self.footer_rows = 4 if app.helper_strip else 2
         bottom = self.lines - self.footer_rows
         titles = {"pattern": "Pattern Editor (F2)", "samples": "Sample List (F3)", "instrument": "Instrument List (F4)",
-                  "info": "Info Page", "orders": "Order List / Pattern Bank (F11)", "settings": "Song Variables (F12)", "help": "Help", "files": f"{'Load' if app.file_mode == 'open' else 'Save'} Project (F9/F10)"}
+                  "info": "Info Page", "orders": "Order List / Pattern Bank (F11)", "settings": "Song Variables (F12)", "help": "Help", "files": "File Browser"}
+        if app.page == "files":
+            from sidpulse.ui.file_browser import TITLES
+            titles["files"] = TITLES[app.file_mode]
         label = titles.get(app.page, app.page)
         self.rect(1, top - 2, self.cols - 2, .03, EDGE)
         self.rect(max(0, (self.cols - len(label)) / 2 - 1), top - 2.4, len(label) + 2, 1.2, BG)
@@ -335,9 +349,8 @@ class Renderer:
             if rownum >= len(ed.pattern.rows):
                 break
             y = top + 2 + index
-            rowcolor = WELL if rownum % 4 else (36, 36, 36)
-            if rownum % 16 == 0:
-                rowcolor = (55, 55, 55)
+            grid_level = ed.pattern_grid.level(rownum)
+            rowcolor = (WELL, (36, 36, 36), (55, 55, 55))[grid_level]
             if ed.highlight and rownum == ed.row:
                 rowcolor = (82, 60, 56)
             self.rect(5.3, y, grid_end - 5.6, 1, rowcolor)
@@ -384,7 +397,7 @@ class Renderer:
                 rownum=self.top_row+index
                 if rownum>=len(ed.pattern.rows):break
                 y=top+2+index
-                self.rect(x+.3,y,sidebar-1.6,1,(32,61,80) if app.control_focus and rownum==ed.row else (22,30,39) if rownum%4 else (39,51,63))
+                self.rect(x+.3,y,sidebar-1.6,1,(32,61,80) if app.control_focus and rownum==ed.row else ((22,30,39),(39,51,63),(52,66,80))[ed.pattern_grid.level(rownum)])
                 control=ed.pattern.controls.get(rownum)
                 if control:
                     val=lambda k,n: '.'*n if getattr(control,k) is None else f'{getattr(control,k):0{n}X}'
@@ -408,6 +421,17 @@ class Renderer:
             self.text(left + 1, y, f"{label:18s} {value}", CREAM if i == app.property_index else TEXT)
             self.hit(left, y, self.cols - left - 1, 1, "property", i)
 
+    def activity_dot(self, x, y, level, kind, number):
+        radius = max(2, round(min(self.cw, self.rh)*.28))
+        center = (round(x*self.cw), round((y+.55)*self.rh))
+        idle = (66, 76, 62)
+        bright = (142, 248, 104)
+        level = max(0., min(1., level))
+        color = tuple(round(a+(b-a)*level) for a,b in zip(idle,bright))
+        pg.draw.circle(self.screen, color, center, radius)
+        rect = pg.Rect(center[0]-radius-2,center[1]-radius-2,2*radius+4,2*radius+4)
+        self.hits.append((rect,'activity_indicator',(kind,number)))
+
     def instrument(self, app, top, bottom):
         inst = app.editor.song.instruments.get(app.editor.instrument)
         left = 33 if self.cols >= 84 else 1
@@ -426,8 +450,9 @@ class Renderer:
                 if selected:self.rect(4.2,y+.1,25.6,1,CREAM if app.instrument_focus=='list' else SELECT)
                 self.text(1,y,f'{number:02d}',TEXT)
                 color=TEXT if selected and app.instrument_focus=='list' else YELLOW if item else (150,150,140)
-                self.text(4.5,y,item.name if item else '(empty)',color,25)
+                self.text(4.5,y,item.name if item else '(empty)',color,22)
                 self.hit(1,y,29,1,'choose_instrument',number)
+                self.activity_dot(28.9,y,self.instrument_levels.get(number,0.) if item else 0.,'instrument',number)
         if left==1:
             button(self,1,top,18,"Add instrument","add_instrument")
             button(self,20,top,20,"Delete instrument","delete_instrument")
@@ -493,13 +518,15 @@ class Renderer:
                    ("Speed (ticks)", str(song.speed)), ("Tempo", str(song.tempo)),
                    ("Audio buffer", f"{app.audio_buffer} samples / {app.audio_buffer / 48:.1f} ms per block"),
                    ("PSID released",song.export_config.get("released","2026 SIDpulse")),
-                   ("Song / PSID loop", "ON" if song.export_config.get("loop",True) else "OFF"),
+                   ("Loop song at end", "ON" if song.export_config.get("loop",True) else "OFF"),
                    ("C64 timing",song.clock), ("Colour theme",app.appearance['theme']),
                    ("Font size",str(app.appearance['font_size'])), ("Bold font",'ON' if app.appearance['font_bold'] else 'OFF'),
                    ("Font file",app.appearance['font_file'] or 'Bundled DejaVu Sans Mono'),
                    ("File timestamps", "ON" if app.file_browser_show_modified else "OFF"),
                    ("Autosave settings",('ON' if app.autosave.enabled else 'OFF')+f' / {app.autosave.minutes} minutes / folder...'),
-                   ("Restart on repeated F5",'ON' if app.restart_on_f5 else 'OFF')]
+                   ("Restart on repeated F5",'ON' if app.restart_on_f5 else 'OFF'),
+                   ("Grid: rows per beat",str(app.editor.pattern_grid.rows_per_beat)),
+                   ("Grid: beats per bar",f"{app.editor.pattern_grid.beats_per_bar} ({app.editor.pattern_grid.rows_per_bar} rows/bar)")]
         self.text(1,top,"SONG / DISPLAY / SHARED SID FILTER | Click value / arrows / Enter",TEXT)
         count=max(1,int((bottom-top-2)/1.35));start=max(0,app.property_index-count+1)
         for i,(label,value) in enumerate(entries[start:start+count],start):
@@ -523,12 +550,14 @@ class Renderer:
                 label = sample.get("name", "Stored sample") if isinstance(sample, dict) else ""
                 if number == app.sample_index:
                     self.rect(4.2, top + i + .1, 25.6, 1, CREAM)
-                self.text(4.5, top + i, label, TEXT if number == app.sample_index else YELLOW, 25)
+                self.text(4.5, top + i, label, TEXT if number == app.sample_index else YELLOW, 22)
+                self.activity_dot(28.9,top+i,0.,'sample',number)
         self.text(left, top, "PCM / DIGI SAMPLE BANK", CYAN)
         lines = ["Instrument 01 and Sample 01 may coexist.",
                  "SID instruments contain synthesis settings.", "Samples contain PCM/digi data.",
                  "", "This editor prototype preserves sample-bank data in .sidpulse.",
-                 "PCM import, sample editing and digi playback are not implemented yet."]
+                 "PCM import, sample editing and digi playback are not implemented yet.",
+                 "Sample activity dots stay idle until sample playback is implemented."]
         y = top + 2
         for line in lines:
             for part in textwrap.wrap(line, max(15, self.cols - left - 2)) or [""]:
@@ -537,39 +566,8 @@ class Renderer:
                 y += 1
 
     def files(self, app, top, bottom):
-        split = max(20, self.cols * 2 // 3)
-        self.well(2, top, split - 4, max(2, bottom - top - 3))
-        if self.cols >= 65:
-            self.well(split, top, self.cols - split - 2, max(2, bottom - top - 3))
-            self.text(split + 1, top + 1, "Native .sidpulse projects", YELLOW)
-            self.text(split + 1, top + 3, "Arrows  Select", CREAM)
-            self.text(split + 1, top + 4, "Enter   Open directory/file", CREAM)
-            self.text(split + 1, top + 5, "Tab     Enter filename", CREAM)
-            self.text(split + 1, top + 6, "Bkspace Parent directory", CREAM)
-            self.text(split + 1, top + 8, "SID export is separate", ACCENT)
-        show_dates = app.file_browser_show_modified and split-6 >= 32
-        date_x = split - 19
-        name_width = date_x - 5 if show_dates else split - 6
-        self.text(3,top,'Name',CREAM,name_width)
-        if show_dates:self.text(date_x,top,'Modified',CREAM,16)
-        visible = max(1,bottom-top-6)
-        start = max(0, app.file_index-visible+1)
-        for i,path in enumerate(app.file_entries[start:start+visible],start):
-            y = top+2+i-start
-            selected = i == app.file_index
-            if selected:self.rect(2.2,y+.1,name_width+.8,1,CREAM)
-            label = '../' if i == 0 else path.name + ('/' if path.is_dir() else '')
-            self.text(3,y,label,TEXT if selected else YELLOW,name_width)
-            if show_dates and i:
-                self.text(date_x,y,app.file_modified.get(path,'Unavailable'),ACCENT,16)
-            self.hit(2,y,split-4,1,'file',i)
-        self.text(2, bottom - 2, "Filename")
-        self.well(12, bottom - 2, self.cols - 14, 1)
-        self.text(12, bottom - 2, app.file_name, YELLOW)
-        self.hit(12, bottom - 2, self.cols - 14, 1, "filename")
-        self.text(2, bottom - 1, "Directory")
-        self.well(12, bottom - 1, self.cols - 14, 1)
-        self.text(12, bottom - 1, app.file_dir, CREAM)
+        from sidpulse.ui.file_browser_view import draw
+        draw(self, app, top, bottom)
 
     def info(self, app, top, bottom):
         state = app.audio.playback
@@ -684,7 +682,7 @@ class Renderer:
             second = "Arrows: select | Enter: choose | Escape: back"
         elif app.page == "pattern":
             descriptions = ["Note: physical piano keys enter a note; Caps Lock auditions without writing.",
-                            "NOTE: both parts accept the full piano keyboard. Keypad / and * change the entry octave.",
+                            "Octave: type 0..7 to change this note only. Caps Lock auditions; Keypad / and * set the entry octave.",
                             "Instrument: decimal 01..99 selects a SID synthesis instrument.",
                             "Instrument: decimal 01..99 selects a SID synthesis instrument.",
                             "EX is reserved. The SID has no independent PCM-style volume register per voice.",
@@ -709,20 +707,25 @@ class Renderer:
             if app.instrument_slot not in ed.song.instruments:
                 first = f"Empty instrument slot {app.instrument_slot:02d}. Enter: Choose preset / No preset / Manual."
         elif app.page == "files":
-            first = "Save and reopen editable .sidpulse projects. Exported .sid files are separate."
-            second = "Arrows: select | Enter: open | Tab: filename or full path | Backspace: parent | Escape: cancel"
+            first = "One browser for Load, Save As, SID and PRG. Filename edits do not alter notes or the project title."
+            second = "Tab: field | Left/Right/Home/End: caret | Shift: select | Ctrl+L: directory | Ctrl+A: select all"
         elif app.page == "help":
             first = "Quick help: choose a topic above. Inactive legacy bindings are grey in the shortcut registry."
             second = "1..9 or Left/Right/Tab: topic | Up/Down/PgUp/PgDn: scroll | Escape: return to editor"
         else:
             first = {"samples": "Separate PCM/digi bank. Sample import and playback are reserved for later work.",
-                     "orders": "Tab switches Order list / Pattern bank. N: new order pattern. Shift+N: duplicate. Bank Enter: edit.",
+                     "orders": "L: loop song at playlist end. Tab: orders/bank. N: new. Shift+N: duplicate. Bank Enter: edit.",
                      "settings": "F12: shared SID filter, speed/tempo, helper and audio buffer. Bigger buffers trade latency for more scheduling headroom.",
                      "info": "Three hardware SID voices. This panel follows playback and audition."}.get(app.page, "SIDpulse Tracker")
             second = "F1: help | F2: pattern | F4: instruments | F9: open | F10: save | Ctrl+Alt +/-: zoom"
         mouse = pg.mouse.get_pos()
         for rect, action, value in reversed(self.hits):
             if rect.collidepoint(mouse):
+                if action == "activity_indicator":
+                    first = ("Instrument activity: bright on note triggers, lit while gated; short visual decay after attacks."
+                             if value[0] == 'instrument' else
+                             "Sample activity is idle: PCM/digi playback is not implemented. Instrument slots are separate.")
+                    second = "Indicators follow playback and audition, not the selected row. They are not loudness meters."
                 if action == "waveform":
                     first = f"{WAVES[value].title()}: select the SID oscillator waveform for this instrument."
                 elif action in ("mute", "solo"):

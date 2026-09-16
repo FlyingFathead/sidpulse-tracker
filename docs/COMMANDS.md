@@ -25,8 +25,9 @@ The table inventories command groups and historical bindings. Some entries such 
 | page.orders | global | F11 | Order list / pattern bank → App.change_page | true | true | true | true | true | true |
 | page.settings | global | F12 | Song and SID settings → App.change_page | true | true | true | true | true | true |
 | file.open | global | F9 / Ctrl+L | Open native project → App.browse | true | true | true | true | true | true |
-| file.save | global | F10 / Ctrl+W / Ctrl+S | Save native project → App.save_project | true | true | true | true | true | true |
-| file.save_as | global | Shift+F10 / Ctrl+Shift+S | Save project as → App.browse | true | true | true | true | true | true |
+| file.save | global | F10 | Save through the shared browser; default to the current project name → App.browse | true | true | true | true | true | true |
+| file.quick_save | global | Ctrl+S / Ctrl+W | Quick-save to the current project file; browse when unsaved → App.save_project | true | true | true | true | true | false |
+| file.save_as | global | Shift+F10 / Ctrl+Shift+S | Save a new revision using the shared file browser → App.browse | true | true | true | true | true | true |
 | file.new | global | Ctrl+N | New project → App.new_project | true | true | true | true | true | true |
 | file.quit | global | Ctrl+Q | Quit with unsaved-work check → App.confirm_discard | true | true | true | true | true | true |
 | file.comments | global | Shift+F9 | Edit song comments → App.text_dialog | true | true | true | true | true | true |
@@ -97,9 +98,10 @@ The table inventories command groups and historical bindings. Some entries such 
 | pattern.audition_row | pattern | 8 | Audition row while held → AudioEngine.send | true | true | true | true | true | true |
 | instrument.navigation | instrument | Arrows / Tab / Enter / Insert / PgUp/PgDn: General / Motion | Bank / properties / buttons / new instrument; click yellow values to type → App.page_key | true | true | true | true | true | true |
 | samples.navigation | samples | Up/Down | Select sample slot → App.sample_index | true | true | true | true | true | true |
+| orders.song_loop | orders | L | Loop song when playlist ends: restart at order 000 or stop → Editor.set_song_loop | true | true | true | true | true | false |
 | orders.navigation | orders | Up/Down / Enter / N / Shift+N / Insert/Delete / PgUp/PgDn / Home/End | Select and edit orders; browse all patterns, Enter opens in F2 → Editor.order_edit | true | true | true | true | true | true |
 | help.navigation | help | 1..8 / Left/Right / Tab / Up/Down / PgUp/PgDn | Select help topic / scroll → App.help_topic | true | true | true | true | true | true |
-| files.navigation | files | Arrows / Enter / Tab / Backspace | Browse projects / enter filename → App.select_file | true | true | true | true | true | true |
+| files.navigation | files | Arrows / Home/End / Enter / Tab / Shift+Tab / Ctrl+L / Alt+Up / Ctrl+A/C/X/V | Shared file browser with inline editable filename and directory → App.select_file | true | true | true | true | true | true |
 | settings.navigation | settings | Arrows / Enter | Edit song / SID settings → App.change_property | true | true | true | true | true | true |
 | legacy.global.001 | global | 2*F11 | Order List and Channel Volume → future.global | true | false | false | true | true | true |
 | legacy.global.002 | global | { } | Decrease/Increase playback speed → future.global | true | false | false | true | true | true |

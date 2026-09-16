@@ -1,3 +1,98 @@
+# v0.2.16
+
+- Use one visible directory-list browser for Load, F10 Save, Save As and SID/PRG
+  export destinations. Remove modal filename prompts from those paths.
+- Add inline Unicode filename/directory carets, selection, insertion/deletion,
+  Home/End, word movement, clipboard commands and horizontal scrolling. Keep
+  directory traversal from erasing filename edits; prevent piano/AltGr routing
+  from invoking unrelated project commands while a text field is active.
+- Prefill the latest successful native project name and directory. Save starts
+  before its extension without select-all, enabling small revision-name edits.
+- F10/menu Save always browses; Ctrl+S/W remains quick-save outside the picker.
+  Browser quick-save submits the visible draft. Keep the current page on a
+  non-browser quick-save; update defaults after successful open/save/recovery.
+- Preserve existing atomic writers and `.bak` files, Cancel-default overwrite
+  checks, save-before-export continuation, unsaved state and native source paths.
+  Retain drafts on I/O failures and check edited directory paths before writes.
+- Correct effect-entry status; add configurable display-only beat/bar shading and
+  exact oversized SID-export diagnostics with the clear instruction to shorten
+  or simplify projects that exceed the compiled-player memory budget.
+- Add direct octave-digit entry without changing pitch class/instrument/effects.
+- Add actual-trigger/gate instrument activity dots; keep sample indicators idle
+  until PCM/digi playback exists.
+- Draw ADSR attack `00` vertically in the schematic envelope view without changing
+  actual SID timing.
+- Add F11 song-end loop control synchronized with F12 and fix final-row loop-state
+  handling; F6 pattern looping remains separate.
+- Replace stale v0.2.12 installation text with v0.2.16 full-release/checksum
+  instructions and separate local maintenance patches from public release assets.
+  Update release guidance and remove obsolete private-handoff wording.
+- Native song format, dependency pins, saved audio settings and the compiled SID
+  export memory budget remain unchanged. WAV/MP3 export and compact SID-player
+  encoding are not included.
+- Maintainer Linux validation before release: **693 tests passed** and both
+  headless smoke tests completed successfully. See `docs/VALIDATION.md` for the
+  stable release-validation procedure.
+# v0.2.15
+
+- Add F4 activity dots driven by actual instrument triggers and gated voice IDs,
+  including delayed notes, retriggers and keyboard/cell/row audition. Keep them
+  separate from selection, memory-only rows and PCM sample IDs. Mutes/pause/reset
+  suppress indicators; a short UI fade makes fast notes visible.
+- Reserve the sample-bank indicator area but explicitly keep it idle until PCM
+  playback is implemented. Dots are activity, not measured envelope/volume meters.
+- Remove the ADSR graph's artificial 4% minimum attack width: 00 is vertical and
+  draggable to the left edge. Label the graph schematic and show approximate SID
+  attack time; 00 still means the fastest hardware rate, not a changed zero time.
+- Expose the shared song-end loop flag at the bottom of F11 with ON/OFF wording
+  and L; rename its F12 alias. Preserve project defaults, undo/save and separate
+  F6 pattern looping. Fix queued final-row loop edits being honored too late.
+- Keep lookahead probes out of activity telemetry and cell/row audition IDs in
+  the audio message. No dependency, native song-format or buffer setting changes.
+- Cumulative checked parent-directory update over supplied 0.2.12/0.2.13/0.2.14;
+  previous octave, grid and oversized-export message repairs are retained.
+- 273 core tests passed, 4 pygame-dependent checks/modules skipped. Native desktop
+  and audio untested; see docs/VALIDATION.md for exact scope and adapter checks.
+
+# v0.2.14
+
+- Fix F2 octave-digit routing: typed numbers reach the octave editor before
+  physical piano-key decoding. At `D#5`, typing `4` on the last digit produces
+  `D#4` without replacing the pitch class, instrument or effect.
+- Accept octaves 0..7; reject 8/9 without moving the cursor or inventing a note.
+  Blank, release and cut cells remain unchanged. Normal row Skip and undo/redo
+  apply; repeat-last-note remembers the corrected octave.
+- Preserve the full physical piano range in the note-name position, letter-note
+  input in the octave position, Caps Lock audition, instrument/parameter input,
+  Alt+digit Skip shortcuts, and keypad entry when it supplies a digit.
+- Update the contextual helper, F1 guide and keyboard documentation accordingly.
+- Keep "Shorten or simplify the project and try again" prominently in oversized
+  SID-export errors. Retain exact byte diagnostics and the hard memory limit;
+  remove the unhelpful suggestion to use a future, unimplemented player.
+- Supply a cumulative checked updater for the supplied v0.2.12 snapshot and
+  v0.2.13-cp001. It accepts only known source hashes, makes sibling backups,
+  refuses conflicting edits, and retains direct parent-directory unzip support.
+- No audio-engine, sequencer, song-format, buffer, dependency or song changes.
+  Validation scope and limitations are in docs/VALIDATION.md.
+
+# v0.2.13
+
+- Replace the incorrect "sequencing is pending" effect-entry status with feedback
+  from the same capability check used by playback/export. Unsupported commands
+  remain stored and are labelled without promising playback support.
+- Add project-local beat/bar shading controls in F12. Default 4/4, configurable
+  rows per beat 1..256 and beats per bar 1..32. Pattern and filter rows share the
+  display-only grid. Optional editor metadata preserves format-6 compatibility.
+- Preflight complete PSID memory requirements and report player bytes, unique
+  tick records, pointer sequence, total budget and excess. Keep the original
+  player, memory map and all executable write semantics unchanged.
+- Add a standard-library incremental updater with exact archive/file checks,
+  CRLF-aware baseline matching, conflict refusal, sibling backups, write-failure
+  rollback and idempotency. No automatic Git, downloads or dependency changes.
+- Add focused regressions and a separate issue/fix-proposal report. Core checks:
+  63 passed, 1 UI integration check skipped for missing pygame-ce. This is not a
+  full GUI/native-audio validation. Native project format remains 6.
+
 # v0.2.12
 
 - Double the first-run/default audio buffer from 1024 to **2048 samples**

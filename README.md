@@ -8,7 +8,92 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
-## v0.2.12: 2048-sample default audio buffer
+## v0.2.16: one file browser and editable filenames
+
+**F9 Load, F10 Save, Save As, SID export and PRG export share the same directory
+browser.** Filename and Directory are inline fields, not popups hiding the list.
+Left/Right and Home/End move a real caret; Shift selects, Backspace/Delete edits,
+and Ctrl+A/C/X/V selects/copies/cuts/pastes. Click to position the caret.
+
+The current project's latest successfully opened/saved name is prefilled.
+Save starts just before the extension without selecting the whole name:
+`work_v21.sidpulse` can become `work_v22.sidpulse` by editing only that digit.
+Folder navigation keeps the draft; a successful Save As becomes the next F9/F10
+default. F10 now always opens the browser. **Ctrl+S/W remains quick-save** outside
+it; inside Save it submits the visible name. Overwrites ask first (Cancel default),
+and errors/cancelled confirmations retain the editable draft. Export keeps the
+native project's path and saved/dirty state unchanged.
+
+**Tab / Shift+Tab** changes focus; **Ctrl+L** edits the directory inside the
+browser; **Alt+Up** goes to its parent; Enter submits; Escape cancels. Directories
+and optional modified dates stay visible. See [browser guide](docs/FILE_BROWSER.md).
+
+All features below are included in the **v0.2.16 full source release**; earlier
+incremental patches are not required. Download the full ZIP and its checksum
+from [GitHub Releases](https://github.com/FlyingFathead/sidpulse-tracker/releases).
+The public release assets are `sidpulse-tracker-v0.2.16-full.zip` and
+`sidpulse-tracker-v0.2.16-SHA256SUMS.txt`. Incremental/checkpoint update packages
+are a separate local-maintenance workflow, not required release downloads.
+Song files, preferences, audio-buffer settings and dependencies are unchanged
+by the file-browser update. See [issue/fix report](docs/ISSUES-v0.2.16.md) and
+[validation](docs/VALIDATION.md).
+
+## Retained from v0.2.15: playing-instrument dots, clearer ADSR and song looping
+
+**F4 instrument bank:** dots at the right flash on actual note triggers and stay
+lit while a voice is gated. Song/pattern playback and keyboard/cell/row audition
+are supported. Selection alone does not light them. Short visual persistence
+keeps drum hits visible; these are activity indicators, not volume meters.
+**F3 sample dots stay idle** because PCM/digi playback is not implemented yet.
+
+**General / ADSR:** attack `00` now draws vertically and the handle reaches the
+left edge. This is a schematic fastest-setting marker: SID attack 00 is nominally
+about 2 ms, not zero time. The graph now states that and shows the approximate
+clock-scaled attack time. Sound-engine/register behavior is unchanged.
+
+**F11:** the bottom **Loop song when the playlist ends** control is ON/OFF;
+press **L** or click it. ON restarts at order 000; OFF stops at the end. Ctrl+S
+saves it with the project. **F12 > Loop song at end** is the same setting;
+F6's pattern loop stays separate. Final-row loop changes are now honored at the
+next end boundary. Previously saved OFF remains OFF.
+
+## Retained from v0.2.14: type the octave directly in the note field
+
+In F2, move the cursor onto the final digit of a note and type **0..7**:
+`D#5` + `4` becomes **`D#4`**, retaining the pitch class, instrument and effects.
+The cursor then follows the existing **Skip** setting (Skip 0 stays put).
+**Ctrl+Backspace** undoes the edit; **Ctrl+Shift+Backspace** redoes it.
+
+The complete physical piano range is unchanged in the note-name slot. Numeric
+entry takes priority only in the octave slot. Letter piano keys still work
+there, and **Caps Lock keeps audition non-destructive**. Numeric keypad input
+works when Num Lock produces a digit. Octaves 8/9 are outside the current 0..7
+range and are rejected; digits never turn blank, release or cut cells into notes.
+
+Oversized SID exports still refuse to run and now lead with **"Shorten or
+simplify the project and try again"**, followed by exact byte counts. There is
+no automatic musical simplification or change to the export budget.
+See [octave-input issue and fix report](docs/ISSUES-v0.2.14.md) and
+[validation](docs/VALIDATION.md).
+
+## Features retained from v0.2.13: editable beat grid and export diagnostics
+
+**F12 > Grid: rows per beat / Grid: beats per bar** now controls pattern and
+filter-lane shading. Defaults remain 4/4 (4-row beats, 16-row bars). For a
+12-row-per-quarter shuffle, set 12/4 for 48-row bars. Enter values in decimal;
+Ctrl+S stores the display grid in the project. This never retimes notes or
+changes tempo/speed. Highlight phase restarts at each pattern's row zero.
+
+Entering an implemented effect no longer incorrectly says that sequencing is
+pending. Unsupported commands remain editable and are explicitly labelled.
+An oversized PSID export now reports the exact player, unique-record and
+pointer-table sizes, including the excess over the existing memory budget.
+The compact-player limitation is **not** fixed by this diagnostic change.
+
+See [issue report and proposals](docs/ISSUES-v0.2.13.md),
+[grid details](docs/PATTERN_GRID.md) and [validation](docs/VALIDATION.md).
+
+## Features retained from v0.2.12: 2048-sample default audio buffer
 
 Fresh installs and machines without an explicit saved audio-buffer preference now
 start at **2048 samples / 42.7 ms per buffer**, twice the previous 1024-sample
@@ -102,8 +187,10 @@ separate from songs. Existing installations default to OFF when the key is absen
 
 - Fix a reproduced SDL/Python deadlock when starting, restarting, pausing or
   closing audio. F5 restart behavior follows the setting described above.
-- The complete QWERTY piano range works in both parts of the F2 NOTE field.
-  Caps Lock previews notes from any voice field without writing pattern data.
+- The complete QWERTY piano range works in the note-name part of F2 NOTE.
+  At the octave digit, type 0..7 to change only the existing note's octave;
+  letter piano keys still enter notes. Caps Lock previews notes from any voice
+  field without writing pattern data.
 - **F11** shows the order list and complete pattern bank, with names and row
   counts. Click the black order-number column and type three decimal digits:
   each completed number applies and advances to the next row. Delete removes
@@ -209,23 +296,27 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 
 ### Linux: install or update
 
-Download the full ZIP and checksum file into the same directory. Both ZIPs extract into the same `sidpulse-tracker/` directory.
+Download `sidpulse-tracker-v0.2.16-full.zip` and
+`sidpulse-tracker-v0.2.16-SHA256SUMS.txt` from the same GitHub release into one
+directory. The full ZIP extracts under `sidpulse-tracker/`.
 
 ```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.12-SHA256SUMS.txt
-unzip sidpulse-tracker-v0.2.12-full.zip
-cd sidpulse-tracker
+sha256sum -c sidpulse-tracker-v0.2.16-SHA256SUMS.txt &&
+unzip sidpulse-tracker-v0.2.16-full.zip &&
+cd sidpulse-tracker &&
 bash run.sh
 ```
 
-For an existing v0.2.11 installation, use the incremental archive. Run these commands from the parent directory containing your existing `sidpulse-tracker/` directory:
+For an existing ZIP installation, close the tracker and back up the folder
+before extracting the full release over it. The release does not contain
+`.git`, `.venv`, `user_songs`, `autosave` or machine preferences. Keep your own
+projects outside the bundled `examples/` and `sidpulse/assets/` directories,
+which are release-owned. An overlay replaces shipped source files; it is not
+a merge of local source edits. A fresh adjacent folder is also suitable.
 
-```bash
-sha256sum --ignore-missing -c sidpulse-tracker-v0.2.12-SHA256SUMS.txt
-unzip -o sidpulse-tracker-v0.2.12-incremental.zip
-cd sidpulse-tracker
-bash run.sh
-```
+For a Git checkout, review and preserve local edits before using
+`git pull --ff-only` on `main`, then run `bash run.sh`. Do not extract a release
+ZIP over source changes that you intend to keep.
 
 The launcher creates `.venv` and installs the pinned `pygame-ce` and `pyresidfp` dependencies if needed. Python 3.10+ is required; Linux Python 3.12 has been tested. Ubuntu systems may require `python3-venv` if virtual-environment creation is unavailable. `pyresidfp` wheels support common Linux and Windows configurations; building from source requires a C++20 compiler and Python development headers.
 
@@ -254,7 +345,9 @@ Song formats 1–5 load with defaults for newer fields. New saves use format 6; 
 
 F2 returns to the pattern editor while the song keeps playing. The green row
 and left `>` mark indicate playback; the outlined cell remains your edit cursor.
-A `*` in the row gutter marks the F7 playback position. F5 loops according to F12 Song / PSID loop (on for new songs and First light).
+A `*` in the row gutter marks the F7 playback position. F5 uses the song loop
+setting: **F11 > Loop song when the playlist ends** or **F12 > Loop song at end**
+(on for new songs and First light).
 An explicit loop=false in older projects stays off. F6 keeps looping until F8.
 An unsequenced pattern selected with F7 plays as a pattern loop.
 
@@ -265,7 +358,8 @@ normal note keys in F4. F2 audition uses the selected physical SID voice; F4
 allocates three voices. During song playback, note entry edits the source without
 stealing its voices for separate audition. Use F8 before auditioning instruments.
 
-F10/Ctrl+W saves; Shift+F10 saves as. Ctrl+Alt +/- zooms; Ctrl+Enter toggles
+F10 opens Save; Shift+F10 opens Save As. Ctrl+S/W quick-saves a named project
+outside the browser. Ctrl+Alt +/- zooms; Ctrl+Enter toggles
 fullscreen. Schism block keys are Alt+C/Alt+P/Alt+O. Ctrl+C centers the cursor;
 Ctrl+Backspace undoes and Ctrl+Shift+Backspace redoes.
 
@@ -355,7 +449,23 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Extract the full ZIP, open PowerShell or Command Prompt in the inner `sidpulse-tracker` folder
+Download the **v0.2.16 full ZIP and SHA-256 checksum file** from GitHub Releases.
+In PowerShell, verify the ZIP before extracting:
+
+```powershell
+$zip = ".\sidpulse-tracker-v0.2.16-full.zip"
+$checksums = ".\sidpulse-tracker-v0.2.16-SHA256SUMS.txt"
+$lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
+    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.16-full\.zip$'
+})
+if ($lines.Count -ne 1) { throw "Missing or ambiguous full-ZIP checksum." }
+$expected = ($lines[0] -split '\s+')[0]
+$actual = (Get-FileHash -LiteralPath $zip -Algorithm SHA256 -ErrorAction Stop).Hash
+if ($actual -ne $expected) { throw "ZIP checksum mismatch. Do not extract." }
+Expand-Archive -LiteralPath $zip -DestinationPath . -ErrorAction Stop
+```
+
+Open PowerShell or Command Prompt in the extracted `sidpulse-tracker` folder
 (the one containing `run.cmd` and `run.ps1`), then run:
 
 ```powershell
@@ -387,9 +497,12 @@ launched process. It does not persistently change your execution policy or need
 an administrator terminal. Microsoft documents the process-specific option in
 [about_PowerShell_exe](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe?view=powershell-5.1#-executionpolicy-executionpolicy).
 
-For an existing v0.2.11 install, extract the v0.2.12 incremental ZIP beside the
-existing `sidpulse-tracker` folder and allow overwrites. Your `user_songs`, `autosave` and `.venv`
-folders are not in the archive.
+For an existing ZIP installation, close the tracker, back up the folder, verify
+the full ZIP as above, then extract it over the installation (use `-Force` with
+`Expand-Archive` to allow replacement). User songs, autosaves and `.venv` are not
+release contents. Preserve local source edits separately; extraction replaces
+files rather than merging them. Git checkouts can update with `git pull --ff-only`
+on `main` after reviewing and preserving local changes.
 
 If you prefer manual setup:
 
@@ -400,9 +513,10 @@ py -3 -m venv .venv
 ```
 
 Direct `run.ps1` remains available where script execution is already enabled.
-The Windows launcher has been reviewed against Microsoft's command-line syntax;
-execution on Windows remains untested here. The CI matrix now includes the full
-CMD-to-PowerShell first-run path, but has not been run on GitHub.
+The CI matrix includes Windows/Linux tests and the Windows CMD-to-PowerShell
+first-run path. Check the Actions result for the exact release commit; local
+validation does not substitute for the remote matrix. The validation procedure
+is recorded in [VALIDATION.md](docs/VALIDATION.md).
 
 ## Development, Git and checkpoint delivery
 
@@ -413,11 +527,13 @@ python -m sidpulse --headless-smoke --example
 python -m sidpulse --log-keys keys.log
 ```
 
-This update includes full/incremental source ZIPs and SHA-256 checksums. The v0.2.12
-incremental contains only changed/new files against the supplied v0.2.11 snapshot;
-no deletions are needed. Neither archive includes Git history bundles, private
-project notes or user data, or overwrites an existing `.git`. Clone the GitHub
-repository when you want its current Git history.
+Public release assets are the **full source ZIP and its SHA-256 checksum file**.
+Build them from the checked release tag, not by zipping a working directory.
+Local cumulative patches are not public release assets. Do not include Git
+history bundles, private project notes, environments, backups or user projects.
+Clone the repository for Git history. See [RELEASING.md](docs/RELEASING.md) for
+the commit, CI, tag, archive and release-review sequence, and
+[release notes](docs/RELEASE_NOTES-v0.2.16.md) for the user-facing change summary.
 
 Repository: [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker).
 

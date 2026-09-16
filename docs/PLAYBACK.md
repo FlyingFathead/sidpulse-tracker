@@ -153,3 +153,16 @@ The regression suite forces an in-flight Python callback during both pause and
 close, in a subprocess with a timeout. It also restarts native playback after
 three-note edits and repeatedly switches two sparse patterns with F5/F6.
 Windows uses pygame's bundled SDL2.dll; Windows execution needs a Windows host.
+
+## Playback activity and song-end looping (v0.2.15)
+
+F4 dots follow actual instrument note triggers and gated voices, including
+keyboard/cell/row audition. A 150 ms visual fade makes short attacks visible;
+these are not loudness meters. Sample dots stay idle because PCM/digi playback
+is not implemented. Activity follows the render worker, not the output cursor.
+
+F11's bottom **Loop song when the playlist ends** button (or **L**) shares the
+existing flag with **F12 > Loop song at end** and SID/PRG export. ON restarts at
+order 000, OFF stops. Ctrl+S saves; Ctrl+Backspace undoes. F6 is a separate pattern
+loop. Received loop edits during the last row apply at the next song-end decision;
+explicit one-pass overrides still win. Bxx jumps and queued PCM are unchanged.

@@ -30,9 +30,10 @@ class PlaybackState:
 
 
 class Sequencer:
-    def __init__(self, sid):
+    def __init__(self, sid, activity=None):
         self.sid = sid
-        self.programs = VoicePrograms(sid)
+        self.activity = activity
+        self.programs = VoicePrograms(sid, self.activity)
         self.filter = None
         self.filter_slide = 0
         self.song = None
@@ -60,7 +61,7 @@ class Sequencer:
         self.loop_override = loop
         for voice in range(3):
             note_off(self.sid, voice, cut=True)
-        self.programs = VoicePrograms(self.sid)
+        self.programs = VoicePrograms(self.sid, self.activity)
         self.filter = deepcopy(song.filter)
         self.filter_slide = 0
         set_filter(self.sid,self.filter)
@@ -125,7 +126,7 @@ class Sequencer:
                 self.programs.release(voice, cut=True)
                 self.programs.voices[voice] = Voice()
             else:
-                self.programs.row(voice, cell, instrument)
+                self.programs.row(voice, cell, instrument, self.instruments[voice])
             if cell.note in (OFF,CUT):
                 self.notes[voice] = None
             elif cell.note is not None:
@@ -170,11 +171,14 @@ class Sequencer:
                 self.row = 0
                 self.order += 1
         if self.mode == 'song':
-            if self.order >= len(self.song.orders) and (self.song.export_config.get("loop",True) if self.loop_override is None else self.loop_override):
+            # Use a loop edit received during the final row at this boundary,
+            # before _row_start applies other queued changes. One-pass overrides win.
+            boundary_song = self.pending_song if self.pending_song is not None else self.song
+            if self.order >= len(self.song.orders) and (boundary_song.export_config.get("loop",True) if self.loop_override is None else self.loop_override):
                 # Restart musical state, preserving elapsed sample time. This is
                 # the same initialization record replayed by the exported loop.
                 elapsed, loops, boundary = self.frames, self.loops+1, self.next_tick
-                self.start(self.song, loop=self.loop_override)
+                self.start(boundary_song, loop=self.loop_override)
                 self.frames, self.loops, self.next_tick = elapsed, loops, boundary
                 return
             if self.order >= len(self.song.orders):

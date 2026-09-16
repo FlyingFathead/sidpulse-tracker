@@ -15,7 +15,8 @@ Historical reference: [Impulse Tracker source](https://github.com/jthlim/impulse
 |---|---|
 | F1, F2, F3, F4, F11, F12 | Help, pattern, samples, instruments, orders + pattern bank, settings |
 | F9 / Ctrl+L | Load .sidpulse |
-| F10 / Ctrl+W | Save .sidpulse |
+| F10 | Save .sidpulse through the shared browser |
+| Ctrl+S / Ctrl+W | Quick-save current .sidpulse (browse when unnamed) |
 | Escape | Close overlay / return, or main menu |
 | Z S X D C V G B H N J M | Lower physical piano row |
 | Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P | Upper physical piano row |
@@ -60,13 +61,13 @@ effect letters are A..Z. Pattern notes support C-0..B-7 in this prototype.
 
 ## Deliberate SID adaptations and additions
 
-- Nine cursor positions preserve the displayed note/octave/instrument/expression/effect layout. Both NOTE positions accept the entire piano range.
+- Nine cursor positions preserve the displayed note/octave/instrument/expression/effect layout. The note-name position accepts the entire physical piano range. At the octave digit, typed 0..7 changes only an existing note's octave, then follows Skip; 8/9 is rejected. Letter piano keys still enter notes there. Caps Lock keeps piano audition non-destructive. Blank, release and cut cells are not converted into notes by an octave digit.
   EX is visible and navigable but reserved. It has no pretend per-voice PCM volume.
 - F4 defaults to an instrument bank and replaces sample-tracker synthesis controls
   with actual SID fields. Tab switches bank/properties. It does not implement all
   historical instrument subpages yet.
 - Shift+F10 is native Save as for now (Schism uses it for audio export). Ctrl+S
-  is an extra Save alias; Ctrl+Shift+S is Save as. Ctrl+N creates a project.
+  is a quick-save alias; Ctrl+Shift+S is Save as. Ctrl+N creates a project.
 - Ctrl+Shift+Backspace adds redo. Ctrl+Alt +/- and Ctrl+Alt+0 add UI zoom without
   stealing Schism Ctrl +/- pattern/order navigation. Ctrl+mouse wheel also zooms.
 - Ctrl+Enter toggles fullscreen; Alt+Enter remains the pattern snapshot command.
@@ -128,3 +129,28 @@ Highlighted fields, Enter, digits and A–F never start parameter entry. All not
 scancodes remain available for audition. Enter still activates buttons and the
 instrument chooser. Ctrl+N always confirms New project, and every quit request
 starts on Cancel with Discard & Quit clearly labelled.
+
+## Added in v0.2.15
+
+F11 **L** toggles the bottom song-end loop button in either panel. Holding the key
+does not repeatedly toggle; Ctrl+L still opens a project. This is a SIDpulse
+addition, not a claim of an identical historical IT shortcut. F12 is the same
+saved flag and F6 still loops only the current pattern.
+
+Instrument-list dots indicate playback/audition rather than cursor selection.
+ADSR's zero attack is a vertical schematic fastest-rate symbol, not a zero-ms SID
+setting. No original note-entry or octave-edit keys are reassigned by these dots.
+
+## Added in v0.2.16
+
+F9, F10, Save As and SID/PRG export destinations share the same browser. F10 now
+opens it even for a named project; Ctrl+S/W quick-saves outside it. Inside Save,
+Ctrl+S/W submits the visible draft. Filename starts from the current saved/opened
+name with an unselected caret before the extension, ready for a revision edit.
+
+Tab/Shift+Tab switches list/name/directory/action/cancel. In text fields,
+Left/Right/Home/End and Shift select/move the caret instead of dialog buttons;
+Backspace/Delete edit text; Ctrl+A/C/X/V operate on selections. Ctrl+L is directory
+editing inside the browser and remains Load elsewhere. Alt+Up goes to the parent.
+No piano key, transport, octave or block-edit bindings are changed outside this
+file-browser context. See [FILE_BROWSER.md](FILE_BROWSER.md).

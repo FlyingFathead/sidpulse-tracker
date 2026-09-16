@@ -95,10 +95,10 @@ def test_f4_program_edit_filter_shortcut_notes_and_native_save_export_workflow(t
         original=deepcopy(app.editor.song)
         key(pg.K_e,pg.KMOD_CTRL|pg.KMOD_SHIFT);assert 'export' in app.dialog
         key(pg.K_s);assert app.page=='files'
-        app.prompt_filename();app.dialog['callback'](str(tmp_path/'song.sidpulse'))
+        app.file_name=str(tmp_path/'song.sidpulse');app.submit_file()
         assert app.path==tmp_path/'song.sidpulse' and not app.editor.dirty
-        assert app.dialog['title']=='Export .sid (PSID v2NG)'
-        app.dialog['callback'](str(tmp_path/'song.sid'))
+        assert app.dialog is None and app.page=='files' and app.file_mode=='sid'
+        app.file_name=str(tmp_path/'song.sid');app.submit_file()
         assert (tmp_path/'song.sid').read_bytes()[:4]==b'PSID'
         assert load(tmp_path/'song.sidpulse')[0]==original
         assert app.editor.song==original and not app.editor.dirty

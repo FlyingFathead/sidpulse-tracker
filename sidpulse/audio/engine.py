@@ -9,6 +9,7 @@ import math
 from queue import Empty, SimpleQueue
 from threading import Event, Thread
 from sidpulse.preferences import DEFAULT_BUFFER
+from sidpulse.audio.activity import InstrumentActivity, ActivitySnapshot
 
 from sidpulse.playback.voices import Audition
 from sidpulse.sid.backend_residfp import ReSIDfpBackend, note_on, note_off, set_filter
@@ -53,6 +54,7 @@ class AudioEngine:
         self.thread = None
         self.error = None
         self.active = ()
+        self.activity = ActivitySnapshot()
         self.levels = (0, 0, 0)
         self.underruns = self.late_wakes = self.over_budget = 0
         self.render_load = self.peak_render_load = 0.0
@@ -103,8 +105,9 @@ class AudioEngine:
             # Settle power-up DC before opening the output. This is host startup,
             # not tracker time; first note still starts at sequencer frame zero.
             sid.render(48000)
-            sequencer = Sequencer(sid)
-            audition = Audition(sid, self.startup.tempo)
+            activity = InstrumentActivity()
+            sequencer = Sequencer(sid, activity)
+            audition = Audition(sid, self.startup.tempo, activity)
             conditioner = OutputConditioner()
             def open_output():
                 self.description = f"reSIDfp / 48 kHz / {self.buffer_frames} samples"
@@ -129,8 +132,9 @@ class AudioEngine:
                         token, note, instrument, *preferred = values
                         if not allocator.held:set_filter(sid,audition_filter)
                         voice = allocator.acquire(token, preferred[0] if preferred else None)
-                        audition.trigger(voice, note, instrument)
-                        audition_sources[voice] = preferred[1] if len(preferred)>1 else None
+                        number = preferred[1] if len(preferred)>1 else None
+                        audition.trigger(voice, note, instrument, number)
+                        audition_sources[voice] = number
                         conditioner.target = 1.0
                     elif name == "scopes":
                         sid.enable_scopes(bool(values[0]))
@@ -148,6 +152,8 @@ class AudioEngine:
                             audition.release(voice)
                         allocator.held.clear()
                     elif name == "play":
+                        activity.reset()
+                        audition_sources.clear()
                         song, mode, order, row, pattern = values
                         audition_filter = deepcopy(song.filter)
                         channel.stop()
@@ -160,7 +166,7 @@ class AudioEngine:
                         sid.render(48000)
                         conditioner = OutputConditioner()
                         conditioner.target = 1.0
-                        audition = Audition(sid, audition.tempo)
+                        audition = Audition(sid, audition.tempo, activity)
                         audition.tempo = song.tempo
                         sequencer.start(song, mode, order, row, pattern)
                         last_wake = time.perf_counter()
@@ -183,8 +189,10 @@ class AudioEngine:
                                     audition.write(voice*7+5,inst.attack<<4|inst.decay)
                                     audition.write(voice*7+6,inst.sustain<<4|inst.release)
                     elif name == "panic":
+                        activity.reset()
+                        audition_sources.clear()
                         sequencer.stop()
-                        audition = Audition(sid, audition.tempo)
+                        audition = Audition(sid, audition.tempo, activity)
                         allocator.held.clear()
                         channel.unpause()
                         conditioner.target = 0.0
@@ -205,12 +213,14 @@ class AudioEngine:
                         model, filter_state, clock = values
                         audition_filter = deepcopy(filter_state)
                         if sid.model != model or sid.clock_name != clock:
+                            activity.reset()
+                            audition_sources.clear()
                             sequencer.stop()
                             allocator.held.clear()
                             channel.stop()
                             sid.set_model(model)
                             sid.set_clock(clock)
-                            audition = Audition(sid, audition.tempo)
+                            audition = Audition(sid, audition.tempo, activity)
                             set_filter(sid, filter_state)
                             sid.render(48000)
                             conditioner = OutputConditioner()
@@ -219,6 +229,10 @@ class AudioEngine:
                 if channel.callback_error is not None:
                     raise RuntimeError('Audio callback failed') from channel.callback_error
                 self.playback = sequencer.state
+                self.activity = activity.snapshot(
+                    sequencer.programs if sequencer.status != "stopped" else audition,
+                    sid.registers, self.muted,
+                    enabled=sequencer.status != "paused" and conditioner.target > 0)
                 self.active = tuple(v for v in range(3) if sid.registers[v * 7 + 4] & 1
                                     and sid.registers[v * 7 + 4] & 0xF0)
                 self.levels = tuple(int(v in self.active) for v in range(3))
@@ -241,6 +255,10 @@ class AudioEngine:
                         self.over_budget += int(ratio > 1.0)
                         channel.write(pcm)
                         self.playback = sequencer.state
+                        self.activity = activity.snapshot(
+                            sequencer.programs if sequencer.status != "stopped" else audition,
+                            sid.registers, self.muted,
+                            enabled=sequencer.status != "paused" and conditioner.target > 0)
                         continue  # prime both queue slots before waiting
                 self.stop_event.wait(.001)
         except Exception as exc:
@@ -249,6 +267,7 @@ class AudioEngine:
             self.error = f"{type(exc).__name__}: {exc}"
             self.description = "Audio unavailable; editing remains available"
         finally:
+            self.activity = ActivitySnapshot()
             self.ready = False
             if channel is not None:
                 try: channel.close()

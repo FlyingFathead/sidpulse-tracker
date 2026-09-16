@@ -199,8 +199,8 @@ def test_prg_menu_export_keeps_unsaved_editor_state(tmp_path):
         app.begin_export('prg')
         assert app.dialog['title'].startswith('Export PRG')
         app.handle(pg.event.Event(pg.KEYDOWN, key=pg.K_e, mod=0, unicode='e'))
-        assert app.dialog['title'] == 'Export .prg (C64 program)'
-        app.dialog['callback'](str(tmp_path / 'music.prg'))
+        assert app.dialog is None and app.page == 'files' and app.file_mode == 'prg'
+        app.file_name = str(tmp_path / 'music.prg'); app.submit_file()
         assert (tmp_path / 'music.prg').read_bytes() == compile_prg(before).data
         assert app.editor.song == before and app.editor.saved is None
         assert app.path is None and not list(tmp_path.glob('*.sidpulse'))

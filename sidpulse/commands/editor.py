@@ -4,6 +4,8 @@ from dataclasses import replace
 
 from sidpulse.commands.history import History
 from sidpulse.song.model import Cell, Instrument, Pattern, Song
+from sidpulse.playback.voices import supported
+from sidpulse.ui.pattern_grid import PatternGrid
 
 FIELDS = ("note", "note", "instrument", "instrument", "expression", "expression", "effect", "parameter", "parameter")
 
@@ -25,8 +27,24 @@ class Editor:
         self.stored_pattern = None
         self.centered = False
         self.highlight = True
+        self.pattern_grid = PatternGrid()
         self.edit_mask = {"note", "instrument"}
         self.status = "Ready. F1 help | Caps Lock: audition without writing"
+
+    def set_song_loop(self, enabled=None):
+        """One undoable project flag shared by preview and SID/PRG export."""
+        current = self.song.export_config.get("loop", True)
+        if enabled is not None and type(enabled) is not bool:
+            raise ValueError("Song loop must be true or false")
+        value = not current if enabled is None else enabled
+        if value != current:
+            config = deepcopy(self.song.export_config)
+            config["loop"] = value
+            self.edit("Enable song loop" if value else "Disable song loop",
+                      [(("export_config",), config)])
+        self.status = ("Song loop ON: restart at order 000 when the playlist ends."
+                       if value else "Song loop OFF: stop after the last playlist entry.")
+        return value
 
     @property
     def pattern(self):
@@ -83,15 +101,26 @@ class Editor:
         self.last_cell = deepcopy(cell)
         self.advance()
 
+    @staticmethod
+    def effect_edit_label(kind, cell):
+        code = f"{cell.effect}{cell.parameter or 0:02X}" if cell.effect else "(no effect)"
+        state = "" if supported(cell.effect, cell.parameter or 0) else " (stored; unsupported in playback/export)"
+        return f"Set {kind} {code}{state}"
+
     def enter_digit(self, char):
         field = FIELDS[self.column]
         cell = deepcopy(self.cell)
         if field == "expression":
             self.status = "EX is reserved: the SID has no independent per-voice volume register"
-        elif self.column == 1 and char in "01234567" and char:
-            if cell.note is not None and cell.note >= 0:
+        elif self.column == 1 and len(char) == 1 and char in "0123456789":
+            if char not in "01234567":
+                self.status = "Note octave must be 0..7; note unchanged"
+            elif cell.note is None or cell.note < 0:
+                self.status = "Enter a pitched note before changing its octave"
+            else:
                 cell.note = cell.note % 12 + 12 * int(char)
                 self.edit("Set note octave", [(self.cell_path(), cell)])
+                self.last_cell = deepcopy(cell)
                 self.advance()
         elif field == "instrument" and char in "0123456789" and char:
             old = cell.instrument or 0
@@ -115,7 +144,7 @@ class Editor:
             old = cell.parameter or 0
             nibble = int(char, 16)
             cell.parameter = nibble * 16 + (old & 15) if self.column == 7 else (old & 240) + nibble
-            self.edit("Set effect parameter (stored; sequencing is pending)", [(self.cell_path(), cell)])
+            self.edit(self.effect_edit_label("effect parameter", cell), [(self.cell_path(), cell)])
             if self.column == 7:
                 self.column = 8
             else:
@@ -123,7 +152,7 @@ class Editor:
                 self.advance()
         elif field == "effect" and len(char) == 1 and "A" <= char.upper() <= "Z":
             cell.effect = char.upper()
-            self.edit("Set effect (stored; sequencing is pending)", [(self.cell_path(), cell)])
+            self.edit(self.effect_edit_label("effect", cell), [(self.cell_path(), cell)])
             self.advance()
 
     def clear_field(self):

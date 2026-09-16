@@ -56,29 +56,17 @@ def grid_value(pos,rect,start,low,high):
     return step,pitch
 
 
-def envelope_points(rect,inst):
-    x,y,w,h=rect
-    level=y+h*(1-inst.sustain/15)
-    return [(x,y+h),(x+w*(.04+.22*inst.attack/15),y),
-            (x+w*(.30+.22*inst.decay/15),level),(x+w*.66,level),
-            (x+w*(.72+.26*inst.release/15),y+h)]
-
-
-def envelope_value(pos,rect,field):
-    x=clamp((pos[0]-rect.x)/max(1,rect.width),0,1)
-    level=clamp(round(15*(1-(pos[1]-rect.y)/max(1,rect.height))),0,15)
-    if field=='sustain':return {'sustain':level}
-    base,width={'attack':(.04,.22),'decay':(.30,.22),'release':(.72,.26)}[field]
-    result={field:clamp(round((x-base)/width*15),0,15)}
-    if field=='decay':result['sustain']=level
-    return result
+from sidpulse.ui.envelope import envelope_points, envelope_value, attack_caption
 
 
 def draw_envelope(r,app,left,top,width,height):
     inst=app.editor.song.instruments[app.editor.instrument]
-    r.control_text(pg.Rect(left*r.cw,top*r.rh,width*r.cw,r.rh),
-                   "ADSR — drag the handles",TEXT)
-    graph=r.well(left,top+1.5,width,max(4,height-3)).inflate(-r.cw,-r.rh)
+    compact = height < 8
+    title = ('ADSR / '+attack_caption(inst.attack,app.editor.song.clock) if compact
+             else "ADSR — schematic / drag handles")
+    r.control_text(pg.Rect(left*r.cw,top*r.rh,width*r.cw,r.rh),title,TEXT)
+    graph_height = max(2.5,height-2.5) if compact else max(4,height-4)
+    graph=r.well(left,top+1.5,width,graph_height).inflate(-max(16,r.cw+4),-r.rh)
     for i in range(5):
         y=graph.y+i*graph.height/4
         pg.draw.line(r.screen,(35,39,38),(graph.x,y),(graph.right,y))
@@ -97,6 +85,8 @@ def draw_envelope(r,app,left,top,width,height):
         pg.draw.rect(r.screen,CREAM,handle,1)
         r.hits.append((handle.inflate(8,8),'graph_drag',{'kind':'envelope','field':ADSR[i],'rect':graph.copy()}))
         r.text((a[0]+b[0])/2/r.cw-.5,(graph.bottom+4)/r.rh,ADSR[i][0].upper(),TEXT)
+    if not compact:
+        r.text(left,top+height-1,attack_caption(inst.attack,app.editor.song.clock),TEXT,width)
     return graph
 
 
@@ -118,7 +108,7 @@ def draw_adsr(r,app,left,top,bottom):
         pg.draw.rect(r.screen,SLIDER,(slider.x,slider.y,round(slider.width*value/15),slider.height))
         slider_thumb(r,slider,value/15)
         r.hits.append((slider.inflate(0,6),'graph_drag',{'kind':'slider','field':field,'rect':slider.copy(),'index':i+2}))
-    r.text(left,bottom-1,'Rate settings 00..0F; sustain holds until note-off.',TEXT,width)
+    r.text(left,bottom-1,'Schematic rate controls 00..0F; A00 is fastest, not zero time.',TEXT,width)
     # Stage widths expose the 16 rate settings, not a misleading common time axis.
 
 

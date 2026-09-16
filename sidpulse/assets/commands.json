@@ -388,29 +388,15 @@
         "global"
       ],
       "shortcuts": [
-        "F10",
-        "Ctrl+W",
-        "Ctrl+S"
+        "F10"
       ],
-      "description": "Save native project",
+      "description": "Save through the shared browser; default to the current project name",
       "command": "save",
-      "target": "App.save_project",
+      "target": "App.browse",
       "key_rules": [
         {
           "key": "K_F10",
           "modifiers": []
-        },
-        {
-          "key": "K_w",
-          "modifiers": [
-            "ctrl"
-          ]
-        },
-        {
-          "key": "K_s",
-          "modifiers": [
-            "ctrl"
-          ]
         }
       ],
       "applicable": true,
@@ -422,6 +408,40 @@
       "reason": ""
     },
     {
+      "id": "file.quick_save",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "Ctrl+S",
+        "Ctrl+W"
+      ],
+      "description": "Quick-save to the current project file; browse when unsaved",
+      "command": "quick_save",
+      "target": "App.save_project",
+      "key_rules": [
+        {
+          "key": "K_s",
+          "modifiers": [
+            "ctrl"
+          ]
+        },
+        {
+          "key": "K_w",
+          "modifiers": [
+            "ctrl"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": ""
+    },
+    {
       "id": "file.save_as",
       "contexts": [
         "global"
@@ -430,7 +450,7 @@
         "Shift+F10",
         "Ctrl+Shift+S"
       ],
-      "description": "Save project as",
+      "description": "Save a new revision using the shared file browser",
       "command": "save_as",
       "target": "App.browse",
       "key_rules": [
@@ -2240,6 +2260,31 @@
       "reason": ""
     },
     {
+      "id": "orders.song_loop",
+      "contexts": [
+        "orders"
+      ],
+      "shortcuts": [
+        "L"
+      ],
+      "description": "Loop song when playlist ends: restart at order 000 or stop",
+      "command": "page_key",
+      "target": "Editor.set_song_loop",
+      "key_rules": [
+        {
+          "key": "K_l",
+          "modifiers": []
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": ""
+    },
+    {
       "id": "orders.navigation",
       "contexts": [
         "orders"
@@ -2343,11 +2388,15 @@
       ],
       "shortcuts": [
         "Arrows",
+        "Home/End",
         "Enter",
         "Tab",
-        "Backspace"
+        "Shift+Tab",
+        "Ctrl+L",
+        "Alt+Up",
+        "Ctrl+A/C/X/V"
       ],
-      "description": "Browse projects / enter filename",
+      "description": "Shared file browser with inline editable filename and directory",
       "command": "page_key",
       "target": "App.select_file",
       "key_rules": [],

@@ -21,6 +21,28 @@ class ExportError(ValueError):
     pass
 
 
+class ExportMemoryError(ExportError):
+    """Exact existing-player memory requirement, not the native project size."""
+    def __init__(self, player_bytes, record_bytes, sequence_bytes):
+        self.player_bytes = player_bytes
+        self.record_bytes = record_bytes
+        self.sequence_bytes = sequence_bytes
+        self.required_bytes = player_bytes + record_bytes + sequence_bytes
+        self.budget_bytes = LIMIT - LOAD
+        self.excess_bytes = self.required_bytes - self.budget_bytes
+        super().__init__(
+            'SID export aborted: project exceeds the memory budget. '
+            'Shorten or simplify the project and try again. '
+            f'Compiled SID needs {self.required_bytes:,} bytes; '
+            f'the $1000..$9FFF memory budget is {self.budget_bytes:,} bytes '
+            f'({self.excess_bytes:,} over). Player {player_bytes:,}, '
+            f'unique tick records {record_bytes:,}, pointer sequence {sequence_bytes:,}. '
+            'The editable .sidpulse is unchanged and may still play in the tracker. '
+            'Simplify a separate export copy to preserve your original arrangement. '
+            'No notes were dropped.'
+        )
+
+
 @dataclass(frozen=True)
 class ExportResult:
     data: bytes
@@ -103,16 +125,20 @@ def compile_song(song):
         raise ExportError('Compilation exceeded 18,000 ticks; shorten the arrangement')
     player=bytearray((Path(__file__).resolve().parents[1]/'assets/player.bin').read_bytes())
     if len(player)!=DATA-LOAD:raise ExportError('Invalid bundled player image')
+    # Preflight the complete requirement before assigning 16-bit addresses.
+    # The player and record layout are unchanged, including every repeated write.
+    unique_records = dict.fromkeys(records)
+    record_bytes = sum(map(len, unique_records))
+    sequence_bytes = 2 * (len(records) + 1)
+    if len(player) + record_bytes + sequence_bytes > LIMIT - LOAD:
+        raise ExportMemoryError(len(player), record_bytes, sequence_bytes)
     addresses={};payload=bytearray();order=[]
     for record in records:
         if record not in addresses:
             address=DATA+len(payload)
-            if address+len(record)>LIMIT:raise ExportError('Compiled SID exceeds the $1000..$9FFF memory budget; shorten or simplify the song')
             addresses[record]=address;payload.extend(record)
         order.append(addresses[record])
     sequence=DATA+len(payload)
-    if sequence+2*(len(order)+1)>LIMIT:
-        raise ExportError('Compiled SID exceeds the $1000..$9FFF memory budget; shorten or simplify the song')
     payload.extend(struct.pack('<'+'H'*(len(order)+1),*order,0))
     struct.pack_into('<HH',player,0x1F0,sequence,sequence if loop else 0)
     def title(text,label):

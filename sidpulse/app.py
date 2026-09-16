@@ -8,6 +8,7 @@ from sidpulse.audio.engine import AudioEngine
 from sidpulse import __version__
 from sidpulse.preferences import BUFFERS, THEMES, load_preferences, save_buffer, load_appearance, save_preferences, config_path, load_file_browser_dates, load_restart_on_f5
 from sidpulse.commands.editor import Editor, FIELDS
+from sidpulse.ui.pattern_grid import PatternGrid
 from sidpulse.project.format import load, save
 from sidpulse.song.model import Cell, ControlCell, Instrument, Song
 from sidpulse.ui.keyboard import Command, dispatch
@@ -20,9 +21,11 @@ LOG = logging.getLogger("sidpulse.keys")
 
 
 from sidpulse.ui.instrument_actions import InstrumentActions
+from sidpulse.ui.file_actions import FileActions
+from sidpulse.ui.file_browser import FileBrowser
 
 
-class App(InstrumentActions):
+class App(InstrumentActions, FileActions):
     def __init__(self, song=None, path=None, audio=True, size=(1280, 900), zoom=1.0, audio_buffer=None):
         pg.display.init()
         pg.font.init()
@@ -67,14 +70,11 @@ class App(InstrumentActions):
         self.held = set()
         self.audition_tokens = {}
         self.editor_metadata = {}
-        self.file_mode = "open"
-        self.file_dir = self.path.parent if self.path else Path.cwd()
-        self.file_entries = []
-        self.file_modified = {}
+        self.browser = FileBrowser(self.path.parent if self.path else Path.cwd())
+        if self.path:
+            self.browser.remember_project(self.path)
         self.file_browser_show_modified = load_file_browser_dates()
         self.restart_on_f5 = load_restart_on_f5()
-        self.file_index = 0
-        self.file_name = self.path.name if self.path else "untitled.sidpulse"
         self.after_save = None
         self.menu_path = []
         self.menu_indices = []
@@ -83,6 +83,7 @@ class App(InstrumentActions):
         self.diagnostics = None
         self.runtime_started = False
         self.runtime_clean = True
+        self.song_loop_key_held = False
         self.order_focus = "orders"
         self.bank_pattern = self.editor.pattern_id
         self.order_draft = None
@@ -117,7 +118,10 @@ class App(InstrumentActions):
             if restore:
                 self.open_project(data['autosave'])
                 self.path = Path(data['source']) if data.get('source') else None
-                self.file_name = self.path.name if self.path else 'recovered.sidpulse'
+                if self.path:
+                    self.browser.remember_project(self.path)
+                else:
+                    self.file_name = 'recovered.sidpulse'
                 self.editor.saved = None  # recovery never marks the source as saved
                 self.editor.status = 'Autosave recovered. F10 saves your project.'
             self.autosave.acknowledge(marker)
@@ -219,6 +223,7 @@ class App(InstrumentActions):
     def restore_metadata(self, data):
         self.editor_metadata = deepcopy(data)
         ed = self.editor
+        ed.pattern_grid = PatternGrid.from_metadata(data.get("pattern_grid"))
         for key, lo, hi in (("row", 0, 255), ("voice", 0, 2), ("column", 0, 8), ("octave", 0, 7), ("skip", 0, 9)):
             value = data.get(key)
             if type(value) is int and lo <= value <= hi:
@@ -243,6 +248,7 @@ class App(InstrumentActions):
             result[key] = getattr(self.editor, key)
         result["zoom"] = self.zoom
         result["helper_strip"] = self.helper_strip
+        result["pattern_grid"] = self.editor.pattern_grid.metadata(result.get("pattern_grid"))
         return result
 
     def text_dialog(self, title, initial, callback, message=""):
@@ -303,9 +309,12 @@ class App(InstrumentActions):
             return
         try:
             self.path = save(destination or self.path, self.editor.song, self.metadata())
+            self.browser.remember_project(self.path)
             self.editor.mark_saved()
             self.editor.status = f"Saved {self.path.name}"
-            self.page = self.previous_page if self.previous_page != "files" else "pattern"
+            if self.page == "files":
+                self.page = self.browser.return_page
+            self.sync_file_text_input()
             if self.after_save:
                 callback, self.after_save = self.after_save, None
                 callback()
@@ -322,9 +331,11 @@ class App(InstrumentActions):
         self.playback_mark = None
         self.restore_metadata(metadata)
         self.path = Path(path).expanduser()
+        self.browser.remember_project(self.path)
         self.audio.configure(song)
         self.page = "pattern"
         self.editor.status = f"Loaded {self.path.name}"
+        self.sync_file_text_input()
 
     def new_project(self):
         self.panic()
@@ -336,67 +347,11 @@ class App(InstrumentActions):
         self.playback_mark = None
         self.editor_metadata = {}
         self.path = None
+        self.browser.set_name("untitled.sidpulse")
+        self.browser.export_result = None
         self.page = "pattern"
+        self.sync_file_text_input()
         self.audio.configure(self.editor.song)
-
-    def browse(self, mode):
-        self.release_audition()
-        if self.page != "files":
-            self.previous_page = self.page
-        self.page = "files"
-        self.file_mode = mode
-        if mode == "save":
-            self.file_name = self.path.name if self.path else "untitled.sidpulse"
-        self.refresh_files()
-
-    def refresh_files(self):
-        try:
-            entries = sorted(self.file_dir.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower()))
-            self.file_entries = [self.file_dir.parent] + [p for p in entries if not p.name.startswith(".") and (p.is_dir() or p.suffix.lower() == ".sidpulse")]
-            from datetime import datetime
-            self.file_modified = {}
-            for path in self.file_entries[1:]:
-                try:
-                    self.file_modified[path] = datetime.fromtimestamp(path.stat().st_mtime).strftime('%Y-%m-%d %H:%M')
-                except (OSError, ValueError, OverflowError):
-                    self.file_modified[path] = 'Unavailable'
-            self.file_index = 0
-            self.editor.status = "Arrows: choose | Enter: open | Tab: filename | Backspace: parent"
-        except OSError as exc:
-            self.file_entries = []
-            self.editor.status = str(exc)
-
-    def select_file(self):
-        if not self.file_entries:
-            return
-        path = self.file_entries[self.file_index]
-        if path.is_dir():
-            self.file_dir = path
-            self.refresh_files()
-        elif self.file_mode == "open":
-            self.open_project(path)
-        else:
-            self.file_name = path.name
-            self.prompt_filename()
-
-    def prompt_filename(self):
-        def accept(value):
-            target = Path(value).expanduser()
-            if not target.is_absolute():
-                target = self.file_dir / target
-            if self.file_mode == "open":
-                self.open_project(target)
-                return
-            if not value.strip():
-                raise ValueError("Enter a filename")
-            target = target.with_suffix(".sidpulse")
-            if target.exists() and (self.path is None or target.resolve() != self.path.resolve()):
-                self.dialog = {"title": "Overwrite project?", "message": f"Replace {target.name}? The previous bytes will be kept as .bak.",
-                               "hint": "Y: overwrite | Esc: cancel", "yes": lambda: self.save_project(target)}
-            else:
-                self.save_project(target)
-        self.text_dialog("Save .sidpulse" if self.file_mode == "save" else "Open .sidpulse", self.file_name, accept,
-                         "Relative to the displayed directory. You may enter an absolute path.")
 
     def change_page(self, page):
         if self.page == 'orders':
@@ -411,7 +366,15 @@ class App(InstrumentActions):
         if page == "orders" and self.page != "orders":
             self.bank_pattern = self.editor.pattern_id
             self.order_entry_index = self.editor.order
+        leaving_files = self.page == "files" and page != "files"
         self.page = page
+        if leaving_files:
+            if page != "help":
+                self.after_save = None
+                self.browser.export_result = None
+            self.sync_file_text_input()
+        elif page == "files":
+            self.sync_file_text_input()
         self.property_index = 0
         self.instrument_focus = "list"
         self.instrument_slot = self.editor.instrument
@@ -457,7 +420,7 @@ class App(InstrumentActions):
                 self.execute(Command("quit"))
             else:
                 command = dispatch(event, self.page, self.editor.column)
-                if command and command.name in ("page", "open", "save", "save_as", "panic", "comments", "fullscreen", "pending", "play", "pause"):
+                if command and command.name in ("page", "open", "save", "quick_save", "save_as", "panic", "comments", "fullscreen", "pending", "play", "pause"):
                     self.menu_path.clear()
                     self.execute(command, event)
         elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
@@ -495,29 +458,16 @@ class App(InstrumentActions):
                      "hint":"S: save project + export | E: export only | Esc: cancel",
                      "export":lambda:self.prompt_export(result,kind)}
 
-    def prompt_export(self,result,kind='sid'):
-        from sidpulse.export.prg import save_prg
-        suffix='.prg' if kind=='prg' else '.sid'
-        label='PRG' if kind=='prg' else 'PSID'
-        default=self.path.with_suffix(suffix) if self.path else self.file_dir/('untitled'+suffix)
-        def accept(text):
-            if not text.strip():raise ValueError("Enter an export filename")
-            target=Path(text).expanduser().with_suffix(suffix)
-            if not target.is_absolute():target=self.file_dir/target
-            def write():
-                path=save_prg(target,result) if kind=='prg' else save_export(target,result)
-                self.editor.status=f"Exported {path.name}: {len(result.data):,} bytes / {result.seconds:.2f}s"
-                self.dialog={"title":f"{label} exported", "message":self.editor.status+' '+(' '.join(result.warnings) or 'Editable project and song notes remain intact.'),"hint":"Enter / Esc: close"}
-            if target.exists():
-                self.dialog={"title":f"Overwrite {label} export?","message":f"Replace {target.name}? Previous export will be kept as {suffix}.bak.","hint":"Y: overwrite | Esc: cancel","yes":write}
-            else:write()
-        self.text_dialog("Export .prg (C64 program)" if kind=='prg' else "Export .sid (PSID v2NG)",str(default),accept,
-                         "C64 PRG: LOAD then RUN on the selected PAL/NTSC machine. RUN/STOP exits. Your editable project is unchanged." if kind=='prg' else
-                         "One PAL/NTSC SID, native 6510 player. This does not change your .sidpulse project or its saved/unsaved status.")
-
     def change_property(self, delta=0, direct=None):
         ed = self.editor
         index = self.property_index
+        if self.page == 'settings' and index in (24, 25):
+            field = 'rows_per_beat' if index == 24 else 'beats_per_bar'
+            ed.pattern_grid = ed.pattern_grid.changed(field, delta=delta, direct=direct)
+            grid = ed.pattern_grid
+            ed.status = (f'Grid: {grid.rows_per_beat} rows/beat, {grid.rows_per_bar} rows/bar. '
+                         'Display only; Ctrl+S saves it with this project.')
+            return
         if self.page == 'settings' and index == 23:
             value = not self.restart_on_f5 if direct is None else str(direct).lower() in ('1','true','on','yes')
             save_preferences({'restart_on_f5': value})
@@ -556,15 +506,16 @@ class App(InstrumentActions):
                 save_preferences({'file_browser_show_modified': value})
                 self.file_browser_show_modified = value
                 return
-            if field in ("released","export_loop"):
-                key="loop" if field=="export_loop" else field
-                value=ed.song.export_config.get(key,True if key=='loop' else '2026 SIDpulse')
-                if key=='released' and direct is None:
+            if field == "export_loop":
+                ed.set_song_loop(None if direct is None else str(direct).lower() in ('on','true','1','yes'))
+                return
+            if field == "released":
+                value=ed.song.export_config.get("released", '2026 SIDpulse')
+                if direct is None:
                     self.text_dialog("PSID released",value,lambda text:self.change_property(direct=text))
                     return
-                new=str(direct).lower() in ('on','true','1','yes') if key=='loop' and direct is not None else not value if key=='loop' else direct
-                config=deepcopy(ed.song.export_config);config[key]=new
-                ed.edit("Set export "+key,[(("export_config",),config)])
+                config=deepcopy(ed.song.export_config);config["released"]=direct
+                ed.edit("Set export released",[(("export_config",),config)])
                 return
             if field in ("theme","font_size","font_bold","font_file"):
                 old=self.appearance[field]
@@ -650,15 +601,8 @@ class App(InstrumentActions):
             else:
                 self.help_scroll += {pg.K_UP: -1, pg.K_DOWN: 1, pg.K_PAGEUP: -10, pg.K_PAGEDOWN: 10}.get(key, 0)
         elif self.page == "files":
-            if key in (pg.K_UP, pg.K_DOWN, pg.K_PAGEUP, pg.K_PAGEDOWN):
-                self.file_index = max(0, min(len(self.file_entries) - 1, self.file_index + {pg.K_UP: -1, pg.K_DOWN: 1, pg.K_PAGEUP: -12, pg.K_PAGEDOWN: 12}[key]))
-            elif key == pg.K_RETURN:
-                self.select_file()
-            elif key == pg.K_BACKSPACE:
-                self.file_dir = self.file_dir.parent
-                self.refresh_files()
-            elif key == pg.K_TAB:
-                self.prompt_filename()
+            from sidpulse.ui.file_browser_input import handle_event
+            handle_event(self, event)
         elif self.page == "orders":
             from sidpulse.ui.orders import handle_key
             handle_key(self,event)
@@ -666,7 +610,14 @@ class App(InstrumentActions):
             if key in (pg.K_UP, pg.K_DOWN):
                 self.sample_index = max(1, min(99, self.sample_index + (-1 if key == pg.K_UP else 1)))
         elif self.page in ("instrument", "settings"):
-            if self.page == 'settings' and self.property_index == 23 and key == pg.K_RETURN:
+            if self.page == 'settings' and self.property_index in (24, 25) and key == pg.K_RETURN:
+                field = 'rows_per_beat' if self.property_index == 24 else 'beats_per_bar'
+                self.text_dialog('Pattern grid: ' + field.replace('_', ' '),
+                                 getattr(ed.pattern_grid, field),
+                                 lambda value: self.change_property(direct=value),
+                                 'Decimal. Display only: no tempo, note or shuffle timing changes. Ctrl+S saves the grid.')
+                return
+            if self.page == 'settings' and self.property_index in (15, 23) and key == pg.K_RETURN:
                 self.change_property()
                 return
             if self.page == 'settings' and self.property_index == 22 and key in (pg.K_RETURN,pg.K_LEFT,pg.K_RIGHT):
@@ -716,7 +667,7 @@ class App(InstrumentActions):
                 if key==pg.K_DELETE:self.confirm_delete_instrument();return
             if self.page=="instrument" and self.instrument_tab=="adsr" and key in (pg.K_UP,pg.K_DOWN):
                 self.property_index=max(2,min(5,self.property_index+(-1 if key==pg.K_UP else 1)));return
-            maximum = len(INSTRUMENT_FIELDS)-1 if self.page == "instrument" else 23
+            maximum = len(INSTRUMENT_FIELDS)-1 if self.page == "instrument" else 25
             if key in (pg.K_UP, pg.K_DOWN):
                 lo,hi=(9,19) if self.page=="instrument" and self.instrument_tab=="motion" else (0,8) if self.page=="instrument" else (0,maximum)
                 self.property_index = max(lo, min(hi, self.property_index + (-1 if key == pg.K_UP else 1)))
@@ -788,7 +739,7 @@ class App(InstrumentActions):
             for voice, cell in cells:
                 if cell.note is not None and cell.note >= 0 and (cell.instrument or ed.instrument) in ed.song.instruments:
                     token = f"row-{scan}-{voice}"
-                    self.audio.send("on", token, cell.note, ed.song.instruments[cell.instrument or ed.instrument], voice)
+                    self.audio.send("on", token, cell.note, ed.song.instruments[cell.instrument or ed.instrument], voice, cell.instrument or ed.instrument)
                     tokens.append(token)
             self.audition_tokens[scan] = tokens
         elif name == "page":
@@ -934,11 +885,10 @@ class App(InstrumentActions):
             self.confirm_quit()
         elif name == "open":
             self.confirm_discard(lambda: self.browse("open"))
-        elif name == "save":
+        elif name == "quick_save":
             self.save_project()
-        elif name == "save_as":
+        elif name in ("save", "save_as"):
             self.browse("save")
-            self.prompt_filename()
         elif name == "new":
             self.confirm_action("New project?", "All unsaved changes will be lost.", self.new_project)
         elif name in ("clear_patterns", "clear_instruments"):
@@ -949,9 +899,13 @@ class App(InstrumentActions):
             self.confirm_action("Clear all pattern data?" if name == "clear_patterns" else "Clear all instruments?",
                                 message, lambda: self.clear_project_data(name))
         elif name == "escape":
-            if self.page in ("help", "files"):
-                self.page = self.previous_page if self.previous_page not in ("help", "files") else "pattern"
-                self.after_save = None
+            if self.page == "files":
+                self.cancel_browser()
+            elif self.page == "help":
+                self.page = self.previous_page if self.previous_page != "help" else "pattern"
+                if self.page != "files":
+                    self.after_save = None
+                self.sync_file_text_input()
             else:
                 self.open_menu()
         elif name == "page_key":
@@ -1021,8 +975,13 @@ class App(InstrumentActions):
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
                 self.dialog = dialog.get("return_dialog")
-                self.after_save = None
                 pg.key.stop_text_input()
+                if dialog.get("on_cancel"):
+                    dialog["on_cancel"]()
+                else:
+                    self.after_save = None
+                    if self.page == "files":
+                        self.sync_file_text_input()
             elif "text" in dialog:
                 if event.key == pg.K_BACKSPACE:
                     dialog["text"] = "" if dialog.pop("select_all", False) else dialog["text"][:-1]
@@ -1074,7 +1033,13 @@ class App(InstrumentActions):
             elif event.key == pg.K_RETURN:
                 self.dialog = None
 
+    def file_event(self, event):
+        from sidpulse.ui.file_browser_input import handle_event
+        return handle_event(self, event)
+
     def handle(self, event):
+        if event.type == pg.KEYUP and event.key == pg.K_l:
+            self.song_loop_key_held = False
         if self.diagnostics: self.diagnostics.event(self,event)
         if event.type in (pg.KEYDOWN, pg.KEYUP):
             LOG.debug("type=%s key=%s scan=%s mods=%s page=%s", event.type, event.key, getattr(event,'scancode',0), event.mod, self.page)
@@ -1088,6 +1053,7 @@ class App(InstrumentActions):
             if event.type == pg.QUIT:
                 self.confirm_quit()
             elif event.type == pg.WINDOWFOCUSLOST:
+                self.song_loop_key_held = False
                 self.release_audition()
                 if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length'):
                     self.dialog['drag_rect'] = None
@@ -1099,6 +1065,8 @@ class App(InstrumentActions):
                 self.dialog_event(event)
             elif self.menu_path:
                 self.menu_event(event)
+            elif self.page == "files" and self.file_event(event):
+                pass
             elif event.type==pg.KEYDOWN and self.page=="pattern" and self.control_focus and not event.mod & (pg.KMOD_ALT|pg.KMOD_CTRL):
                 if event.key in (pg.K_UP,pg.K_DOWN,pg.K_PAGEUP,pg.K_PAGEDOWN):
                     self.editor.move(rows={pg.K_UP:-1,pg.K_DOWN:1,pg.K_PAGEUP:-16,pg.K_PAGEDOWN:16}[event.key])
@@ -1133,11 +1101,13 @@ class App(InstrumentActions):
                     elif self.instrument_tab in ('general','motion','adsr'):
                         lo,hi=(9,19) if self.instrument_tab=='motion' else (2,5) if self.instrument_tab=='adsr' else (0,8)
                         self.property_index=max(lo,min(hi,self.property_index-event.y));self.instrument_focus='properties'
-                elif self.page == 'settings':self.property_index=max(0,min(23,self.property_index-event.y))
+                elif self.page == 'settings':self.property_index=max(0,min(25,self.property_index-event.y))
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 for rect, action, value in reversed(self.renderer.hits):
                     if not rect.collidepoint(event.pos):
                         continue
+                    if action == 'activity_indicator':
+                        continue  # hover feedback must not steal the row's click
                     if self.instrument_action(action,value,event.pos):
                         pass
                     elif action == "page":
@@ -1167,6 +1137,9 @@ class App(InstrumentActions):
                         self.editor.edit("Set oscillator waveform", [(("instruments", self.editor.instrument, "waveform"), value)])
                         self.property_index = 1
                         self.instrument_focus = "properties"
+                    elif action == 'song_loop':
+                        from sidpulse.ui.orders import toggle_loop
+                        toggle_loop(self)
                     elif action in ('order_focus','bank_pattern','bank_open','order','order_value'):
                         from sidpulse.ui.orders import commit_entry, begin_entry, open_pattern
                         if not commit_entry(self): break

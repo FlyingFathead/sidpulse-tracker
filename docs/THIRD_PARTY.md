@@ -13,11 +13,14 @@
 - [DejaVu Sans Mono](https://dejavu-fonts.github.io/): bundled scalable font,
   with the complete distribution copyright/license in `sidpulse/assets/FONT_LICENSE.txt`.
 
-The project is private at this stage. No public license for Harry's original
-SIDpulse source has been selected in this initial handoff. Resolve public release
-licensing, including compatibility with the GPL native SID dependency, before
-publishing/distributing a combined application. This does not change how the
-source prototype is run locally.
+## Project licensing status
+
+The SIDpulse Tracker v0.2.16 source tree contains no project-wide `LICENSE`
+for the original SIDpulse code. The third-party notices above identify their
+respective components; they do not specify a license for SIDpulse itself.
+Choosing and recording that license remains the author's decision. The
+v0.2.16 documentation does not select a license, change third-party notices, or
+assert that native dependencies have been relicensed.
 
 ## v0.2.0 export validation
 

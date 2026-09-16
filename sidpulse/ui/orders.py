@@ -85,10 +85,19 @@ def entry_key(app, event):
     return True
 
 
+def toggle_loop(app):
+    if commit_entry(app):
+        app.editor.set_song_loop()
+
+
 def handle_key(app, event):
     ed = app.editor
     key = event.key
-    if key == pg.K_TAB:
+    if key == pg.K_l and not event.mod & (pg.KMOD_CTRL | pg.KMOD_ALT | pg.KMOD_SHIFT):
+        if not getattr(event, 'repeat', False) and not getattr(app, 'song_loop_key_held', False):
+            app.song_loop_key_held = True
+            toggle_loop(app)
+    elif key == pg.K_TAB:
         app.order_focus = 'bank' if app.order_focus == 'orders' else 'orders'
     elif key in (pg.K_UP, pg.K_DOWN, pg.K_PAGEUP, pg.K_PAGEDOWN):
         move(app, {pg.K_UP:-1, pg.K_DOWN:1, pg.K_PAGEUP:-12, pg.K_PAGEDOWN:12}[key])
@@ -114,14 +123,22 @@ def handle_key(app, event):
 
 def draw(r, app, top, bottom):
     ed = app.editor; c = palette(app.appearance)
+    if bottom-top < 7:
+        if bottom-top >= 4:
+            r.text(1,top,'Zoom out for order editing. L: song loop.',c['TEXT'],r.cols-2)
+        draw_loop(r,app,max(0,bottom-2.75),True)
+        return
     split = max(22, int(r.cols * .38))
     right = split + 2; width = r.cols-right-1
     button(r, 1, top, 17, 'Order list', 'order_focus', 'orders', app.order_focus=='orders')
     button(r, right, top, min(22,width), 'Pattern bank', 'order_focus', 'bank', app.order_focus=='bank')
-    y0 = top + 3.5
-    visible = max(1, int(bottom-y0-3))
-    r.text(1, top+2, 'Ord', c['TEXT']); r.text(6, top+2, 'Pat', c['TEXT'])
-    r.text(12, top+2, 'Name', c['TEXT'], split-13)
+    compact = bottom-top < 12
+    loop_top = bottom-(2.75 if compact else 3.65)
+    y0 = top+(1.5 if compact else 3.5)
+    visible = max(1,int(loop_top-y0-(1.6 if compact else 3.15)))
+    if not compact:
+        r.text(1,top+2,'Ord',c['TEXT']);r.text(6,top+2,'Pat',c['TEXT'])
+        r.text(12,top+2,'Name',c['TEXT'],split-13)
     # The order index is outside the recessed pattern-number column.
     r.well(5, y0-.15, 6, visible+.3)
     selected_order = min(app.order_entry_index,min(255,len(ed.song.orders)))
@@ -144,8 +161,9 @@ def draw(r, app, top, bottom):
             r.hit(1,y,split-1,1,'order',i)
         if i <= len(ed.song.orders): r.hit(5,y,6,1,'order_value',i)
     ids = bank_ids(app); rowx = r.cols-6
-    r.text(right,top+2,'Pat   Name',c['TEXT'],width-6)
-    r.text(rowx,top+2,'Rows',c['TEXT'],4)
+    if not compact:
+        r.text(right,top+2,'Pat   Name',c['TEXT'],width-6)
+        r.text(rowx,top+2,'Rows',c['TEXT'],4)
     r.well(right,y0-.15,width,visible+.3)
     start = max(0,ids.index(app.bank_pattern)-visible+1)
     used = set(ed.song.orders)
@@ -160,9 +178,28 @@ def draw(r, app, top, bottom):
         r.text(rowx,y,f'{len(pattern.rows):3d}',color,4)
         r.hit(right,y,width,1,'bank_pattern',number)
     chosen = ed.song.patterns[app.bank_pattern]
-    y = y0+visible+.65
-    label = 'In song' if app.bank_pattern in used else 'Unused'
-    r.text(right,y,f'{app.bank_pattern:03d}: {label} | {len(chosen.rows)} rows',c['TEXT'],width)
-    r.text(1,y,'Tab: switch panels',c['TEXT'],split-1)
-    r.text(1,y+1.15,'3 digits: next order row',c['TEXT'],split-1)
-    button(r,right,y+1.15,min(25,width),'Edit pattern (Enter)','bank_open')
+    y = y0+visible+(.2 if compact else .65)
+    if compact:
+        r.text(1,y,'Tab: panels',c['TEXT'],split-1)
+        button(r,right,y,min(25,width),'Edit (Enter)','bank_open')
+    else:
+        label = 'In song' if app.bank_pattern in used else 'Unused'
+        r.text(right,y,f'{app.bank_pattern:03d}: {label} | {len(chosen.rows)} rows',c['TEXT'],width)
+        r.text(1,y,'Tab: switch panels',c['TEXT'],split-1)
+        r.text(1,y+1.15,'3 digits: next order row',c['TEXT'],split-1)
+        button(r,right,y+1.15,min(25,width),'Edit pattern (Enter)','bank_open')
+    draw_loop(r,app,loop_top,compact)
+
+
+def draw_loop(r,app,top,compact=False):
+    c=palette(app.appearance);enabled=app.editor.song.export_config.get('loop',True)
+    r.horizontal_rule(top)
+    width=min(11,max(7,r.cols//3));label_width=max(1,r.cols-width-4)
+    label='Loop song when the playlist ends' if label_width>=32 else 'Loop at playlist end'
+    r.text(1,top+.2,label,c['TEXT'],label_width)
+    button(r,r.cols-width-1,top+.2,width,'ON [L]' if enabled else 'OFF [L]',
+           'song_loop',selected=enabled)
+    r.text(1,top+1.6,'ON: restart from order 000.' if enabled else
+           'OFF: stop after the last playlist entry.',c['TEXT'],r.cols-2)
+    if not compact:
+        r.text(1,top+2.6,'Saved in project; also used by SID/PRG export. F6 loops one pattern.',c['TEXT'],r.cols-2)

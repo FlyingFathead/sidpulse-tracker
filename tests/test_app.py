@@ -29,7 +29,7 @@ def test_pygame_edit_save_browser_reload(app, tmp_path):
     app.file_dir = tmp_path
     app.handle(event(pg.K_F10))
     assert app.page == "files" and app.file_mode == "save"
-    app.handle(event(pg.K_TAB))
+    app.handle(event(pg.K_a, mod=pg.KMOD_CTRL))
     app.handle(pg.event.Event(pg.TEXTINPUT, text="test-song.sidpulse"))
     app.handle(event(pg.K_RETURN))
     assert app.path == tmp_path / "test-song.sidpulse"
