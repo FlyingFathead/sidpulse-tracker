@@ -17,6 +17,14 @@ From the repository root, using the project virtual environment:
 
 The release must not proceed if any test fails.
 
+The SID/PRG/channel CPU tests use `tests/py65_nmos.py`, an explicit test-only
+adapter for py65 1.2.0's `DEC absolute` ($CE) timing-table typo (3 versus 6 cycles).
+The adapter copies the table per instance and leaves instruction execution and
+installed py65 untouched. `tests/test_py65_nmos.py` checks isolation, instruction
+semantics and the documented cycle count; `tests/test_replay_cycles.py` checks the
+production verifier independently against fixed hardware-manual expectations.
+Do not remove cycle assertions or alter production timing to match the typo.
+
 ## 2. Headless smoke tests
 
 Verify that the application initializes and exercises its basic playback paths:
@@ -62,7 +70,7 @@ cat VERSION
 grep -nE 'version|__version__' pyproject.toml sidpulse/__init__.py
 ```
 
-For v0.2.17, each application-version declaration must resolve to `0.2.17`.
+For v0.2.21, each application-version declaration must resolve to `0.2.21`.
 
 ## 6. Interactive tracker checks
 
@@ -148,3 +156,41 @@ Exact test counts, CI URLs, operating systems manually tested, known limitations
 and intentionally skipped checks belong in the release record or checkpoint.
 
 Do not rewrite this document merely because the number of tests changed.
+
+## v0.2.19 export squeezer gate
+
+Consult [the candidate-specific validation record](VALIDATION-v0.2.19.md).
+Run the full suite, including both new dependency-backed test modules; a passing
+pure subset does not replace it. With 64tass installed, run
+`python scripts/build_squeeze_players.py --check`. Inspect the export dialog's
+checked defaults and independent opt-outs, low/high zoom scrolling, Cancel and
+S/E paths. Compare SID/PRG exports with squeezing on/off in matching PAL/NTSC
+VICE/native audio and real hardware where available. Check hard-restart attacks
+and filter/sync/ring timing, not merely final register snapshots.
+
+
+## Export-analysis responsiveness (v0.2.21)
+
+The worker lifecycle and compiler-progress tests are dependency-light. Actual
+animation, keyboard/mouse, resize and save continuation tests require pygame-ce:
+
+```bash
+./.venv/bin/python -m pytest -q -ra tests/test_export_analysis_job.py tests/test_export_progress_gui.py tests/test_squeeze_gui.py tests/test_file_browser_gui.py tests/test_programs.py tests/test_prg.py
+```
+
+Do not replace the spawned compiler with a synchronous fallback in production.
+The native GUI fixtures use frame polling to await completion; they must not
+restore the old assumption that opening Export already returns a compiled result.
+
+Interactively open SID and PRG export on a larger song. Confirm that the first
+progress frame appears promptly, the coloured band keeps moving through long
+phases, and elapsed time advances. Resize the window, move it off/on screen,
+cancel during squeezing and verification, reopen, and try closing the application
+while analyzing. No export/preferences should be written by cancellation and no
+compiler process should survive application shutdown.
+
+After analysis, change squeeze options and exercise Analyze, Save + export and
+Export only, including native-save cancellation and export overwrite cancellation.
+Check animation/Cancel at minimum window size, 300% zoom and each theme. Confirm
+existing audio continues without introducing new dropouts on the supported hosts.
+A passing worker unit test alone does not establish desktop or audio behavior.

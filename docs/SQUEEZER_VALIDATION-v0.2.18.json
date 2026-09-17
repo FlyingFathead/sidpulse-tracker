@@ -1,0 +1,987 @@
+{
+  "version": "0.2.18",
+  "baseline": "Uploaded v0.2.17 source snapshot",
+  "python": "3.13.5",
+  "python_subset": {
+    "passed": 431,
+    "skipped": 3,
+    "not_full_suite": true
+  },
+  "independent_cpu": {
+    "cases": 104,
+    "logical_ticks": 118904,
+    "cases_detail": [
+      {
+        "name": "Song-PAL-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 385,
+        "payload": 1316,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-PAL-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 385,
+        "payload": 1316,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-PAL-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 385,
+        "payload": 436,
+        "maximum_cycles": 1807,
+        "stack": 4
+      },
+      {
+        "name": "Song-PAL-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 385,
+        "payload": 436,
+        "maximum_cycles": 1825,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-PAL-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 47,
+        "payload": 1078,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-PAL-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 47,
+        "payload": 1078,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-PAL-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 47,
+        "payload": 749,
+        "maximum_cycles": 6609,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-PAL-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 47,
+        "payload": 749,
+        "maximum_cycles": 6691,
+        "stack": 4
+      },
+      {
+        "name": "example_song-PAL-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 2305,
+        "payload": 22420,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "example_song-PAL-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 2305,
+        "payload": 22420,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "example_song-PAL-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 2305,
+        "payload": 8520,
+        "maximum_cycles": 8531,
+        "stack": 4
+      },
+      {
+        "name": "example_song-PAL-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 2305,
+        "payload": 8520,
+        "maximum_cycles": 8606,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-PAL-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 3073,
+        "payload": 11052,
+        "maximum_cycles": 1576,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-PAL-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 3073,
+        "payload": 11052,
+        "maximum_cycles": 1576,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-PAL-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 3073,
+        "payload": 4605,
+        "maximum_cycles": 6022,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-PAL-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 3073,
+        "payload": 4605,
+        "maximum_cycles": 6084,
+        "stack": 4
+      },
+      {
+        "name": "Song-PAL-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 769,
+        "payload": 1304,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-PAL-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 769,
+        "payload": 1304,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-PAL-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 769,
+        "payload": 431,
+        "maximum_cycles": 1807,
+        "stack": 4
+      },
+      {
+        "name": "Song-PAL-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 769,
+        "payload": 431,
+        "maximum_cycles": 1825,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-PAL-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 93,
+        "payload": 1056,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-PAL-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 93,
+        "payload": 1056,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-PAL-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 93,
+        "payload": 734,
+        "maximum_cycles": 6609,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-PAL-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 93,
+        "payload": 734,
+        "maximum_cycles": 6691,
+        "stack": 4
+      },
+      {
+        "name": "example_song-PAL-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 2305,
+        "payload": 22428,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "example_song-PAL-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 2305,
+        "payload": 22428,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "example_song-PAL-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 2305,
+        "payload": 8514,
+        "maximum_cycles": 8531,
+        "stack": 4
+      },
+      {
+        "name": "example_song-PAL-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 2305,
+        "payload": 8514,
+        "maximum_cycles": 8606,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-PAL-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 3073,
+        "payload": 11050,
+        "maximum_cycles": 1576,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-PAL-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 3073,
+        "payload": 11050,
+        "maximum_cycles": 1576,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-PAL-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 3073,
+        "payload": 4593,
+        "maximum_cycles": 6022,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-PAL-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 3073,
+        "payload": 4593,
+        "maximum_cycles": 6090,
+        "stack": 4
+      },
+      {
+        "name": "Song-NTSC-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 385,
+        "payload": 1316,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-NTSC-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 385,
+        "payload": 1316,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-NTSC-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 385,
+        "payload": 436,
+        "maximum_cycles": 1807,
+        "stack": 4
+      },
+      {
+        "name": "Song-NTSC-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 385,
+        "payload": 436,
+        "maximum_cycles": 1825,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-NTSC-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 47,
+        "payload": 1078,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-NTSC-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 47,
+        "payload": 1078,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-NTSC-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 47,
+        "payload": 753,
+        "maximum_cycles": 6609,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-NTSC-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 47,
+        "payload": 753,
+        "maximum_cycles": 6691,
+        "stack": 4
+      },
+      {
+        "name": "example_song-NTSC-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 2305,
+        "payload": 22372,
+        "maximum_cycles": 2096,
+        "stack": 2
+      },
+      {
+        "name": "example_song-NTSC-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 2305,
+        "payload": 22372,
+        "maximum_cycles": 2096,
+        "stack": 2
+      },
+      {
+        "name": "example_song-NTSC-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 2305,
+        "payload": 8624,
+        "maximum_cycles": 8255,
+        "stack": 4
+      },
+      {
+        "name": "example_song-NTSC-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 2305,
+        "payload": 8624,
+        "maximum_cycles": 8339,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-NTSC-loopFalse-squeezeFalse-prgFalse",
+        "ticks": 3073,
+        "payload": 10960,
+        "maximum_cycles": 1572,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-NTSC-loopFalse-squeezeFalse-prgTrue",
+        "ticks": 3073,
+        "payload": 10960,
+        "maximum_cycles": 1572,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-NTSC-loopFalse-squeezeTrue-prgFalse",
+        "ticks": 3073,
+        "payload": 4466,
+        "maximum_cycles": 6022,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-NTSC-loopFalse-squeezeTrue-prgTrue",
+        "ticks": 3073,
+        "payload": 4466,
+        "maximum_cycles": 6090,
+        "stack": 4
+      },
+      {
+        "name": "Song-NTSC-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 769,
+        "payload": 1304,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-NTSC-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 769,
+        "payload": 1304,
+        "maximum_cycles": 694,
+        "stack": 2
+      },
+      {
+        "name": "Song-NTSC-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 769,
+        "payload": 431,
+        "maximum_cycles": 1807,
+        "stack": 4
+      },
+      {
+        "name": "Song-NTSC-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 769,
+        "payload": 431,
+        "maximum_cycles": 1825,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-NTSC-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 93,
+        "payload": 1056,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-NTSC-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 93,
+        "payload": 1056,
+        "maximum_cycles": 2133,
+        "stack": 2
+      },
+      {
+        "name": "fixture_song-NTSC-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 93,
+        "payload": 738,
+        "maximum_cycles": 6609,
+        "stack": 4
+      },
+      {
+        "name": "fixture_song-NTSC-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 93,
+        "payload": 738,
+        "maximum_cycles": 6691,
+        "stack": 4
+      },
+      {
+        "name": "example_song-NTSC-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 2305,
+        "payload": 22380,
+        "maximum_cycles": 2096,
+        "stack": 2
+      },
+      {
+        "name": "example_song-NTSC-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 2305,
+        "payload": 22380,
+        "maximum_cycles": 2096,
+        "stack": 2
+      },
+      {
+        "name": "example_song-NTSC-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 2305,
+        "payload": 8618,
+        "maximum_cycles": 8255,
+        "stack": 4
+      },
+      {
+        "name": "example_song-NTSC-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 2305,
+        "payload": 8618,
+        "maximum_cycles": 8339,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-NTSC-loopTrue-squeezeFalse-prgFalse",
+        "ticks": 3073,
+        "payload": 10958,
+        "maximum_cycles": 1572,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-NTSC-loopTrue-squeezeFalse-prgTrue",
+        "ticks": 3073,
+        "payload": 10958,
+        "maximum_cycles": 1572,
+        "stack": 2
+      },
+      {
+        "name": "welcome_song-NTSC-loopTrue-squeezeTrue-prgFalse",
+        "ticks": 3073,
+        "payload": 4457,
+        "maximum_cycles": 6022,
+        "stack": 4
+      },
+      {
+        "name": "welcome_song-NTSC-loopTrue-squeezeTrue-prgTrue",
+        "ticks": 3073,
+        "payload": 4457,
+        "maximum_cycles": 6084,
+        "stack": 4
+      },
+      {
+        "name": "random-0-1000-single",
+        "ticks": 701,
+        "payload": 6241,
+        "maximum_cycles": 2895,
+        "stack": 4
+      },
+      {
+        "name": "random-0-1000-lanes",
+        "ticks": 701,
+        "payload": 7754,
+        "maximum_cycles": 4802,
+        "stack": 4
+      },
+      {
+        "name": "random-0-09b4-single",
+        "ticks": 701,
+        "payload": 6241,
+        "maximum_cycles": 2932,
+        "stack": 4
+      },
+      {
+        "name": "random-0-09b4-lanes",
+        "ticks": 701,
+        "payload": 7754,
+        "maximum_cycles": 4848,
+        "stack": 4
+      },
+      {
+        "name": "random-1-1000-single",
+        "ticks": 701,
+        "payload": 6018,
+        "maximum_cycles": 3041,
+        "stack": 4
+      },
+      {
+        "name": "random-1-1000-lanes",
+        "ticks": 701,
+        "payload": 7568,
+        "maximum_cycles": 4466,
+        "stack": 4
+      },
+      {
+        "name": "random-1-09b4-single",
+        "ticks": 701,
+        "payload": 6018,
+        "maximum_cycles": 3072,
+        "stack": 4
+      },
+      {
+        "name": "random-1-09b4-lanes",
+        "ticks": 701,
+        "payload": 7568,
+        "maximum_cycles": 4515,
+        "stack": 4
+      },
+      {
+        "name": "random-2-1000-single",
+        "ticks": 701,
+        "payload": 5965,
+        "maximum_cycles": 2895,
+        "stack": 4
+      },
+      {
+        "name": "random-2-1000-lanes",
+        "ticks": 701,
+        "payload": 7513,
+        "maximum_cycles": 4692,
+        "stack": 4
+      },
+      {
+        "name": "random-2-09b4-single",
+        "ticks": 701,
+        "payload": 5965,
+        "maximum_cycles": 2932,
+        "stack": 4
+      },
+      {
+        "name": "random-2-09b4-lanes",
+        "ticks": 701,
+        "payload": 7513,
+        "maximum_cycles": 4737,
+        "stack": 4
+      },
+      {
+        "name": "random-3-1000-single",
+        "ticks": 701,
+        "payload": 6482,
+        "maximum_cycles": 2895,
+        "stack": 4
+      },
+      {
+        "name": "random-3-1000-lanes",
+        "ticks": 701,
+        "payload": 8156,
+        "maximum_cycles": 4675,
+        "stack": 4
+      },
+      {
+        "name": "random-3-09b4-single",
+        "ticks": 701,
+        "payload": 6482,
+        "maximum_cycles": 2932,
+        "stack": 4
+      },
+      {
+        "name": "random-3-09b4-lanes",
+        "ticks": 701,
+        "payload": 8156,
+        "maximum_cycles": 4726,
+        "stack": 4
+      },
+      {
+        "name": "random-4-1000-single",
+        "ticks": 701,
+        "payload": 6236,
+        "maximum_cycles": 2965,
+        "stack": 4
+      },
+      {
+        "name": "random-4-1000-lanes",
+        "ticks": 701,
+        "payload": 7792,
+        "maximum_cycles": 4725,
+        "stack": 4
+      },
+      {
+        "name": "random-4-09b4-single",
+        "ticks": 701,
+        "payload": 6236,
+        "maximum_cycles": 3002,
+        "stack": 4
+      },
+      {
+        "name": "random-4-09b4-lanes",
+        "ticks": 701,
+        "payload": 7792,
+        "maximum_cycles": 4773,
+        "stack": 4
+      },
+      {
+        "name": "random-5-1000-single",
+        "ticks": 701,
+        "payload": 6269,
+        "maximum_cycles": 2895,
+        "stack": 4
+      },
+      {
+        "name": "random-5-1000-lanes",
+        "ticks": 701,
+        "payload": 7908,
+        "maximum_cycles": 4452,
+        "stack": 4
+      },
+      {
+        "name": "random-5-09b4-single",
+        "ticks": 701,
+        "payload": 6269,
+        "maximum_cycles": 2932,
+        "stack": 4
+      },
+      {
+        "name": "random-5-09b4-lanes",
+        "ticks": 701,
+        "payload": 7908,
+        "maximum_cycles": 4502,
+        "stack": 4
+      },
+      {
+        "name": "random-6-1000-single",
+        "ticks": 701,
+        "payload": 6264,
+        "maximum_cycles": 2885,
+        "stack": 4
+      },
+      {
+        "name": "random-6-1000-lanes",
+        "ticks": 701,
+        "payload": 7821,
+        "maximum_cycles": 4716,
+        "stack": 4
+      },
+      {
+        "name": "random-6-09b4-single",
+        "ticks": 701,
+        "payload": 6264,
+        "maximum_cycles": 2923,
+        "stack": 4
+      },
+      {
+        "name": "random-6-09b4-lanes",
+        "ticks": 701,
+        "payload": 7821,
+        "maximum_cycles": 4769,
+        "stack": 4
+      },
+      {
+        "name": "random-7-1000-single",
+        "ticks": 701,
+        "payload": 6550,
+        "maximum_cycles": 2895,
+        "stack": 4
+      },
+      {
+        "name": "random-7-1000-lanes",
+        "ticks": 701,
+        "payload": 8215,
+        "maximum_cycles": 4678,
+        "stack": 4
+      },
+      {
+        "name": "random-7-09b4-single",
+        "ticks": 701,
+        "payload": 6550,
+        "maximum_cycles": 2938,
+        "stack": 4
+      },
+      {
+        "name": "random-7-09b4-lanes",
+        "ticks": 701,
+        "payload": 8215,
+        "maximum_cycles": 4727,
+        "stack": 4
+      },
+      {
+        "name": "wrapper-PAL-squeezeFalse-mismatchFalse",
+        "ticks": 18,
+        "payload": 3103
+      },
+      {
+        "name": "wrapper-PAL-squeezeFalse-mismatchTrue",
+        "ticks": 0,
+        "payload": 3103
+      },
+      {
+        "name": "wrapper-PAL-squeezeTrue-mismatchFalse",
+        "ticks": 18,
+        "payload": 1169
+      },
+      {
+        "name": "wrapper-PAL-squeezeTrue-mismatchTrue",
+        "ticks": 0,
+        "payload": 1169
+      },
+      {
+        "name": "wrapper-NTSC-squeezeFalse-mismatchFalse",
+        "ticks": 18,
+        "payload": 3103
+      },
+      {
+        "name": "wrapper-NTSC-squeezeFalse-mismatchTrue",
+        "ticks": 0,
+        "payload": 3103
+      },
+      {
+        "name": "wrapper-NTSC-squeezeTrue-mismatchFalse",
+        "ticks": 18,
+        "payload": 1173
+      },
+      {
+        "name": "wrapper-NTSC-squeezeTrue-mismatchTrue",
+        "ticks": 0,
+        "payload": 1173
+      }
+    ]
+  },
+  "pending": [
+    "Full dependency-backed pytest suite and py65 tests",
+    "pygame interactive/headless dialog rendering",
+    "Native reSIDfp/libsidplayfp audio comparison",
+    "VICE and real-C64 listening",
+    "64tass rebuild/check",
+    "Remote CI"
+  ],
+  "bundled_binary_sha256": {
+    "player.bin": "dc7804d644d2060b5ae17e8b7e3a7ea07cd7d0ded734107618a993c5ceb09ea4",
+    "prg-loader-squeezed.bin": "26e66ea1fdda951f9e63ea1320b52edf1bd5927a9df7cb543dc7eab1e184ab81",
+    "prg-loader.bin": "97c5c372e900fd014132f87b915788096f9ea3ac934108496501b529c0733b1c",
+    "squeeze-lanes-prg.bin": "67ff999201ee7cbf26075d10c055de7452f1a2c1fc24ca76df814594f19f9916",
+    "squeeze-lanes.bin": "f723d01422ae86401cfcec09103c94e8520bc135c4cc22ce4a966b849c39b1cf",
+    "squeeze-single-prg.bin": "5aac4b64712041f0b660c05d921958ac2f6c6f442b15381116d0286dcd0ec581",
+    "squeeze-single.bin": "3c9a4234c555b5ece682f71bc9f87d86cee4dd75f0dce8a5a573d906f4339603"
+  },
+  "measurements": [
+    {
+      "name": "first-light",
+      "format": "sid",
+      "old_file_bytes": 22552,
+      "new_file_bytes": 8638,
+      "saved_percent": 61.7,
+      "old_resident_bytes": 22434,
+      "new_resident_bytes": 8520,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 22428,
+        "payload_bytes": 8514,
+        "player_bytes": 474,
+        "song_data_bytes": 8040,
+        "zero_page_bytes": 2,
+        "stack_bytes": 4,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 0,
+        "original_wrapper_bytes": 0
+      },
+      "old_bundled_asset_matched_legacy": true
+    },
+    {
+      "name": "first-light",
+      "format": "prg",
+      "old_file_bytes": 24477,
+      "new_file_bytes": 8951,
+      "saved_percent": 63.43,
+      "old_resident_bytes": 24486,
+      "new_resident_bytes": 8958,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 22428,
+        "payload_bytes": 8514,
+        "player_bytes": 474,
+        "song_data_bytes": 8040,
+        "zero_page_bytes": 2,
+        "stack_bytes": 7,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 435,
+        "original_wrapper_bytes": 2047
+      },
+      "old_bundled_asset_matched_legacy": null
+    },
+    {
+      "name": "first-light-ntsc",
+      "format": "sid",
+      "old_file_bytes": 22504,
+      "new_file_bytes": 8742,
+      "saved_percent": 61.15,
+      "old_resident_bytes": 22386,
+      "new_resident_bytes": 8624,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 22380,
+        "payload_bytes": 8618,
+        "player_bytes": 474,
+        "song_data_bytes": 8144,
+        "zero_page_bytes": 2,
+        "stack_bytes": 4,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 0,
+        "original_wrapper_bytes": 0
+      },
+      "old_bundled_asset_matched_legacy": true
+    },
+    {
+      "name": "first-light-ntsc",
+      "format": "prg",
+      "old_file_bytes": 24429,
+      "new_file_bytes": 9055,
+      "saved_percent": 62.93,
+      "old_resident_bytes": 24438,
+      "new_resident_bytes": 9062,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 22380,
+        "payload_bytes": 8618,
+        "player_bytes": 474,
+        "song_data_bytes": 8144,
+        "zero_page_bytes": 2,
+        "stack_bytes": 7,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 435,
+        "original_wrapper_bytes": 2047
+      },
+      "old_bundled_asset_matched_legacy": null
+    },
+    {
+      "name": "autumn-at-five",
+      "format": "sid",
+      "old_file_bytes": 11174,
+      "new_file_bytes": 4717,
+      "saved_percent": 57.79,
+      "old_resident_bytes": 11056,
+      "new_resident_bytes": 4599,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 11050,
+        "payload_bytes": 4593,
+        "player_bytes": 474,
+        "song_data_bytes": 4119,
+        "zero_page_bytes": 2,
+        "stack_bytes": 4,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 0,
+        "original_wrapper_bytes": 0
+      },
+      "old_bundled_asset_matched_legacy": true
+    },
+    {
+      "name": "autumn-at-five",
+      "format": "prg",
+      "old_file_bytes": 13099,
+      "new_file_bytes": 5030,
+      "saved_percent": 61.6,
+      "old_resident_bytes": 13108,
+      "new_resident_bytes": 5037,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 11050,
+        "payload_bytes": 4593,
+        "player_bytes": 474,
+        "song_data_bytes": 4119,
+        "zero_page_bytes": 2,
+        "stack_bytes": 7,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 435,
+        "original_wrapper_bytes": 2047
+      },
+      "old_bundled_asset_matched_legacy": true
+    },
+    {
+      "name": "autumn-at-five-ntsc",
+      "format": "sid",
+      "old_file_bytes": 11082,
+      "new_file_bytes": 4581,
+      "saved_percent": 58.66,
+      "old_resident_bytes": 10964,
+      "new_resident_bytes": 4463,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 10958,
+        "payload_bytes": 4457,
+        "player_bytes": 474,
+        "song_data_bytes": 3983,
+        "zero_page_bytes": 2,
+        "stack_bytes": 4,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 0,
+        "original_wrapper_bytes": 0
+      },
+      "old_bundled_asset_matched_legacy": true
+    },
+    {
+      "name": "autumn-at-five-ntsc",
+      "format": "prg",
+      "old_file_bytes": 13007,
+      "new_file_bytes": 4894,
+      "saved_percent": 62.37,
+      "old_resident_bytes": 13016,
+      "new_resident_bytes": 4901,
+      "report": {
+        "enabled": true,
+        "algorithm": "Independent voice streams",
+        "original_payload_bytes": 10958,
+        "payload_bytes": 4457,
+        "player_bytes": 474,
+        "song_data_bytes": 3983,
+        "zero_page_bytes": 2,
+        "stack_bytes": 7,
+        "cleanup": {
+          "duplicate_patterns": 0,
+          "duplicate_instruments": 0,
+          "unused_patterns": 0,
+          "unused_instruments": 0,
+          "unused_samples": 0
+        },
+        "fallback_reason": "",
+        "wrapper_bytes": 435,
+        "original_wrapper_bytes": 2047
+      },
+      "old_bundled_asset_matched_legacy": true
+    }
+  ]
+}

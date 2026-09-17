@@ -1,3 +1,4 @@
+from export_gui_helpers import finish_export_analysis
 from copy import deepcopy
 import pygame as pg
 import pytest
@@ -93,7 +94,13 @@ def test_f4_program_edit_filter_shortcut_notes_and_native_save_export_workflow(t
         app.handle(pg.event.Event(pg.TEXTINPUT,text='Second line'));key(pg.K_RETURN)
         assert app.editor.song.comments=='First line\nSecond line'
         original=deepcopy(app.editor.song)
-        key(pg.K_e,pg.KMOD_CTRL|pg.KMOD_SHIFT);assert 'export' in app.dialog
+        key(pg.K_e,pg.KMOD_CTRL|pg.KMOD_SHIFT)
+        assert app.dialog['kind']=='export_squeezer' and app.dialog['target']=='sid'
+        assert app.dialog.get('busy') and app.dialog['result'] is None
+        finish_export_analysis(app)
+        assert 'error' not in app.dialog and app.dialog['result'] is not None
+        assert app.dialog['source']==original
+        assert app.dialog['options'].enabled and app.dialog['result'].squeeze_report.enabled
         key(pg.K_s);assert app.page=='files'
         app.file_name=str(tmp_path/'song.sidpulse');app.submit_file()
         assert app.path==tmp_path/'song.sidpulse' and not app.editor.dirty

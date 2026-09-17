@@ -10,16 +10,17 @@
   Python binding and native reSIDfp chip emulation, installed via requirements.txt.
   Credit Sebastian Klemke, Dag Lem, Antti S. Lankila, Ken Händel, Leandro Nini
   and the libsidplayfp contributors. Native binaries/source are not bundled here.
-- [DejaVu Sans Mono](https://dejavu-fonts.github.io/): bundled scalable font,
-  with the complete distribution copyright/license in `sidpulse/assets/FONT_LICENSE.txt`.
+- [DejaVu Sans Mono](https://dejavu-fonts.github.io/): optional supplied scalable font; the
+  v0.2.18 source snapshot omits font binaries and falls back to system monospace.
+  The retained distribution copyright/license is in `sidpulse/assets/FONT_LICENSE.txt`.
 
 ## Project licensing status
 
-The SIDpulse Tracker v0.2.17 source tree contains no project-wide `LICENSE`
+The SIDpulse Tracker v0.2.18 source tree contains no project-wide `LICENSE`
 for the original SIDpulse code. The third-party notices above identify their
 respective components; they do not specify a license for SIDpulse itself.
 Choosing and recording that license remains the author's decision. The
-v0.2.17 documentation does not select a license, change third-party notices, or
+v0.2.18 documentation does not select a license, change third-party notices, or
 assert that native dependencies have been relicensed.
 
 ## v0.2.0 export validation

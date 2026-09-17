@@ -17,6 +17,12 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e ".[dev]"
+      - name: Rebuild and compare C64 replay images
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y 64tass
+          python scripts/build_squeeze_players.py --check
       - run: python -m pytest -q
       - run: python -m sidpulse --headless-smoke --example
       - run: python -m sidpulse --headless-smoke --play-welcome-song

@@ -65,6 +65,7 @@ class App(InstrumentActions, FileActions):
         self.fullscreen = False
         self.window_size = size
         self.dialog = None
+        self.export_jobs = []
         self.intro_pending = False
         self.scopes_visible = False
         self.held = set()
@@ -216,6 +217,8 @@ class App(InstrumentActions, FileActions):
         self.editor.status = "Monitor only | Alt+F1/F2/F3 mute voices | Alt+F9 mute current | Alt+F10 solo current"
 
     def close(self):
+        from sidpulse.ui.export_squeezer import close_analysis
+        close_analysis(self)
         self.audio.close()
         pg.quit()
         self.autosave.close(clean=self.runtime_clean)
@@ -448,15 +451,13 @@ class App(InstrumentActions, FileActions):
         self.text_dialog(f"CTRL CH / FILTER row {row:03d}",initial,accept,
                          "Cutoff 000..7FF, res 0..F, route 0..7, mode 00/10/20/40, volume 0..F (hex); slide signed decimal. Dot keeps previous value.")
 
+    def poll_export_analysis(self):
+        from sidpulse.ui.export_squeezer import poll_analysis
+        poll_analysis(self)
+
     def begin_export(self, kind='sid'):
-        from sidpulse.export.prg import compile_prg
-        result=compile_prg(self.editor.song) if kind=='prg' else compile_song(self.editor.song)
-        label='PRG' if kind=='prg' else 'PSID'
-        self.release_audition()
-        self.dialog={"title":f"Export {label} / keep your project", "message":
-                     f"Ready: {len(result.data):,} bytes, {result.seconds:.2f} seconds. Save an editable .sidpulse with all instruments and song notes before exporting?",
-                     "hint":"S: save project + export | E: export only | Esc: cancel",
-                     "export":lambda:self.prompt_export(result,kind)}
+        from sidpulse.ui.export_squeezer import open_dialog
+        open_dialog(self, kind)
 
     def change_property(self, delta=0, direct=None):
         ed = self.editor
@@ -914,6 +915,10 @@ class App(InstrumentActions, FileActions):
     def dialog_event(self, event):
         from sidpulse.ui.dialogs import choices,focus
         dialog = self.dialog
+        if dialog.get('kind') == 'export_squeezer':
+            from sidpulse.ui.export_squeezer import handle_event
+            handle_event(self, event)
+            return
         if dialog.get('kind') == 'pattern_length':
             from sidpulse.ui.pattern_length import handle_event
             handle_event(self,event)
@@ -1183,6 +1188,7 @@ class App(InstrumentActions, FileActions):
             if self.autosave.warning and self.dialog is None:self.show_autosave_warning()
             self.renderer.render(self)
             pg.display.flip()
+            self.poll_export_analysis()
             if self.audio.error:
                 self.editor.status = self.audio.error
             count += 1

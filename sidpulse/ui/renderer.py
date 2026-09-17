@@ -74,14 +74,15 @@ class Renderer:
             self.logo_cache.clear()
             self.welcome_font_cache.clear()
             self.layout = Layout(*screen.get_size(), zoom*self.appearance["font_size"]/16)
-            font_path = Path(__file__).resolve().parents[1] / "assets" / "DejaVuSansMono.ttf"
+            from sidpulse.ui.fonts import default_font_path
+            font_path = default_font_path()
             custom=self.appearance.get('font_file')
             if custom:
-                try:pg.font.Font(str(Path(custom).expanduser()),16);font_path=Path(custom).expanduser()
+                try:pg.font.Font(str(Path(custom).expanduser()),16);font_path=str(Path(custom).expanduser())
                 except (OSError,pg.error):pass
-            self.font = pg.font.Font(str(font_path), self.layout.font_size)
+            self.font = pg.font.Font(font_path, self.layout.font_size)
             self.font.set_bold(self.appearance['font_bold'])
-            self.small_font = pg.font.Font(str(font_path), max(12, round(self.layout.font_size * .8)))
+            self.small_font = pg.font.Font(font_path, max(12, round(self.layout.font_size * .8)))
             self.small_font.set_bold(self.appearance['font_bold'])
             self.cw = self.font.size("M")[0]
             self.rh = self.font.get_linesize() + max(2, self.layout.font_size // 5)
@@ -811,6 +812,10 @@ class Renderer:
         if self.cols < 54 or self.lines < 18:
             fit = min(self.cols / 54, self.lines / 18) * .9
             self.configure(app.screen, app.zoom * fit, app.appearance)
+        if dialog.get('kind') == 'export_squeezer':
+            from sidpulse.ui.export_squeezer import draw
+            draw(self, app)
+            return
         if dialog.get('kind') == 'welcome':
             from sidpulse.ui.welcome import draw
             draw(self, app)

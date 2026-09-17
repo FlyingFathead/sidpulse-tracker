@@ -1,4 +1,5 @@
 """Real pygame/SDL browser tests. Skipped when pygame-ce is unavailable."""
+from export_gui_helpers import finish_export_analysis
 from copy import deepcopy
 import pytest
 pg=pytest.importorskip('pygame')
@@ -90,7 +91,7 @@ def test_overwrite_cancel_reopens_same_editable_field(app,tmp_path):
 def test_export_only_uses_browser_and_does_not_rename_source(app,tmp_path,kind):
     source=save(tmp_path/'song_v31.sidpulse',app.editor.song);app.open_project(source)
     app.editor.song.title='unsaved';before=deepcopy(app.editor.song)
-    app.begin_export(kind);key(app,pg.K_e)
+    app.begin_export(kind);finish_export_analysis(app);key(app,pg.K_e)
     assert app.dialog is None and app.page=='files' and app.file_mode==kind
     assert app.file_name=='song_v31.'+kind
     replace(app,'take_02.'+kind);key(app,pg.K_RETURN)
@@ -99,7 +100,7 @@ def test_export_only_uses_browser_and_does_not_rename_source(app,tmp_path,kind):
 
 
 def test_save_before_export_continuation_uses_new_saved_basename(app,tmp_path):
-    app.begin_export('sid');key(app,pg.K_s)
+    app.begin_export('sid');finish_export_analysis(app);key(app,pg.K_s)
     assert app.page=='files' and app.file_mode=='save' and app.dialog is None
     replace(app,'fresh_v42.sidpulse');key(app,pg.K_RETURN)
     assert app.path==tmp_path/'fresh_v42.sidpulse' and app.file_mode=='sid' and app.page=='files'

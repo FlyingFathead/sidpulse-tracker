@@ -8,7 +8,60 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
-## v0.2.17: startup splash now makes the choice explicit
+## v0.2.21: responsive SID/PRG export analysis
+
+Opening Export now shows the squeezer immediately, with an animated activity bar
+using the current slider-fill colour (no slider handle), real compiler phase
+labels and elapsed time. Song copying and compilation run outside the display
+thread, in a coordinator thread and a separate Python worker process respectively.
+The window continues rendering and processing resize, close and Cancel events.
+
+This also covers **Analyze** and the re-analysis needed after changing options
+before **Save + export** or **Export only**. Busy controls prevent duplicate jobs;
+Escape/Cancel stops the worker without saving preferences, the song, or an export.
+Successful analysis is reused for export. Errors are displayed in the dialog and
+late results cannot replace a cancelled/newer dialog. No new dependency, player
+binary, encoding, audio setting or native song format is introduced.
+
+The moving bar is an **activity indicator**, not a fabricated completion percentage
+or an estimated time remaining. The optimizer can still take several seconds.
+See [release notes](docs/RELEASE_NOTES-v0.2.21.md),
+[validation](docs/VALIDATION-v0.2.21.md) and [export controls](docs/SQUEEZER.md).
+
+## Retained from v0.2.20: strict replay test-reference repairs
+
+The development-only py65 timing adapter remains intact, along with exact cycle
+and SID-write assertions. The preceding v0.2.20 full suite passed on the user's
+Linux environment (979 tests, as reported by the user); that is a baseline result,
+not a substitute for validating this new asynchronous GUI path.
+
+## Retained from v0.2.19: automatic channel-phrase squeezing
+
+**Squeeze song** remains enabled by default for SID/PRG exports only. The exporter
+now compares counted per-channel phrases, shared register-order templates,
+independent register-value streams, and cost-optimized static phrase banks.
+Repeated bass/drum parts share storage underneath a changing lead, without
+changing the IT-style editor. The player reads the packed representation directly;
+there is no whole-song expansion buffer. Native songs, preview and undo are unchanged.
+
+Complete PAL exports: **First light SID 22,552 → 6,496 bytes, PRG 24,477 → 6,809**;
+**Autumn at five SID 11,174 → 3,600 bytes, PRG 13,099 → 3,913**. These compare the
+legacy opt-out with the new default. The latest v0.2.18 candidate's SID figures
+were 8,638 and 4,717 bytes respectively; this is an additional improvement.
+
+The compiler compares full resident footprints, verifies reconstructed events,
+and executes the selected machine-code player through full pass/loop/re-init
+checks. It rejects a compact candidate that exceeds its instruction-cycle reserve.
+`--no-squeeze-song` retains exact legacy output. No new runtime dependency is added.
+
+This is a **source candidate**, not a published or fully hardware-validated release.
+Native GUI/audio, py65, 64tass and VICE/real-target release gates remain open in the
+build environment. Ordered tick/write equivalence is not cycle-identical spacing
+inside a tick. See [design/options](docs/SQUEEZER.md),
+[measurements and actual validation](docs/VALIDATION-v0.2.19.md), and
+[release notes](docs/RELEASE_NOTES-v0.2.19.md).
+
+## Retained from v0.2.17: startup splash now makes the choice explicit
 
 The startup splash now offers **New song / Play demo song**. **New song** (and
 Escape) creates a genuinely blank `Untitled` project instead of leaving the
@@ -36,11 +89,11 @@ native project's path and saved/dirty state unchanged.
 browser; **Alt+Up** goes to its parent; Enter submits; Escape cancels. Directories
 and optional modified dates stay visible. See [browser guide](docs/FILE_BROWSER.md).
 
-All features below are included in the **v0.2.17 full source release**; earlier
-incremental patches are not required. Download the full ZIP and its checksum
-from [GitHub Releases](https://github.com/FlyingFathead/sidpulse-tracker/releases).
-The public release assets are `sidpulse-tracker-v0.2.17-full.zip` and
-`sidpulse-tracker-v0.2.17-SHA256SUMS.txt`. Incremental/checkpoint update packages
+All features below are included in the **v0.2.21 source candidate**; earlier
+incremental patches are not required. After publication, obtain the full ZIP and
+its checksum from [GitHub Releases](https://github.com/FlyingFathead/sidpulse-tracker/releases).
+The intended public release assets are `sidpulse-tracker-v0.2.21-full.zip` and
+`sidpulse-tracker-v0.2.21-SHA256SUMS.txt`. Incremental/checkpoint update packages
 are a separate local-maintenance workflow, not required release downloads.
 Song files, preferences, audio-buffer settings and dependencies are unchanged
 by the file-browser update. See [issue/fix report](docs/ISSUES-v0.2.16.md) and
@@ -304,13 +357,13 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 
 ### Linux: install or update
 
-Download `sidpulse-tracker-v0.2.17-full.zip` and
-`sidpulse-tracker-v0.2.17-SHA256SUMS.txt` from the same GitHub release into one
+Download `sidpulse-tracker-v0.2.21-full.zip` and
+`sidpulse-tracker-v0.2.21-SHA256SUMS.txt` from the same GitHub release into one
 directory. The full ZIP extracts under `sidpulse-tracker/`.
 
 ```bash
-sha256sum -c sidpulse-tracker-v0.2.17-SHA256SUMS.txt &&
-unzip sidpulse-tracker-v0.2.17-full.zip &&
+sha256sum -c sidpulse-tracker-v0.2.21-SHA256SUMS.txt &&
+unzip sidpulse-tracker-v0.2.21-full.zip &&
 cd sidpulse-tracker &&
 bash run.sh
 ```
@@ -393,7 +446,8 @@ rows together; voice/block editing operates on its selected voice lanes.
 remain in `.sidpulse`, including Unicode and line breaks.
 
 **Ctrl+Shift+E**, or Escape > File > Export PSID, compiles the current document.
-Choose S to save `.sidpulse` and export, E to export only, or Escape to cancel.
+The export-only squeezer starts enabled. Choose S to save `.sidpulse` and export,
+E to export only, or Escape to cancel. A analyzes changed checkbox settings.
 An export alone never marks unsaved edits as saved. F12 offers PSID released text
 and whole-song loop. Existing export files get an overwrite prompt and backup.
 
@@ -457,12 +511,12 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.17 full ZIP and SHA-256 checksum file** from GitHub Releases.
+Download the **v0.2.21 full ZIP and SHA-256 checksum file** from GitHub Releases.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.17-full.zip"
-$checksums = ".\sidpulse-tracker-v0.2.17-SHA256SUMS.txt"
+$zip = ".\sidpulse-tracker-v0.2.21-full.zip"
+$checksums = ".\sidpulse-tracker-v0.2.21-SHA256SUMS.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
     $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.17-full\.zip$'
 })
@@ -541,7 +595,7 @@ Local cumulative patches are not public release assets. Do not include Git
 history bundles, private project notes, environments, backups or user projects.
 Clone the repository for Git history. See [RELEASING.md](docs/RELEASING.md) for
 the commit, CI, tag, archive and release-review sequence, and
-[release notes](docs/RELEASE_NOTES-v0.2.17.md) for the user-facing change summary.
+[release notes](docs/RELEASE_NOTES-v0.2.21.md) for the user-facing change summary.
 
 Repository: [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker).
 

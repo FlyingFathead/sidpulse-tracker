@@ -1,4 +1,4 @@
-"""PSID v2NG with an executable 6510 player and deduplicated tick programs."""
+"""PSID v2NG with legacy or losslessly squeezed resident 6510 playback."""
 from copy import deepcopy
 from dataclasses import dataclass
 import os
@@ -7,7 +7,13 @@ from pathlib import Path
 import shutil
 import struct
 import tempfile
+from typing import Callable
 
+from sidpulse.export.squeeze import (SqueezeOptions, SqueezeReport, resolve_options,
+                                     prepare_song, optimized_stream_candidates, COMPACT_PRG_LOAD,
+                                     COMPACT_PRG_WRAPPER, LEGACY_PRG_WRAPPER)
+from sidpulse.export.channel_phrases import channel_candidates
+from sidpulse.export.replay_verify import verify_replay, CycleBudgetError, VerificationError
 from sidpulse.playback.sequencer import Sequencer
 from sidpulse.playback.voices import supported
 from sidpulse.project.format import validate
@@ -23,20 +29,20 @@ class ExportError(ValueError):
 
 class ExportMemoryError(ExportError):
     """Exact existing-player memory requirement, not the native project size."""
-    def __init__(self, player_bytes, record_bytes, sequence_bytes):
+    def __init__(self, player_bytes, record_bytes, sequence_bytes, *, load=LOAD):
         self.player_bytes = player_bytes
         self.record_bytes = record_bytes
         self.sequence_bytes = sequence_bytes
         self.required_bytes = player_bytes + record_bytes + sequence_bytes
-        self.budget_bytes = LIMIT - LOAD
+        self.budget_bytes = LIMIT - load
         self.excess_bytes = self.required_bytes - self.budget_bytes
         super().__init__(
             'SID export aborted: project exceeds the memory budget. '
             'Shorten or simplify the project and try again. '
             f'Compiled SID needs {self.required_bytes:,} bytes; '
-            f'the $1000..$9FFF memory budget is {self.budget_bytes:,} bytes '
+            f'the ${load:04X}..$9FFF memory budget is {self.budget_bytes:,} bytes '
             f'({self.excess_bytes:,} over). Player {player_bytes:,}, '
-            f'unique tick records {record_bytes:,}, pointer sequence {sequence_bytes:,}. '
+            f'song data {record_bytes:,}, sequence {sequence_bytes:,}. '
             'The editable .sidpulse is unchanged and may still play in the tracker. '
             'Simplify a separate export copy to preserve your original arrangement. '
             'No notes were dropped.'
@@ -51,6 +57,7 @@ class ExportResult:
     seconds: float
     max_cycles_bound: int
     warnings: tuple
+    squeeze_report: SqueezeReport | None = None
 
 
 class RecordingSID:
@@ -67,7 +74,7 @@ class RecordingSID:
         self.events.append((25,32))
 
 
-def compile_song(song):
+def _record_song(song, *, progress=None, phase="Recording playback..."):
     """Compile a finite order traversal; source remains unmodified.
 
     Backward Bxx traversal is deliberately rejected in this first compiler.
@@ -100,6 +107,8 @@ def compile_song(song):
     seq.restart_loop = loop
     records=[];seen_rows=set();seconds=0;max_cycles=0
     while len(records)<MAX_TICKS:
+        if progress is not None and len(records) % 128 == 0:
+            progress(phase, f"{len(records):,} musical ticks processed.")
         seq._boundary()  # same boundary routine as PCM playback, without rendering samples
         if seq.status=='playing' and seq.tick==0:
             position=(seq.order,seq.row)
@@ -123,6 +132,10 @@ def compile_song(song):
         seq.frames=int(seq.next_tick)
     else:
         raise ExportError('Compilation exceeded 18,000 ticks; shorten the arrangement')
+    return song, records, seconds, max_cycles, warnings
+
+
+def _legacy_image(records, loop):
     player=bytearray((Path(__file__).resolve().parents[1]/'assets/player.bin').read_bytes())
     if len(player)!=DATA-LOAD:raise ExportError('Invalid bundled player image')
     # Preflight the complete requirement before assigning 16-bit addresses.
@@ -141,6 +154,108 @@ def compile_song(song):
     sequence=DATA+len(payload)
     payload.extend(struct.pack('<'+'H'*(len(order)+1),*order,0))
     struct.pack_into('<HH',player,0x1F0,sequence,sequence if loop else 0)
+    return bytes(player + payload)
+
+
+def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=False,
+                 progress: Callable[[str, str], None] | None = None):
+    """Compile without changing the song. Squeezing defaults ON for SID/PRG.
+
+    The legacy player is retained byte-for-byte as the opt-out and as a
+    size/cycle fallback. The choice uses code, state, packed data, scratch
+    space and (for PRG) the wrapper, not compressed data size alone.
+    """
+    if progress is not None:
+        progress("Pre-analyzing...", "Validating the song and preparing the export copy.")
+    validate(song)
+    options = resolve_options(squeeze)
+    source = song
+    source_had_samples = bool(song.samples)
+    prepared, cleanup = prepare_song(song, options)
+    song, records, seconds, max_cycles, warnings = _record_song(prepared, progress=progress)
+    if options.enabled and any(vars(cleanup).values()):
+        _, reference, reference_seconds, _, _ = _record_song(source, progress=progress, phase="Checking source preservation...")
+        if records != reference or seconds != reference_seconds:
+            raise ExportError('Squeeze cleanup changed original playback; no export written')
+    if source_had_samples and not song.samples:
+        warnings.append("Unused PCM bank omitted from export; the editable project is intact. "
+                        "PCM/sample playback is not implemented in this SID-only version.")
+    loop = song.export_config.get("loop", True)
+    unique_records = dict.fromkeys(records)
+    record_bytes = sum(map(len, unique_records))
+    sequence_bytes = 2 * (len(records) + 1)
+    legacy_size = DATA - LOAD + record_bytes + sequence_bytes
+    load = LOAD
+    candidate = None
+    reason = ""
+    verified = None
+    if options.enabled and options.streams:
+        target_load = COMPACT_PRG_LOAD if _prg else LOAD
+        try:
+            if progress is not None:
+                progress("Squeezing song...", "Packing repeated voice, register and timing streams.")
+            candidates = list(optimized_stream_candidates(records, target_load))
+            if progress is not None:
+                progress("Squeezing song...", "Finding reusable channel phrases and repeat counts.")
+            candidates.extend(channel_candidates(records, loop, target_load))
+        except (ValueError, KeyError) as exc:
+            raise ExportError('Squeeze construction failed; no export written: ' + str(exc)) from exc
+        wrapper = COMPACT_PRG_WRAPPER if _prg else 0
+        original_wrapper = LEGACY_PRG_WRAPPER if _prg else 0
+        original_extra = 11 if _prg else 6
+        def cost(item):
+            extra = max(4, item.zero_page_bytes) + max(7, item.stack_bytes + 3) if _prg else item.zero_page_bytes + item.stack_bytes
+            return (item.size + wrapper + extra, item.size + wrapper, item.cycles_bound, item.mode)
+        oversized = None
+        for item in sorted(candidates, key=cost):
+            if (item.size + wrapper >= legacy_size + original_wrapper
+                    or cost(item)[0] > legacy_size + original_wrapper + original_extra):
+                continue
+            if not item.safe_timing:
+                reason = 'A compact layout exceeded the conservative per-tick CPU budget.'
+                continue
+            if item.load + item.size > LIMIT:
+                if oversized is None:
+                    oversized = item
+                continue
+            try:
+                if progress is not None:
+                    progress("Verifying playback...", f"{item.mode}: checking {len(records):,} musical ticks and loop behavior.")
+                checked = verify_replay(item.image(loop), len(item.player), records, loop,
+                                        gap_address=item.gap_address, load=item.load)
+            except CycleBudgetError as exc:
+                reason = 'A compact layout exceeded the replay CPU budget: ' + str(exc)
+                continue
+            except VerificationError as exc:
+                raise ExportError('Squeeze replay verification failed; no export written: ' + str(exc)) from exc
+            candidate, verified = item, checked
+            break
+        if candidate is None and oversized is not None and legacy_size > LIMIT - LOAD:
+            raise ExportMemoryError(len(oversized.player), oversized.data_bytes, 0, load=oversized.load)
+        if candidate is None and not reason:
+            reason = 'The legacy representation is smaller including decoder/scratch overhead.'
+    elif options.enabled:
+        reason = 'Resident stream packing is disabled; existing tick-record encoding retained.'
+    if progress is not None:
+        progress("Preparing export...", "Building the selected player and song image.")
+    if candidate is not None:
+        load = candidate.load
+        payload = candidate.image(loop)
+        max_cycles = max(candidate.cycles_bound, verified.max_cycles)
+        labels = {'lanes': 'Independent voice streams', 'single': 'Shared event stream',
+                  'registers': 'Independent register-value streams'}
+        algorithm = labels.get(candidate.mode, candidate.mode)
+        if getattr(candidate, 'optimized', False):
+            algorithm += ' / cost-optimized phrase bank'
+        report = SqueezeReport(True, algorithm, legacy_size, len(payload), len(candidate.player),
+                               candidate.data_bytes, candidate.zero_page_bytes, verified.stack_bytes, cleanup,
+                               verified_calls=verified.calls, verified_max_cycles=verified.measured_max_cycles,
+                               phrase_blocks=getattr(candidate, 'blocks', 0),
+                               repeated_blocks=getattr(candidate, 'repeated_blocks', 0))
+    else:
+        payload = _legacy_image(records, loop)
+        report = SqueezeReport(options.enabled, 'Legacy tick records', legacy_size, len(payload),
+                               DATA - LOAD, record_bytes + sequence_bytes, 4, 2, cleanup, reason)
     def title(text,label):
         if not isinstance(text,str):raise ExportError(f'{label} must be text')
         encoded=text.encode('cp1252',errors='replace')
@@ -149,10 +264,10 @@ def compile_song(song):
         return encoded[:32].ljust(32,b'\0')
     # PAL flag bit 2; preferred chip bits 4..5. Speed bit0 selects CIA1 timer.
     flags=(4 if song.clock=='PAL' else 8)|(16 if song.sid_model=='6581' else 32)
-    header=struct.pack('>4s7HI',b'PSID',2,124,LOAD,INIT,PLAY,1,1,1)
+    header=struct.pack('>4s7HI',b'PSID',2,124,load,load,load + 3,1,1,1)
     header+=title(song.title,'title')+title(song.author,'author')+title(song.export_config.get('released','2026 SIDpulse'),'released')
     header+=struct.pack('>H4B',flags,0,0,0,0)
-    return ExportResult(header+player+payload,len(records),len(addresses),seconds,max_cycles,tuple(warnings))
+    return ExportResult(header+payload,len(records),len(unique_records),seconds,max_cycles,tuple(warnings),report)
 
 
 def save_export(path,result,*,suffix='.sid'):

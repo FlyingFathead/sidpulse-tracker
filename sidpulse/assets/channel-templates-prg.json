@@ -1,0 +1,13 @@
+{
+  "format": 1,
+  "load": 2484,
+  "size": 474,
+  "sha256": "55889b47d4928dc8151a72b8b2ad775e879c4a668098576467f9d4d0d143e4c8",
+  "starts_lo": 409,
+  "starts_hi": 414,
+  "loop": 419,
+  "gap": 2735,
+  "workspace_bytes": 54,
+  "template_low": 220,
+  "template_high": 225
+}

@@ -99,7 +99,8 @@ def draw(r, app):
     def font(size, bold=True):
         key = (size, bold)
         if key not in r.welcome_font_cache:
-            result = pg.font.Font(str(assets / 'DejaVuSansMono.ttf'), size)
+            from sidpulse.ui.fonts import default_font_path
+            result = pg.font.Font(default_font_path(), size)
             result.set_bold(bold)
             r.welcome_font_cache[key] = result
         return r.welcome_font_cache[key]

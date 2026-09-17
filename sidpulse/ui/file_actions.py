@@ -170,5 +170,6 @@ class FileActions:
         self.page = self.browser.return_page
         self.editor.status = f'Exported {path.name}: {len(result.data):,} bytes / {result.seconds:.2f}s'
         self.notice(kind.upper() + ' exported', self.editor.status + ' ' +
+                    ((result.squeeze_report.summary() + ' ') if result.squeeze_report else '') +
                     (' '.join(result.warnings) or 'Editable project and song notes remain intact.'))
         self.sync_file_text_input()

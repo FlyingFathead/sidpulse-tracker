@@ -1,3 +1,74 @@
+# v0.2.21 — responsive export analysis
+
+- Remove synchronous SID/PRG compilation from menu and dialog event handlers.
+  Paint the first analysis frame before starting a background job; isolate the
+  CPU-heavy compiler in a spawned Python process, with copying, IPC and cleanup
+  managed outside the SDL thread.
+- Add a pinned animated slider-colour activity bar without a knob, real compiler
+  phase labels and elapsed time. Do not invent a percentage or time remaining.
+- Keep resize, repaint, quit confirmation and Escape/Cancel responsive. Prevent
+  duplicate submissions; discard cancelled/stale results and surface worker errors.
+- Continue Save + export / Export only only after successful re-analysis of changed
+  options. Keep preferences and all file writes in the original explicit UI flow.
+- Preserve squeeze defaults, native songs, player binaries and export encodings.
+  Extend worker lifecycle and SDL workflow tests without weakening replay assertions.
+
+# v0.2.20 candidate — validation repairs
+
+- Correct the development-only py65 1.2.0 DEC-absolute cycle-table typo using
+  an instance-local test adapter (six cycles, not three). Preserve upstream
+  instruction execution, installed packages, and the correct production verifier.
+- Keep strict replay cycle/write comparisons; use the same reference adapter for
+  SID, PRG, stream and channel tests. Add independent manual-based DEC/idle-path
+  regression tests, adapter isolation checks and fail-closed metadata guards.
+- Update the program-edit/save/export integration test to assert the actual
+  File Squeezer dialog, prepared result and preserved source before exercising
+  the existing complete native-save and SID-export workflow.
+- No player binary, encoding, optimizer, sequencer, UI behavior, native song
+  format, dependency pin or default export option changes. See
+  `docs/VALIDATION-v0.2.20.md` for the exact validation scope and remaining gates.
+
+# v0.2.19 candidate
+
+- Add counted per-channel phrase/repeat reuse and shared register-order templates.
+- Add independent register-value streams with an ordered global conductor.
+- Add byte-cost dynamic-programming phrase-bank refinement, exact period search,
+  unused-bank pruning, full resident-cost selection and bounded searches.
+- Verify selected machine-code playback, timer/idle behavior, whole-loop traversal,
+  stop/re-init, owned writes and a 20% instruction-cycle reserve with 128-cycle margin.
+- Verify performed cleanup against the untouched original source trace.
+- Correct compact PRG ZP accounting; preserve earlier explicit squeeze opt-outs.
+- Keep exact legacy output on opt-out, no native format/editor/synth changes.
+- Add independent CPU tests, reproducible benchmarks and canonical 64tass/CI checks.
+- Provide checked, backed-up migration from the supplied original and known v0.2.18
+  candidate trees, removing only hash-matched superseded candidate files.
+- This source candidate still requires complete native GUI/audio/VICE/hardware validation.
+
+# v0.2.18 candidate
+
+- Add default-enabled, export-only **SIDpulse Tracker File Squeezer** to SID/PRG
+  export, with individually controlled source cleanup and resident stream packing.
+- Pack independently repeated voice/global/timing streams and compare a smaller
+  single-stream encoding; read immutable shared literal phrases directly on C64.
+  No full-song decrunch buffer, recursive references or lossy event simplification.
+- Preserve source projects, preview, undo, implicit instrument memory and order
+  positions; canonicalize only exact synthesis/program fields and pattern/control
+  contents on an isolated export copy. Report that unused banks were already absent
+  from legacy target images rather than attributing imaginary savings to cleanup.
+- Use 406/474-byte player/state images and a 435-byte contiguous PRG wrapper;
+  retain title/author, PAL/NTSC checks, CIA polling and RUN/STOP return. Preflight
+  the complete target image and report code/data/wrapper/ZP/stack footprint.
+- Verify decoded timed events before linking, enforce conservative per-tick CPU
+  costs and retain exact legacy output when disabled or a smaller safe packed
+  layout is unavailable. Logical equivalence does not imply cycle-identical writes.
+- Persist machine-only export preferences with enabled migration defaults; add
+  deterministic CLI opt-outs without importing GUI/audio backends for CLI export.
+- Add squeezer/CPU/GUI regression tests and assembly rebuild checks; regenerate
+  existing bundled SID/PRG examples with default squeezing. Add system monospace
+  fallback when the optional supplied font is absent; existing font overrides stay.
+- Native format remains 6; preview/sequencer, dependencies and audio settings are
+  unchanged. See the validation report for checks performed and open release gates.
+
 # v0.2.17
 
 - Rename the startup splash's ambiguous `OK` action to **New song**.

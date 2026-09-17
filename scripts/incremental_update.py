@@ -67,7 +67,7 @@ def target_path(repo: Path, relative: str) -> Path:
 class PlannedFile:
     relative: str
     path: Path
-    content: bytes
+    content: bytes | None
     before: bytes | None
     mode: int
 
@@ -87,7 +87,7 @@ def preflight(repo: Path, archive: Path, files: dict, expected_sha256: str,
         raise UpdateError(f'Expected {" / ".join(bases)} (or already {version}), found {actual_version!r}; refusing overwrite.')
     plan = []
     conflicts = []
-    expected_names = {'sidpulse-tracker/' + name for name in files}
+    expected_names = {'sidpulse-tracker/' + name for name, record in files.items() if record['after'] is not None}
     with zipfile.ZipFile(archive) as zipped:
         members = zipped.infolist()
         names = [member.filename for member in members]
@@ -98,9 +98,9 @@ def preflight(repo: Path, archive: Path, files: dict, expected_sha256: str,
                 raise UpdateError('Unexpected directory/symlink entry in archive.')
         for relative, record in files.items():
             path = target_path(repo, relative)
-            payload = zipped.read('sidpulse-tracker/' + relative)
+            payload = zipped.read('sidpulse-tracker/' + relative) if record['after'] is not None else None
             text = record['text']
-            if content_digest(payload, text) != record['after']:
+            if (content_digest(payload, text) if payload is not None else None) != record['after']:
                 raise UpdateError(f'Unexpected packaged content: {relative}')
             old = path.read_bytes() if path.exists() else None
             old_hash = content_digest(old, text) if old is not None else None
@@ -140,12 +140,13 @@ def apply_plan(repo: Path, plan: list[PlannedFile], release: str) -> Path | None
         stage = Path(stage_name)
         for item in plan:
             staged = stage / item.relative
-            staged.parent.mkdir(parents=True, exist_ok=True)
-            with staged.open('xb') as stream:
-                stream.write(item.content)
-                stream.flush()
-                os.fsync(stream.fileno())
-            staged.chmod(item.mode)
+            if item.content is not None:
+                staged.parent.mkdir(parents=True, exist_ok=True)
+                with staged.open('xb') as stream:
+                    stream.write(item.content)
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                staged.chmod(item.mode)
             if item.before is not None:
                 saved = backup / item.relative
                 saved.parent.mkdir(parents=True, exist_ok=True)
@@ -153,7 +154,7 @@ def apply_plan(repo: Path, plan: list[PlannedFile], release: str) -> Path | None
                 saved.chmod(item.mode)
             manifest['files'].append({'path': item.relative, 'existed': item.before is not None,
                                       'before_sha256': digest(item.before) if item.before is not None else None,
-                                      'after_sha256': digest(item.content), 'mode': item.mode})
+                                      'after_sha256': digest(item.content) if item.content is not None else None, 'mode': item.mode})
         (backup / 'RESTORE.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
         try:
             # Recheck all inputs after staging, before the first write.
@@ -172,7 +173,10 @@ def apply_plan(repo: Path, plan: list[PlannedFile], release: str) -> Path | None
                 for directory in reversed(missing):
                     directory.mkdir()
                     created_dirs.append(directory)
-                os.replace(stage / item.relative, target)
+                if item.content is None:
+                    target.unlink()
+                else:
+                    os.replace(stage / item.relative, target)
                 replaced.append(item)
         except BaseException as exc:
             rollback_errors = []
@@ -180,7 +184,8 @@ def apply_plan(repo: Path, plan: list[PlannedFile], release: str) -> Path | None
                 try:
                     target = target_path(repo, item.relative)
                     # Never erase an edit made by another process after replacement.
-                    if not target.exists() or target.read_bytes() != item.content:
+                    current = target.read_bytes() if target.exists() else None
+                    if current != item.content:
                         raise UpdateError('Target changed again; recover manually from the backup')
                     if item.before is None:
                         target.unlink()
@@ -219,7 +224,7 @@ def release_cli(*, archive_name: str, expected_sha256: str, files: dict,
             return 0
         print(f'{len(plan)} files ready for {release}:')
         for item in plan:
-            print('  ' + ('update ' if item.before is not None else 'add    ') + item.relative)
+            print('  ' + ('remove ' if item.content is None else 'update ' if item.before is not None else 'add    ') + item.relative)
         if not args.apply:
             print('Check only. No files changed. Re-run with --apply to install.')
             return 0

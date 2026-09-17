@@ -4,11 +4,12 @@ import sys
 
 import pygame as pg
 import pytest
-from py65.devices.mpu6502 import MPU
+from py65_nmos import MPU
 
 from sidpulse.__main__ import main
 from sidpulse.app import App
 from sidpulse.export.prg import PRG_LOAD, compile_prg, save_prg
+from sidpulse.export.squeeze import COMPACT_PRG_LOAD
 from sidpulse.export.psid import ExportError, RecordingSID, compile_song
 from sidpulse.playback.sequencer import Sequencer
 from sidpulse.project.format import load
@@ -67,16 +68,18 @@ def step_until(cpu, predicate, calls=None):
 
 
 @pytest.mark.parametrize('clock', ['PAL', 'NTSC'])
-def test_prg_run_timer_polling_and_runstop(clock):
+@pytest.mark.parametrize('squeeze', [False, True])
+def test_prg_run_timer_polling_and_runstop(clock, squeeze):
     song = welcome_song()
     song.clock = clock
-    result = compile_prg(song)
-    # Payload bytes stay at exactly the addresses used by the tested PSID player.
-    assert result.data[2 + 0x1000 - PRG_LOAD:] == compile_song(song).data[124:]
+    result = compile_prg(song, squeeze=squeeze)
+    linked = compile_song(song, squeeze=squeeze, _prg=True)
+    player_load = struct.unpack_from(">H", linked.data, 8)[0]
+    assert result.data[2 + player_load - PRG_LOAD:] == linked.data[124:]
     assert result.data[:14] == bytes.fromhex('01080b080a009e32303631000000')
     cpu, mem = machine(result.data, clock == 'PAL')
     calls = []
-    step_until(cpu, lambda: cpu.pc == 0x1000, calls)
+    step_until(cpu, lambda: cpu.pc == player_load, calls)
     assert cpu.p & cpu.INTERRUPT
     assert mem[0xDC02] == 255 and mem[0xDC03] == 0
     assert mem[0xDC0D] == 0  # no pending underflow on startup
@@ -129,7 +132,8 @@ def test_prg_slow_tempo_and_tempo_changes_use_compiled_cia_timing():
         [Cell(52, 1, 'T', 160), Cell(), Cell()],
         [Cell(), Cell(), Cell()]])}
     cpu, mem = machine(compile_prg(song).data, pal=True)
-    step_until(cpu, lambda: cpu.pc == 0x1000)
+    player_load = struct.unpack_from(">H", compile_song(song, _prg=True).data, 8)[0]
+    step_until(cpu, lambda: cpu.pc == player_load)
     reads = mem.icr_reads
     step_until(cpu, lambda: mem.icr_reads > reads)
     old_timer = mem[0xDC04] | mem[0xDC05] << 8
@@ -161,7 +165,7 @@ def test_prg_display_warns_about_unicode_without_changing_native_text():
     assert any('PRG title' in warning for warning in result.warnings)
     assert any('PRG author' in warning for warning in result.warnings)
     assert song.title == 'Who? Autumn \u00e4' and song.author == 'A' * 40
-    offset = 2 + 0x0C00 - PRG_LOAD
+    offset = 2 + (0x0961 if result.squeeze_report.wrapper_bytes < 1000 else 0x0C00) - PRG_LOAD
     assert result.data[offset:offset + 33] == b'WHO? AUTUMN ?'.ljust(33, b'\0')
 
 
@@ -197,6 +201,8 @@ def test_prg_menu_export_keeps_unsaved_editor_state(tmp_path):
         app.editor.saved = None
         before = deepcopy(app.editor.song)
         app.begin_export('prg')
+        from export_gui_helpers import finish_export_analysis
+        finish_export_analysis(app)
         assert app.dialog['title'].startswith('Export PRG')
         app.handle(pg.event.Event(pg.KEYDOWN, key=pg.K_e, mod=0, unicode='e'))
         assert app.dialog is None and app.page == 'files' and app.file_mode == 'prg'

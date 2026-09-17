@@ -26,5 +26,12 @@
   "autosave_minutes": 5,
   "autosave_directory": "",
   "restart_on_f5": false,
-  "hide_welcome_on_startup": false
+  "hide_welcome_on_startup": false,
+  "export_squeeze": {
+    "enabled": true,
+    "patterns": true,
+    "instruments": true,
+    "unused": true,
+    "streams": true
+  }
 }

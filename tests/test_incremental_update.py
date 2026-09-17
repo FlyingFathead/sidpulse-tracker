@@ -107,3 +107,44 @@ def test_cumulative_release_accepts_only_listed_versions_and_file_hashes(tmp_pat
     (repo / "module.py").write_text("not a published baseline")
     with pytest.raises(u.UpdateError, match="Local changes"):
         u.preflight(repo, archive, files, digest, ("0.2.11", "0.2.12"), "0.2.13")
+
+
+def test_known_obsolete_candidate_file_is_backed_up_and_removed(tmp_path):
+    repo, archive, files, sha = fixture(tmp_path)
+    obsolete = repo/'old.py'; obsolete.write_bytes(b'known old backend\n')
+    files['old.py'] = {'before': [None, u.content_digest(obsolete.read_bytes(), True)],
+                       'after': None, 'text': True, 'mode': 0o644}
+    todo = plan((repo, archive, files, sha))
+    backup = u.apply_plan(repo, todo, 'cleanup-test')
+    assert not obsolete.exists()
+    assert (backup/'old.py').read_bytes() == b'known old backend\n'
+    assert plan((repo, archive, files, sha)) == []
+
+
+def test_obsolete_but_locally_edited_file_is_never_removed(tmp_path):
+    repo, archive, files, sha = fixture(tmp_path)
+    (repo/'old.py').write_bytes(b'user changed this\n')
+    files['old.py'] = {'before': [None, u.content_digest(b'known backend', True)],
+                       'after': None, 'text': True, 'mode': 0o644}
+    with pytest.raises(u.UpdateError, match='Local changes'):
+        plan((repo, archive, files, sha))
+    assert (repo/'VERSION').read_bytes() == b'0.2.12\n'
+
+
+def test_removed_file_is_restored_if_later_write_fails(tmp_path, monkeypatch):
+    repo, archive, files, sha = fixture(tmp_path)
+    obsolete = repo/'aaa-old.py'; obsolete.write_bytes(b'old backend')
+    files['aaa-old.py'] = {'before': [u.content_digest(obsolete.read_bytes(), True)],
+                           'after': None, 'text': True, 'mode': 0o644}
+    real = u.os.replace
+    attempted = False
+    def fail_once(src, dst):
+        nonlocal attempted
+        if not attempted:
+            attempted = True
+            raise OSError('injected failure after removal')
+        return real(src, dst)
+    monkeypatch.setattr(u.os, 'replace', fail_once)
+    with pytest.raises(u.UpdateError, match='rolled back'):
+        u.apply_plan(repo, plan((repo, archive, files, sha)), 'cleanup-test')
+    assert obsolete.read_bytes() == b'old backend'

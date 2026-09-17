@@ -87,7 +87,7 @@ def test_full_memory_requirement_is_counted_before_writing():
     song.instruments[2].vibrato_speed=3;song.instruments[2].vibrato_depth=4
     song.instruments[3].arpeggio=[0,4,7,12];song.instruments[3].arp_speed=3
     before=deepcopy(song)
-    with pytest.raises(ExportMemoryError) as caught: compile_song(song)
+    with pytest.raises(ExportMemoryError) as caught: compile_song(song, squeeze=False)
     error=caught.value
     assert error.required_bytes==error.player_bytes+error.record_bytes+error.sequence_bytes
     assert error.excess_bytes>0 and song==before
@@ -102,7 +102,7 @@ def test_existing_pal_ntsc_exports_remain_byte_identical(name,expected):
     from pathlib import Path
     path=Path(__file__).resolve().parents[1]/'examples'/f'{name}.sidpulse'
     song,_=load(path)
-    assert hashlib.sha256(compile_song(song).data).hexdigest()==expected
+    assert hashlib.sha256(compile_song(song, squeeze=False).data).hexdigest()==expected
 
 
 def test_gui_grid_metadata_and_settings_route_when_pygame_available(tmp_path):

@@ -11,6 +11,13 @@ def main():
     exports = parser.add_mutually_exclusive_group()
     exports.add_argument("--export-sid",type=Path,help="compile PSID and save a sibling .sidpulse source; no GUI")
     exports.add_argument("--export-prg",type=Path,help="compile a runnable C64 PRG and save a sibling .sidpulse source; no GUI")
+    for name, help_text in (("song", "enable export-only RAM/file squeezing (default: on)"),
+                            ("patterns", "condense duplicate export patterns"),
+                            ("instruments", "condense identical export instruments"),
+                            ("unused", "discard unused export-copy data"),
+                            ("streams", "pack resident voice/timing streams")):
+        parser.add_argument("--squeeze-" + name, action=argparse.BooleanOptionalAction,
+                            default=None, help=help_text)
     parser.add_argument("--save-project",type=Path,help="native save path with --export-sid or --export-prg (default: export basename.sidpulse)")
     parser.add_argument("--silent", action="store_true", help="run editor without an audio device")
     parser.add_argument("--example", action="store_true", help="open the First light SID arrangement")
@@ -25,6 +32,10 @@ def main():
     args = parser.parse_args()
     if args.play_welcome_song and (args.project or args.example or args.welcome):
         parser.error("--play-welcome-song cannot accompany a project, --example or --welcome")
+    if not (args.export_sid or args.export_prg) and any(
+            getattr(args, "squeeze_" + name) is not None
+            for name in ("song", "patterns", "instruments", "unused", "streams")):
+        parser.error("--squeeze-* options apply only to --export-sid / --export-prg")
     if args.headless_smoke:
         os.environ["SDL_VIDEODRIVER"] = "dummy"
         os.environ["SDL_AUDIODRIVER"] = "dummy"
@@ -44,8 +55,10 @@ def main():
         if len(size) != 2 or min(size) < 360:
             raise ValueError("Use WIDTHxHEIGHT with dimensions at least 360")
         metadata = {}
-        from sidpulse.ui.welcome import show_on_startup, open_dialog, play_intro
-        welcome = not (args.project or args.example or args.play_welcome_song or args.export_sid or args.export_prg or args.headless_smoke) and (args.welcome or show_on_startup())
+        welcome = False
+        if not (args.export_sid or args.export_prg):
+            from sidpulse.ui.welcome import show_on_startup, open_dialog, play_intro
+            welcome = not (args.project or args.example or args.play_welcome_song or args.headless_smoke) and (args.welcome or show_on_startup())
         if args.project:
             song, metadata = load(args.project)
         else:
@@ -55,10 +68,15 @@ def main():
             from sidpulse.export.prg import compile_prg,save_prg
             from sidpulse.project.format import save
             target = args.export_prg or args.export_sid
-            result = compile_prg(song) if args.export_prg else compile_song(song)
+            from sidpulse.export.squeeze import SqueezeOptions
+            options = SqueezeOptions(**{("enabled" if name == "song" else name): getattr(args, "squeeze_" + name)
+                                        for name in ("song", "patterns", "instruments", "unused", "streams")
+                                        if getattr(args, "squeeze_" + name) is not None})
+            result = compile_prg(song, squeeze=options) if args.export_prg else compile_song(song, squeeze=options)
             native=save(args.save_project or target.with_suffix('.sidpulse'),song,metadata)
             output=save_prg(target,result) if args.export_prg else save_export(target,result)
             print(f"Saved {native} and {output}: {len(result.data):,} bytes, {result.seconds:.2f}s")
+            if result.squeeze_report: print(result.squeeze_report.summary())
             for warning in result.warnings:print(warning)
             return 0
         if args.save_project:

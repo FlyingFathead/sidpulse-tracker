@@ -2,7 +2,7 @@ from copy import deepcopy
 import struct
 import math
 import pytest
-from py65.devices.mpu6502 import MPU
+from py65_nmos import MPU
 
 from sidpulse.export.psid import compile_song,save_export,RecordingSID,ExportError
 from sidpulse.playback.sequencer import Sequencer
@@ -46,10 +46,12 @@ def trace_song(song):
         seq.frames=int(seq.next_tick)
 
 
-def test_exported_6502_matches_every_ordered_sid_write_of_first_light():
-    song=example_song();song.export_config["loop"]=False;before=deepcopy(song);result=compile_song(song)
-    assert song==before and result.data==compile_song(song).data
-    assert 10000<len(result.data)<30000 and result.unique_records<result.ticks//2
+@pytest.mark.parametrize("squeeze", [False, True])
+def test_exported_6502_matches_every_ordered_sid_write_of_first_light(squeeze):
+    song=example_song();song.export_config["loop"]=False;before=deepcopy(song);result=compile_song(song, squeeze=squeeze)
+    assert song==before and result.data==compile_song(song, squeeze=squeeze).data
+    assert (5000 if squeeze else 10000)<len(result.data)<(10000 if squeeze else 30000)
+    assert result.unique_records<result.ticks//2
     assert result.seconds==pytest.approx(46.08)
     cpu,mem=machine(result.data)
     maximum=0
@@ -71,23 +73,25 @@ def test_exported_6502_matches_every_ordered_sid_write_of_first_light():
                0xD400<=a<=0xD418 or a in (0xDC04,0xDC05,0xDC0E) for a,v in mem.writes)
 
 
-def test_psid_tempo_changes_gate_delay_effects_and_filter_writes():
+@pytest.mark.parametrize("squeeze", [False, True])
+def test_psid_tempo_changes_gate_delay_effects_and_filter_writes(squeeze):
     song=Song(speed=3,export_config={"loop":False})
     rows=[[Cell(48,1,'J',0x37),Cell(24,2),Cell(36,4)],
           [Cell(effect='E',parameter=2),Cell(effect='T',parameter=150),Cell(effect='Q',parameter=2)],
           [Cell(55,1,'G',0x10),Cell(effect='A',parameter=4),Cell(48,4,'S',0xD2)],
           [Cell(effect='H',parameter=0x34),Cell(effect='F',parameter=0xF2),Cell(effect='S',parameter=0xC2)]]
     song.patterns={0:Pattern(rows=rows,controls={0:ControlCell(0x200,8,2,16,15,4),2:ControlCell(slide=-5)})}
-    result=compile_song(song);cpu,mem=machine(result.data)
+    result=compile_song(song, squeeze=squeeze);cpu,mem=machine(result.data)
     for i,(expected,tempo) in enumerate(trace_song(song)):
         mem.events=[];call(cpu,0x1000 if i==0 else 0x1003)
         assert (mem.events[25:] if i==0 else mem.events)==expected
         assert mem[0xDC04]|mem[0xDC05]<<8==round(985248*2.5/tempo)-1
 
 
-def test_loop_export_restarts_data_and_psid_flags_match_chip():
+@pytest.mark.parametrize("squeeze", [False, True])
+def test_loop_export_restarts_data_and_psid_flags_match_chip(squeeze):
     song=Song(speed=1);song.sid_model='6581';song.patterns[0].rows=[[Cell(48,1),Cell(),Cell()]]
-    song.export_config={'loop':True};result=compile_song(song)
+    song.export_config={'loop':True};result=compile_song(song, squeeze=squeeze)
     assert struct.unpack('>H',result.data[118:120])[0]==0x14
     cpu,mem=machine(result.data);call(cpu,0x1000);first=mem.events[25:]
     for _ in range(3):
@@ -114,9 +118,10 @@ def test_export_file_backup_and_atomic_failure(tmp_path,monkeypatch):
     assert path.read_bytes()==second
 
 
-def test_tempo_32_uses_two_cia_calls_per_tick():
+@pytest.mark.parametrize("squeeze", [False, True])
+def test_tempo_32_uses_two_cia_calls_per_tick(squeeze):
     song=Song(tempo=32,speed=1);song.patterns[0].rows=[[Cell(48,1),Cell(),Cell()],[Cell(50,1),Cell(),Cell()]]
-    result=compile_song(song);cpu,mem=machine(result.data)
+    result=compile_song(song, squeeze=squeeze);cpu,mem=machine(result.data)
     call(cpu,0x1000)
     assert mem[0xDC04]|mem[0xDC05]<<8==round(round(985248*2.5/32)/2)-1
     mem.events=[];call(cpu,0x1003);assert not mem.events

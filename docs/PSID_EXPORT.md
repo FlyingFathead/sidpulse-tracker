@@ -1,10 +1,11 @@
-# PSID export v0.2.1
+# PSID export
 
 For a BASIC-loadable C64 program, use [PRG export](PRG_EXPORT.md). It wraps this
 same compiled player and music stream; supported effects and limits are shared.
 
 Ctrl+Shift+E or File > Export PSID compiles the current document, offers a native
-save, then asks for the .sid destination. Export-only leaves the dirty flag and
+save, then asks for the .sid destination. The default-enabled export-only
+[File Squeezer](SQUEEZER.md) can be disabled independently of the project. Export-only leaves the dirty flag and
 project filename intact. F12 supplies released text and optional whole-song loop.
 CLI `--export-sid PATH` always saves a sibling .sidpulse (override with
 `--save-project PATH`). Existing files are backed up before atomic replacement.
@@ -19,12 +20,17 @@ follow the [HVSC SID specification](https://www.hvsc.c64.org/download/C64Music/D
 
 The same Sequencer and VoicePrograms used for host playback emit ordered SID
 writes for each musical tick. The compiler runs them without PCM synthesis.
-Identical complete tick records share one address; a two-byte pointer sequence
-retains event order. Gate transitions and deliberate repeated writes are kept.
+Default squeezing compares resident single/voice/register streams and counted channel phrases, with
+literal sharing, timing-state reuse and empty-tick runs. It verifies every
+decoded record and chooses a smaller timing-safe image. No full-song expansion
+buffer is allocated. With squeezing disabled or fallback selected, identical
+complete tick records share one address and a two-byte pointer sequence retains
+event order. Gate transitions and deliberate repeated writes are kept.
 Ordinary unchanged modulation/filter writes may be omitted by the shared engine.
-This is an initial size/CPU compromise, not the final table-based event player.
+This remains trace-derived replay, not a native instrument/table sequencer.
 
-The original 512-byte 6510 player image is bundled; its readable source is
+The squeezed 406/462/474/580-byte player/state images and assembly are documented in
+[SQUEEZER.md](SQUEEZER.md). The original 512-byte legacy player is retained; its readable source is
 `sidpulse/export/player.asm`. Optional rebuild:
 
 ```
@@ -59,7 +65,9 @@ No independent per-voice PCM volume or panning is invented.
 - Compiler guard: 18,000 musical ticks; repeated order/row visits are rejected.
   Preview may play backward Bxx loops. For this exporter use finite orders and
   whole-song loop in F12. Pattern/order reuse through distinct orders is supported.
-- Conservative per-call estimate `400 + 90 * pair_count` must fit the CIA period.
+- Legacy per-call estimate `400 + 90 * pair_count` must fit the CIA period.
+  Squeezed playback additionally uses its packet/read/dispatch/gap cost model
+  and falls back when no tested packed layout fits the conservative check.
   This covers player instructions; it is not a whole-system C64 load guarantee.
 - Generic extension macros/filter-program banks have no executable semantics yet
   and block export. Unreferenced PCM bank data stay in the native file with an

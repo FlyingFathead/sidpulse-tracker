@@ -1,7 +1,8 @@
 # PRG export
 
 **File > Export PRG** compiles the current song as a standalone C64 program.
-It offers to save the editable project first. **Export only** leaves the project
+The default-enabled [File Squeezer](SQUEEZER.md) measures resident RAM and file
+size before continuing. It offers to save the editable project first. **Export only** leaves the project
 filename and unsaved status intact. Existing PRGs get a `.prg.bak` backup before
 atomic replacement.
 
@@ -42,14 +43,16 @@ not create a D64 image or handle physical transfer to hardware.
 
 ## Music and implementation
 
-The PRG contains the same compiled payload as [PSID export](PSID_EXPORT.md).
+The PRG uses the same compiler and decoded event semantics as
+[PSID export](PSID_EXPORT.md), linked for its chosen wrapper layout.
 Native instrument arpeggios, delayed vibrato, ADSR and filter automation therefore
 use the same ordered SID writes. There is no sampled audio or substitute synth.
 SIDpulse's rounded welcome sound uses low-pass-filtered triangles; the SID has
 no native sine-wave oscillator. Real chip/filter variations still affect timbre.
 
 The two-byte load address is $0801. A BASIC `SYS 2061` line starts the loader at
-$080D; the music player stays at $1000 with its play entry at $1003. The wrapper
+$080D. Squeezed music starts at $09B4 with play at $09B7; legacy music
+stays at $1000 with play at $1003. The wrapper
 polls CIA1 Timer A with CPU interrupts masked and calls the player on underflow.
 Tempo changes and slow ticks follow the compiler's CIA period and idle-call
 records. This is a standalone player that owns the machine while playing, not
@@ -57,13 +60,17 @@ an interrupt routine for a game or demo. It expects the normal BASIC environment
 with KERNAL and I/O mapped in. RUN/STOP restores normal I/O and screen routines.
 
 All PSID size, CPU, effect and arrangement limits also apply. Unsupported music
-is rejected before writing. The extra loader occupies $0801–$0FFF; the compiled
-music remains within $1000–$9FFF. Titles/authors are uppercase and limited to
+is rejected before writing. The squeezed loader occupies $0801–$09B3 (435 bytes), with music
+immediately following it below $A000. Legacy uses $0801–$0FFF (2,047 bytes),
+with music within $1000–$9FFF. No temporary decrunch area is needed. Titles/authors are uppercase and limited to
 32 display characters; unsupported characters are replaced with a warning.
 The full original text remains in the native project.
 
 The loader binary is bundled, so users do not need an assembler. Its source is
-`sidpulse/export/prg_loader.asm`. Developers can rebuild it with:
+`sidpulse/export/prg_loader.asm` (legacy) and
+`sidpulse/export/prg_loader_squeezed.asm` (compact). Rebuild/check all ten compact player variants and the
+compact PRG wrapper with `python scripts/build_squeeze_players.py --check`.
+Developers can rebuild the legacy wrapper with:
 
 ```bash
 64tass --nostart -o sidpulse/assets/prg-loader.bin sidpulse/export/prg_loader.asm

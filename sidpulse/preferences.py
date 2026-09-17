@@ -92,3 +92,34 @@ def load_restart_on_f5():
         return value if type(value) is bool else False
     except (OSError, ValueError, AttributeError):
         return False
+
+
+def load_squeeze_options():
+    from dataclasses import fields
+    from sidpulse.export.squeeze import SqueezeOptions
+    try:
+        document = json.loads(config_path().read_text())
+        data = document.get('export_squeeze', document.get('export_squeezer', {}))
+        if not isinstance(data, dict):
+            data = {}
+        else:
+            data = dict(data)
+            # Preserve explicit choices made by the earlier local candidates.
+            for old, current in (('duplicate_patterns', 'patterns'),
+                                 ('identical_instruments', 'instruments'),
+                                 ('unused_data', 'unused'), ('compact', 'streams'),
+                                 ('phrases', 'streams')):
+                if current not in data and type(data.get(old)) is bool:
+                    data[current] = data[old]
+    except (OSError, ValueError, AttributeError):
+        data = {}
+    return SqueezeOptions(**{field.name: data[field.name] for field in fields(SqueezeOptions)
+                             if type(data.get(field.name)) is bool})
+
+
+def save_squeeze_options(options):
+    from dataclasses import asdict
+    from sidpulse.export.squeeze import SqueezeOptions
+    if not isinstance(options, SqueezeOptions):
+        raise TypeError('Expected SqueezeOptions')
+    save_preferences({'export_squeeze': asdict(options)})

@@ -1,3 +1,9 @@
+> Implementation update (v0.2.18 candidate, 2026-09-17): export-only resident
+> stream squeezing is implemented and export-core tested. The native instrument/
+> table replay engine, full desktop/audio validation and hardware release gates
+> remain distinct work. See [SQUEEZER.md](SQUEEZER.md) and
+> [candidate validation](SQUEEZER_VALIDATION-v0.2.18.md).
+
 # SIDpulse Tracker
 ## Canonical Project Roadmap
 
