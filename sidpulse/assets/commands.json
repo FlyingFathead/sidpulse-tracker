@@ -41,16 +41,25 @@
     {
       "id": "audio.settings",
       "command": "audio_settings",
-      "description": "Audio buffer settings",
+      "description": "Audio buffer and underrun detection settings",
       "contexts": [
         "global"
       ],
-      "shortcuts": [],
-      "key_rules": [],
+      "shortcuts": [
+        "Alt+F12"
+      ],
+      "key_rules": [
+        {
+          "key": "K_F12",
+          "modifiers": [
+            "alt"
+          ]
+        }
+      ],
       "target": "App.execute",
       "implemented": true,
       "applicable": true,
-      "keybind_in_use": false,
+      "keybind_in_use": true,
       "visible": true,
       "visible_in_help": true,
       "visible_in_menu": true,

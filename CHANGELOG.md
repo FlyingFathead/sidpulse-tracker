@@ -1,3 +1,20 @@
+# v0.2.22 - isolated audio and underrun diagnostics
+
+- Run native synthesis and SDL output in a spawned audio process. Keep commands
+  and display snapshots on IPC; never transfer PCM through the UI process.
+- Optimize PCM FIFO copies and host conditioner loops while retaining sample
+  ordering, DC filtering, transport ramps, rounding and SID register events.
+- Add independent missing-frame and late-callback diagnostics. Detect callback
+  delays even when the existing software PCM queue never becomes empty.
+- Bind previously unused Alt+F12 to audio settings. Add a persistent, default-on
+  `audio_underrun_detection` checkbox/config boolean for unobtrusive lower-left
+  warnings. Preserve raw test counters when notifications are disabled.
+- Retain 2048-sample defaults, saved buffer overrides, native format 6, runtime
+  dependency pins, scopes, editor controls and export/player data.
+- Include reproducible baseline/candidate benchmarks, identical-initial-state
+  native PCM comparisons, failure injection and full regression results in
+  docs/VALIDATION-v0.2.22.md. Hardware results are not inferred from dummy SDL.
+
 # v0.2.21 — responsive export analysis
 
 - Remove synchronous SID/PRG compilation from menu and dialog event handlers.

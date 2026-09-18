@@ -1,0 +1,31 @@
+{
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "cpu_count": 9,
+    "audio_driver": "dummy",
+    "pygame": "2.5.7",
+    "pyresidfp": "0.17.0"
+  },
+  "results": {
+    "kind": "idle_no_scopes",
+    "frames": 2048,
+    "duration_seconds": 12.0,
+    "gaps": 0,
+    "missing_frames": 0,
+    "callback_intervals_ms": {
+      "n": 283,
+      "mean": 42.25595344876336,
+      "median": 42.23192300014489,
+      "p95": 42.33465800007252,
+      "p99": 43.01936199999545,
+      "maximum": 46.37737700022626
+    },
+    "intervals_above_1_5_blocks": 0,
+    "render_load": 0.09550725434486021,
+    "peak_render_load": 0.1974433359315242,
+    "over_budget": 0,
+    "late_wakes": 0,
+    "error": null
+  }
+}

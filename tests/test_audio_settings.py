@@ -67,7 +67,7 @@ def test_slider_keyboard_focus_and_preference_failure(app, monkeypatch):
     key(app, pg.K_HOME)
     def fail(value):
         raise OSError('Read-only preferences')
-    monkeypatch.setattr('sidpulse.app.save_buffer', fail)
+    monkeypatch.setattr('sidpulse.app.save_preferences', fail)
     key(app, pg.K_RETURN)
     assert 'Read-only preferences' in app.dialog['error']
     assert app.audio_buffer == 2048

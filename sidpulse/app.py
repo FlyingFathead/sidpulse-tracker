@@ -1,6 +1,7 @@
 """Native pygame shell. All song mutations go through reversible editor commands."""
 from copy import deepcopy
 import logging
+import time
 from pathlib import Path
 import pygame as pg
 
@@ -35,6 +36,11 @@ class App(InstrumentActions, FileActions):
         self.editor = Editor(song)
         self.audio_buffer = load_preferences() if audio_buffer is None else audio_buffer
         self.audio = AudioEngine(self.editor.song, audio, self.audio_buffer)
+        from sidpulse.preferences import load_audio_underrun_detection
+        self.audio_underrun_detection = load_audio_underrun_detection()
+        self.audio_warning = ''
+        self.audio_warning_until = 0.0
+        self.last_audio_gaps = self.last_audio_late_callbacks = 0
         self.last_audio_revision = 0
         self.audio_configuration = (self.editor.song.sid_model,self.editor.song.clock)
         self.follow_playback = False
@@ -178,6 +184,7 @@ class App(InstrumentActions, FileActions):
             self.change_page("info")
 
     def sync_audio(self):
+        self.update_audio_warning()
         scopes_visible = self.page == 'info'
         if scopes_visible != self.scopes_visible:
             self.scopes_visible = scopes_visible
@@ -259,8 +266,36 @@ class App(InstrumentActions, FileActions):
         self.dialog = {"title": title, "text": str(initial), "callback": callback, "message": message, "select_all": True}
         pg.key.start_text_input()
 
-    def apply_audio_buffer(self, value):
-        save_buffer(value)
+    def update_audio_warning(self):
+        # Startup/audio-disabled adapters may not have published diagnostics yet.
+        gaps = getattr(self.audio, 'underruns', 0)
+        late = getattr(self.audio, 'late_callbacks', 0)
+        if self.audio_underrun_detection:
+            if gaps > self.last_audio_gaps:
+                self.audio_warning = 'Buffer underrun: configure audio with Alt+F12.'
+                self.audio_warning_until = time.monotonic() + 12
+            elif late > self.last_audio_late_callbacks:
+                self.audio_warning = 'Late audio callback: check audio with Alt+F12.'
+                self.audio_warning_until = time.monotonic() + 12
+        else:
+            self.audio_warning = ''
+            self.audio_warning_until = 0.0
+        self.last_audio_gaps, self.last_audio_late_callbacks = gaps, late
+
+    def apply_audio_buffer(self, value, detection=None):
+        if value not in BUFFERS:
+            raise ValueError('Unsupported audio buffer size')
+        if detection is None:
+            save_buffer(value)
+        else:
+            if type(detection) is not bool:
+                raise ValueError('Audio underrun detection must be true or false')
+            save_preferences({'audio_buffer': value, 'audio_underrun_detection': detection})
+            self.audio_underrun_detection = detection
+            self.audio_warning = ''
+            self.audio_warning_until = 0.0
+            self.last_audio_gaps = self.audio.underruns
+            self.last_audio_late_callbacks = self.audio.late_callbacks
         if value != self.audio_buffer:
             self.audio_buffer = value
             self.audio.send('buffer', value)
@@ -858,6 +893,8 @@ class App(InstrumentActions, FileActions):
             open_dialog(self)
         elif name == "audio_reset_stats":
             self.audio.send("reset_stats")
+            self.audio_warning = ''
+            self.audio_warning_until = 0.0
             ed.status = "Audio counters reset"
         elif name == "about":
             self.dialog={"title":"About SIDpulse Tracker", "logo":True}

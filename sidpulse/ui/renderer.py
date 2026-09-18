@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from collections import OrderedDict
 from pathlib import Path
 import textwrap
+import time
 import pygame as pg
 
 from sidpulse import __version__
@@ -271,8 +272,16 @@ class Renderer:
         self.rect(0, bottom, self.cols, self.footer_rows, PANEL)
         self.horizontal_rule(bottom)
         self.text(1, bottom, ed.status, TEXT)
-        self.text(1, bottom + 1, audio.description + (f" | gaps {audio.underruns} | render {audio.render_load:.0%}" if audio.ready else ""), TEXT if audio.ready else DIM, self.cols - 17)
-        if self.cols > 40:
+        warning = app.audio_underrun_detection and app.audio_warning and time.monotonic() < app.audio_warning_until
+        if warning:
+            message = app.audio_warning
+            if self.cols < 80:
+                message = ('Buffer underrun' if message.startswith('Buffer') else 'Late callback') + ' | Alt+F12: audio'
+            color = (215, 92, 103) if sum(PANEL) < 384 else (150, 25, 40)
+            self.text(1, bottom + 1, message, color, self.cols - 2)
+        else:
+            self.text(1, bottom + 1, audio.description + (f" | gaps {audio.underruns} | render {audio.render_load:.0%}" if audio.ready else ""), TEXT if audio.ready else DIM, self.cols - 17)
+        if self.cols > 40 and not warning:
             self.text(self.cols - 15, bottom + 1, "F8: SILENCE", DIM)
         if app.helper_strip:
             self.horizontal_rule(bottom + 2)

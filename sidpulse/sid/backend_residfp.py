@@ -24,6 +24,8 @@ class ReSIDfpBackend:
         self.clock_hz = CLOCKS[clock]
         self.chip = SID(self.models[model], SamplingMethod.RESAMPLE, float(self.clock_hz), float(sample_rate))
         self.pending = deque()
+        self.pending_frames = 0
+        self.pending_offset = 0
         self.model = model
         self.registers = bytearray(25)
         self.muted = (False, False, False)
@@ -44,6 +46,7 @@ class ReSIDfpBackend:
     def reset(self):
         self.chip.reset()
         self.pending.clear()
+        self.pending_frames = self.pending_offset = 0
         self.registers[:] = bytes(25)
         if self.voice_scopes is not None:
             self.voice_scopes.reset()
@@ -84,18 +87,34 @@ class ReSIDfpBackend:
             self.chip.write(voice * 7 + 4, self.registers[voice * 7 + 4])
 
     def clock(self, cycles):
-        self.pending.extend(self.chip.clock(cycles))
+        samples = self.chip.clock(cycles)
+        if samples:
+            self.pending.append(array('h', samples).tobytes())
+            self.pending_frames += len(samples)
         if self.voice_scopes is not None:
             self.voice_scopes.clock(cycles)
 
     def render(self, frames):
         if not 0 <= frames <= self.sample_rate * 10:
             raise ValueError("Render in chunks of up to ten seconds")
-        while len(self.pending) < frames:
-            cycles = max(1, math.ceil((frames - len(self.pending)) * self.clock_hz / self.sample_rate))
+        while self.pending_frames < frames:
+            cycles = max(1, math.ceil((frames - self.pending_frames) * self.clock_hz / self.sample_rate))
             self.clock(cycles)
         # Native-endian signed int16, matching SDL AUDIO_S16SYS.
-        return array("h", (self.pending.popleft() for _ in range(frames))).tobytes()
+        # Copy contiguous blocks instead of a Python deque operation per sample.
+        remaining = frames * 2
+        out = bytearray()
+        while remaining:
+            block = self.pending[0]
+            count = min(remaining, len(block) - self.pending_offset)
+            out.extend(memoryview(block)[self.pending_offset:self.pending_offset + count])
+            remaining -= count
+            self.pending_offset += count
+            if self.pending_offset == len(block):
+                self.pending.popleft()
+                self.pending_offset = 0
+        self.pending_frames -= frames
+        return bytes(out)
 
 
 def set_filter(sid, state):

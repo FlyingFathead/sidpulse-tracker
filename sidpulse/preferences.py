@@ -94,6 +94,14 @@ def load_restart_on_f5():
         return False
 
 
+def load_audio_underrun_detection():
+    try:
+        value = json.loads(config_path().read_text()).get('audio_underrun_detection', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
 def load_squeeze_options():
     from dataclasses import fields
     from sidpulse.export.squeeze import SqueezeOptions

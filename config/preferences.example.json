@@ -33,5 +33,6 @@
     "instruments": true,
     "unused": true,
     "streams": true
-  }
+  },
+  "audio_underrun_detection": true
 }

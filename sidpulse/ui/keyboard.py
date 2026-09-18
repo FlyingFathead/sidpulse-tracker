@@ -29,6 +29,8 @@ def _dispatch_unchecked(event, page="pattern", column=0):
     if event.type == pg.KEYUP:
         return Command("release", scan)
     if alt and not ctrl and not shift:
+        if key == pg.K_F12:
+            return Command('audio_settings')
         if key in (pg.K_F1, pg.K_F2, pg.K_F3):
             return Command("mute", (pg.K_F1, pg.K_F2, pg.K_F3).index(key))
         if key in (pg.K_F9, pg.K_F10):

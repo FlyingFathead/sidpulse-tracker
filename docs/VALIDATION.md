@@ -70,7 +70,7 @@ cat VERSION
 grep -nE 'version|__version__' pyproject.toml sidpulse/__init__.py
 ```
 
-For v0.2.21, each application-version declaration must resolve to `0.2.21`.
+For v0.2.22, each application-version declaration must resolve to `0.2.22`.
 
 ## 6. Interactive tracker checks
 
@@ -194,3 +194,14 @@ Export only, including native-save cancellation and export overwrite cancellatio
 Check animation/Cancel at minimum window size, 300% zoom and each theme. Confirm
 existing audio continues without introducing new dropouts on the supported hosts.
 A passing worker unit test alone does not establish desktop or audio behavior.
+
+## Audio isolation and underrun detection (v0.2.22)
+
+- Run the full test suite with native pygame/reSIDfp and py65 dependencies.
+- See VALIDATION-v0.2.22.md for the unchanged 0.2.21 comparison and rerun commands.
+- Verify Alt+F12, checkbox OK/Cancel and config true/false; warnings belong in the
+  lower-left footer, never a modal. Distinguish missing PCM from late callbacks.
+- Exercise playback, audition, pause/resume, buffer changes, mute, live edits,
+  repeated restarts, Info scopes, resizing, export, and clean shutdown.
+- Repeat the real-device checks on Linux and Windows before claiming either
+  platform's hardware path is validated. Dummy-driver zeroes are not that proof.

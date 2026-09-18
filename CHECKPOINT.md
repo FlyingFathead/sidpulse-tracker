@@ -1,16 +1,15 @@
-# SIDpulse Tracker v0.2.21 release checkpoint
+# SIDpulse Tracker v0.2.22 validation checkpoint
 
-Application 0.2.21; native format 6, unchanged.
+Application 0.2.22; native format 6, unchanged.
 
-## Local release validation — 2026-09-17
+- Baseline 0.2.21: 1023 passed, zero failures/errors/skips.
+- Candidate 0.2.22: 1051 passed, zero failures/errors/skips.
+- Seven default-buffer real-time scenarios: 168 seconds, zero missing PCM
+  frames, starvation episodes or callback intervals above 1.5 blocks.
+- Native PCM, conditioning and ordered SID events match from identical initial
+  emulator state across eight song/model/clock combinations (4,608,000 frames).
+- Alt+F12, saved detection boolean and unobtrusive lower-left warnings added.
+- Linux SDL dummy results only; no Windows/physical-device/VICE/real-C64 or
+  assembler-rebuild claim. No remote release has been published by this work.
 
-The maintainer's Linux run of `./.venv/bin/python -m pytest -q -ra`
-completed with **1023 passed, zero failures and zero skips** in 264.79 seconds.
-The export UI was also exercised manually and reported working well.
-
-These results supersede the earlier dependency-limited local checks for this
-version. They do not establish VICE/real-hardware or Windows validation;
-consult the release commit's CI runs for cross-platform and assembler results.
-
-See docs/RELEASE_NOTES-v0.2.21.md and docs/VALIDATION-v0.2.21.md.
-Historical candidate checks are retained in the validation document.
+See docs/VALIDATION-v0.2.22.md for methods, raw evidence, limits and commands.

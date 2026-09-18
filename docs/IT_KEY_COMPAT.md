@@ -154,3 +154,8 @@ Backspace/Delete edit text; Ctrl+A/C/X/V operate on selections. Ctrl+L is direct
 editing inside the browser and remains Load elsewhere. Alt+Up goes to the parent.
 No piano key, transport, octave or block-edit bindings are changed outside this
 file-browser context. See [FILE_BROWSER.md](FILE_BROWSER.md).
+
+## Audio settings addition (v0.2.22)
+
+Alt+F12 opens audio buffer and underrun-notification settings globally. It was
+unassigned in v0.2.21; Ctrl+F12 and Shift+F12 retain their existing actions.

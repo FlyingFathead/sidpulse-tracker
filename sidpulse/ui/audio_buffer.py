@@ -13,8 +13,9 @@ def open_dialog(app, step=0):
     app.release_audition()
     pg.key.stop_text_input()
     index = max(0, min(len(BUFFERS) - 1, BUFFERS.index(app.audio_buffer) + step))
-    app.dialog = {'kind': 'audio_buffer', 'title': 'Default audio buffer',
-                  'index': index, 'focus': 0, 'drag_rect': None}
+    app.dialog = {'kind': 'audio_buffer', 'title': 'Audio settings (Alt+F12)',
+                  'index': index, 'focus': 0, 'drag_rect': None,
+                  'detection': app.audio_underrun_detection}
 
 
 def activate(app, action):
@@ -23,7 +24,7 @@ def activate(app, action):
         app.dialog = None
     elif action == 'ok':
         try:
-            app.apply_audio_buffer(BUFFERS[dialog['index']])
+            app.apply_audio_buffer(BUFFERS[dialog['index']], dialog['detection'])
         except (ValueError, OSError) as exc:
             dialog['error'] = str(exc)
         else:
@@ -47,6 +48,9 @@ def handle_event(app, event):
                 set_from_mouse(dialog, event.pos[0], rect)
             elif action == 'buffer_button':
                 activate(app, value)
+            elif action == 'audio_detection':
+                dialog['focus'] = 3
+                dialog['detection'] = not dialog['detection']
             return
     elif event.type == pg.MOUSEMOTION and dialog['drag_rect'] is not None:
         set_from_mouse(dialog, event.pos[0], dialog['drag_rect'])
@@ -62,13 +66,18 @@ def handle_event(app, event):
         if key == pg.K_ESCAPE:
             activate(app, 'cancel')
         elif key == pg.K_TAB:
-            dialog['focus'] = (dialog['focus'] + (-1 if event.mod & pg.KMOD_SHIFT else 1)) % 3
+            dialog['focus'] = (dialog['focus'] + (-1 if event.mod & pg.KMOD_SHIFT else 1)) % 4
         elif key in (pg.K_RETURN, pg.K_KP_ENTER, pg.K_SPACE):
-            activate(app, ('ok', 'ok', 'cancel')[dialog['focus']])
+            if dialog['focus'] == 3:
+                dialog['detection'] = not dialog['detection']
+            else:
+                activate(app, ('ok', 'ok', 'cancel')[dialog['focus']])
         elif key in (pg.K_LEFT, pg.K_RIGHT):
             step = -1 if key == pg.K_LEFT else 1
             if dialog['focus'] == 0:
                 dialog['index'] = max(0, min(len(BUFFERS) - 1, dialog['index'] + step))
+            elif dialog['focus'] == 3:
+                dialog['detection'] = not dialog['detection']
             else:
                 dialog['focus'] = 1 + (dialog['focus'] - 1 + step) % 2
         elif key in (pg.K_UP, pg.K_DOWN):
@@ -103,6 +112,15 @@ def draw(renderer, app):
     r.hits.append((slider.inflate(0, 8), 'buffer_slider', None))
     r.text(x + 2, y + 6.6, 'Less delay', colors['TEXT'])
     r.text(x + w - 2 - len('More stability'), y + 6.6, 'More stability', colors['TEXT'])
+    label = ('[x]' if dialog['detection'] else '[ ]') + ' Detect audio underruns / warn'
+    rect = r.rect(x + 2, y + 8, w - 4, 1.4, colors['PANEL'])
+    r.control_text(rect, label, colors['TEXT'])
+    r.hits.append((rect, 'audio_detection', None))
+    if dialog['focus'] == 3:
+        pg.draw.rect(r.screen, colors['TEXT'], rect, 1)
+    r.text(x + 2, y + 9.6,
+           f'Missing {app.audio.missing_frames}f | late {app.audio.late_callbacks} | max {app.audio.max_callback_interval * 1000:.1f}ms',
+           colors['TEXT'], w - 4)
     bw = (w - 5) / 2
     for i, (label, action) in enumerate(zip(LABELS, ('ok', 'cancel'))):
         button(r, x + 2 + i * (bw + 1), y + h - 3, bw, label,

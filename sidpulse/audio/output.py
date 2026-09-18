@@ -14,11 +14,20 @@ class OutputConditioner:
 
     def process(self, pcm):
         samples = array('h', pcm)
+        # Keep the exact recurrence and rounding, but avoid repeated attribute
+        # lookups and four Python min/max calls for every sample.
+        previous_x, previous_y = self.previous_x, self.previous_y
+        gain, target, step = self.gain, self.target, self.step
+        coefficient = self.coefficient
         for i, x in enumerate(samples):
-            if self.previous_x is None:
-                self.previous_x = x
-            y = x - self.previous_x + self.coefficient * self.previous_y
-            self.previous_x, self.previous_y = x, y
-            self.gain += max(-self.step, min(self.step, self.target - self.gain))
-            samples[i] = max(-32768, min(32767, round(y * self.gain)))
+            if previous_x is None:
+                previous_x = x
+            y = x - previous_x + coefficient * previous_y
+            previous_x, previous_y = x, y
+            if gain != target:
+                delta = target - gain
+                gain += -step if delta < -step else step if delta > step else delta
+            value = round(y * gain)
+            samples[i] = -32768 if value < -32768 else 32767 if value > 32767 else value
+        self.previous_x, self.previous_y, self.gain = previous_x, previous_y, gain
         return samples.tobytes()

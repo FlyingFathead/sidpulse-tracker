@@ -12,7 +12,7 @@ The table inventories command groups and historical bindings. Some entries such 
 |---|---|---|---|---|---|---|---|---|---|
 | audio.reset_stats | global | (menu only) | Reset audio diagnostics → App.execute | true | true | false | true | true | true |
 | settings.f5_restart | global | (menu only) | Restart on repeated F5: optional, off by default → App.execute | true | true | false | true | true | true |
-| audio.settings | global | (menu only) | Audio buffer settings → App.execute | true | true | false | true | true | true |
+| audio.settings | global | Alt+F12 | Audio buffer and underrun detection settings → App.execute | true | true | true | true | true | true |
 | playback.follow | pattern | Scroll Lock / Ctrl+F | Toggle playback tracing → App.execute | true | true | true | true | true | true |
 | audio.mute.3 | global | Alt+F3 | Toggle SID voice 3 monitor mute → App.toggle_monitor | true | true | true | true | true | false |
 | audio.mute.2 | global | Alt+F2 | Toggle SID voice 2 monitor mute → App.toggle_monitor | true | true | true | true | true | false |

@@ -1,4 +1,4 @@
-"""A bounded SDL PCM queue fed by a dedicated native-emulation worker.
+"""A bounded SDL PCM queue fed by an isolated native-emulation worker.
 
 A sample-clocked sequencer and audition share one native SID register
 interface. An SDL callback transports finished PCM; it never synthesizes the SID.
@@ -57,6 +57,8 @@ class AudioEngine:
         self.activity = ActivitySnapshot()
         self.levels = (0, 0, 0)
         self.underruns = self.late_wakes = self.over_budget = 0
+        self.missing_frames = self.late_callbacks = self.callback_count = 0
+        self.max_callback_interval = 0.0
         self.render_load = self.peak_render_load = 0.0
         self.peak = self.rms = 0.0
         self.waveform = (0.0,) * 64
@@ -68,7 +70,8 @@ class AudioEngine:
         self.playback = PlaybackState()
         self.startup = deepcopy(song)
         if enabled:
-            self.thread = Thread(target=self._run, name="sidpulse-audio", daemon=True)
+            from sidpulse.audio.process import bridge
+            self.thread = Thread(target=bridge, args=(self,), name="sidpulse-audio-control", daemon=True)
             self.thread.start()
 
     def send(self, name, *values):
@@ -81,7 +84,7 @@ class AudioEngine:
     def close(self):
         self.stop_event.set()
         if self.thread:
-            self.thread.join(timeout=3)
+            self.thread.join(timeout=5)
 
     def measure(self, pcm):
         samples = array("h", pcm)
@@ -208,6 +211,8 @@ class AudioEngine:
                     elif name == "reset_stats":
                         channel.reset_stats()
                         self.underruns = self.late_wakes = self.over_budget = 0
+                        self.missing_frames = self.late_callbacks = self.callback_count = 0
+                        self.max_callback_interval = 0.0
                         self.render_load = self.peak_render_load = 0.0
                     elif name == "configure":
                         model, filter_state, clock = values
@@ -239,6 +244,10 @@ class AudioEngine:
                 if sequencer.status != "paused":
                     channel.expect_audio = sequencer.status == "playing" or bool(allocator.held)
                     self.underruns = channel.gaps
+                    self.missing_frames = getattr(channel, 'missing_frames', 0)
+                    self.late_callbacks = getattr(channel, 'late_callbacks', 0)
+                    self.callback_count = getattr(channel, 'callback_count', 0)
+                    self.max_callback_interval = getattr(channel, 'max_callback_interval', 0.0)
                     if channel.needs_block():
                         began = time.perf_counter()
                         was_playing = sequencer.status == "playing"

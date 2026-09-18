@@ -48,7 +48,7 @@ MENUS = {
                       Item("System configuration Ctrl+F1", "pending", "System configuration", False),
                       Item("Colour themes     Ctrl+F12", "appearance_settings", 17),
                       Item("Font settings    Shift+F12", "appearance_settings", 18),
-                      Item("Audio buffer settings...", "audio_settings"),
+                      Item("Audio settings    Alt+F12", "audio_settings"),
                       Item("Autosave settings...", "autosave_settings"),
                       Item("F5 restart option...", "f5_restart_settings"),
                       Item("Reset audio counters", "audio_reset_stats"),

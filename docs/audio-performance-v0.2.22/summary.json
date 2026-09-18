@@ -1,0 +1,22 @@
+{
+  "baseline_suite": {
+    "tests": "1023",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "180.155"
+  },
+  "candidate_suite": {
+    "tests": "1051",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "173.445"
+  },
+  "identical_pcm_frames": 4608000,
+  "candidate_realtime_seconds": 168.0,
+  "candidate_clean": true,
+  "backend": "SDL dummy",
+  "hardware_validated": false,
+  "windows_executed": false
+}

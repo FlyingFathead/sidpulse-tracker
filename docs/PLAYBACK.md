@@ -1,3 +1,39 @@
+# Audio isolation and diagnostics (v0.2.22 candidate)
+
+The SDL device, native SID and existing render worker now run in a separate
+spawned process. UI Python work cannot hold the audio process's GIL. Only
+commands and display snapshots cross the pipe; PCM stays next to the device.
+The parent coordinator handles process startup, IPC and cleanup outside the UI.
+The sample clock, two-block reserve, 48 kHz rate and 2048-sample default remain.
+Display snapshots refresh at up to 60 Hz; they can lag the audio worker by one
+snapshot interval. No new runtime dependency or audio-quality mode is required.
+
+`Alt+F12` opens audio settings. The checkbox **Detect audio underruns / warn**
+saves the strict boolean `audio_underrun_detection` in the machine preferences.
+It defaults to `true` for new/migrated preferences. Set it to `false` in the
+config or clear the checkbox to disable live notifications. Raw counters stay
+available for diagnostics and tests regardless of the notification setting.
+Changes are staged until OK; Cancel does not save or reopen the device.
+
+Confirmed missing PCM produces a small reddish lower-left footer message:
+**Buffer underrun: configure audio with Alt+F12.** It expires after 12 seconds,
+without opening a modal, changing focus, interrupting playback or replacing
+editor status. A callback interval over 1.5 device blocks has a separate
+**Late audio callback** message. A late callback is not proof that SDL supplied
+silence, and a zero PCM-gap count is not proof of punctual callbacks.
+
+Info retains starvation episodes, late worker wakes, peak render load and
+over-budget blocks. Audio settings adds missing frames, late callback count and
+maximum callback interval. Settings > Reset audio counters
+clears the measurements and current notification. Pauses and initial priming
+are excluded from callback timing. Driver/hardware glitches remain outside the
+scope of these software measurements.
+
+The PCM FIFO now copies contiguous blocks; host output conditioning uses local
+state and direct clamps. Both preserve the previous equations, rounding and
+ordered SID events. See the performance validation for numerical comparisons,
+controlled failure detection and measured scheduling/throughput results.
+
 # v0.2.4 continuous output and voice displays
 
 A single SDL device callback consumes a continuous PCM stream. The dedicated

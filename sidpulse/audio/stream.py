@@ -4,6 +4,7 @@ A device callback consumes samples directly. No mixer Sound boundaries or
 per-Sound completion callbacks participate in musical timing.
 """
 from collections import deque
+from time import perf_counter
 from sidpulse.audio.device import pause_device, close_device, _pause_function
 
 
@@ -20,6 +21,9 @@ class PCMStream:
         self.in_gap = False
         self.device = None
         self.callback_error = None
+        self.callback_count = self.late_callbacks = 0
+        self.max_callback_interval = 0.0
+        self.last_callback = None
         if open_device:
             _pause_function()  # validate the safe control path before opening SDL
             from pygame._sdl2 import AudioDevice, AUDIO_S16, init_subsystem, INIT_AUDIO
@@ -29,6 +33,16 @@ class PCMStream:
 
     def callback(self, device, stream):
         try:
+            now = perf_counter()
+            if self.expect_audio and not self.paused and not self.priming:
+                if self.last_callback is not None:
+                    interval = now - self.last_callback
+                    self.max_callback_interval = max(self.max_callback_interval, interval)
+                    self.late_callbacks += int(interval > self.frames / 48000 * 1.5)
+                self.last_callback = now
+                self.callback_count += 1
+            else:
+                self.last_callback = None
             self._fill(stream)
         except Exception as exc:
             # An SDL callback exception otherwise only reaches a disappearing
@@ -81,9 +95,11 @@ class PCMStream:
         self.priming = True
         self.in_gap = False
         self.paused = False
+        self.last_callback = None
 
     def pause(self):
         self.paused = True
+        self.last_callback = None
         if self.device:
             pause_device(self.device, True)
 
@@ -95,6 +111,9 @@ class PCMStream:
     def reset_stats(self):
         self.gaps = self.missing_frames = 0
         self.in_gap = False
+        self.callback_count = self.late_callbacks = 0
+        self.max_callback_interval = 0.0
+        self.last_callback = None
 
     def close(self):
         if self.device:
