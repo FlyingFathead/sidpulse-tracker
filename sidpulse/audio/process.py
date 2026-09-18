@@ -17,12 +17,14 @@ STATE_FIELDS = (
     'waveform', 'voice_waveforms', 'ready', 'muted', 'description',
     'buffer_frames', 'playback', 'missing_frames', 'late_callbacks',
     'callback_count', 'max_callback_interval',
+    'output_device', 'output_devices', 'output_notice', 'output_list_error',
+    'output_result', 'test_result', 'test_active',
 )
 
 
-def audio_process(connection, stop, song, frames):
+def audio_process(connection, stop, song, frames, output_device=None):
     from sidpulse.audio.engine import AudioEngine
-    engine = AudioEngine(song, enabled=False, buffer_frames=frames)
+    engine = AudioEngine(song, enabled=False, buffer_frames=frames, output_device=output_device)
     engine.stop_event = stop
     def receive_commands():
         try:
@@ -69,7 +71,7 @@ def bridge(engine):
         parent, child = context.Pipe()
         child_stop = context.Event()
         process = context.Process(target=audio_process,
-                                  args=(child, child_stop, engine.startup, engine.buffer_frames),
+                                  args=(child, child_stop, engine.startup, engine.buffer_frames, engine.output_device),
                                   name='sidpulse-audio', daemon=True)
         process.start()
         child.close()

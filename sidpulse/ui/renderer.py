@@ -818,8 +818,9 @@ class Renderer:
 
     def dialog(self, app):
         dialog = app.dialog
-        if self.cols < 54 or self.lines < 18:
-            fit = min(self.cols / 54, self.lines / 18) * .9
+        minimum_lines = 23 if dialog.get('kind') == 'audio_buffer' else 18
+        if self.cols < 54 or self.lines < minimum_lines:
+            fit = min(self.cols / 54, self.lines / minimum_lines) * .9
             self.configure(app.screen, app.zoom * fit, app.appearance)
         if dialog.get('kind') == 'export_squeezer':
             from sidpulse.ui.export_squeezer import draw

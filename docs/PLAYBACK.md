@@ -1,4 +1,51 @@
-# Audio isolation and diagnostics (v0.2.22 candidate)
+# Output devices and diagnostic test (v0.2.23)
+
+Audio settings (Alt+F12) lists outputs from pygame-ce's SDL audio backend, with
+System default first. Refresh outputs re-enumerates playback devices, never
+capture devices. SDL's active driver determines the available list. Linux
+PulseAudio/PipeWire/ALSA and Windows WASAPI/other SDL drivers can expose different
+names; the application does not replace the system's audio routing controls.
+Names are saved exactly as reported, not as unstable numeric list positions.
+SDL names cannot distinguish two outputs with identical names; rename them in
+the OS if needed. Refresh the list after connecting a device. This version does
+not promise seamless hot-unplug recovery during ordinary playback.
+
+`audio_output_device: null` selects the system default; a string selects a named
+output. Missing/invalid preferences migrate to default. If a named saved output
+cannot open, startup tries the default and retains the saved choice in config.
+The settings dialog reports the fallback and marks a missing choice unavailable.
+If every output fails, audio reports an error and editing remains available.
+
+OK requests a device change in the audio worker and waits asynchronously for
+confirmation before atomically saving buffer, device and detection preferences.
+A failed open restores the previous device and unconsumed PCM. A failed config
+write requests restoration too. Cancel during an outstanding apply queues a
+restore and does not save. Successful buffer/device changes briefly interrupt
+output and discard the old queue, as previous buffer changes did; sequencer state
+is retained. Paused playback stays paused and session counters are preserved.
+
+Test arpeggio previews the draft selection without committing it. A precomputed,
+quiet (peak 4096 / 32768), 48 kHz mono C-E-G-C sine arpeggio has 8 ms edge fades
+and a 100 ms silent tail. Only a temporary output stream runs during the test.
+The live SID, sequencer, output conditioner and unconsumed song PCM wait intact;
+auto-finish, Stop test or Cancel restores the original output and pause state.
+Test-stream starvation and timing counters join the session totals on restore;
+the intentional silent ending is excluded from starvation detection.
+Shutdown closes both streams without reopening. Test playback is independent of
+song instruments, filter and mute/solo settings. A short output transition is
+expected while opening/restoring a device; this is not a gapless crossfade.
+
+Reset defaults stages System default, 2048 samples and underrun detection ON.
+It neither resets unrelated preferences nor saves until OK. All SDL enumeration,
+open/close work and test playback stay in the audio process, outside the UI.
+Enumeration is requested at startup, dialog open/refresh and named-device apply;
+there is no device scan or tone generation in the ordinary render/callback path.
+
+API references: [SDL device names](https://wiki.libsdl.org/SDL2/SDL_GetAudioDeviceName),
+[opening a named or default output](https://wiki.libsdl.org/SDL2/SDL_OpenAudioDevice).
+See [0.2.23 validation](VALIDATION-v0.2.23.md) for measured coverage and limits.
+
+# Audio isolation and diagnostics (v0.2.22)
 
 The SDL device, native SID and existing render worker now run in a separate
 spawned process. UI Python work cannot hold the audio process's GIL. Only

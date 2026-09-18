@@ -1,3 +1,21 @@
+# v0.2.23 - output devices and test arpeggio
+
+- Add SDL playback-device selection and a saved `audio_output_device` machine
+  preference; `null` uses the system default. Linux and Windows share the same
+  SDL API and spawned-process implementation.
+- Add a quiet, faded C-E-G-C test, Refresh outputs and staged Reset defaults to
+  Alt+F12. The test uses the selected draft output/buffer without saving settings,
+  changing SID state, advancing song time or discarding queued music.
+- Confirm successful output changes before saving. Restore the previous output
+  on open/save failure; use the default if a saved or restored device disappears.
+- Preserve playback pause state and session diagnostic counters when reopening.
+- Retain the 0.2.22 process isolation, native sound path, buffers, dependencies,
+  song format 6 and exporter/player binaries.
+- Replace a timing-sensitive restart-test assertion with an observable rewind
+  assertion; 60 Hz telemetry can skip the original sub-5000-frame startup window.
+- Add device/preference/UI and real spawned SDL integration coverage; record
+  matched 0.2.22/0.2.23 measurements in docs/VALIDATION-v0.2.23.md.
+
 # v0.2.22 - isolated audio and underrun diagnostics
 
 - Run native synthesis and SDL output in a spawned audio process. Keep commands

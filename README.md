@@ -8,6 +8,26 @@ Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Pyt
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
 
+## v0.2.23: output selection and test arpeggio
+
+**Alt+F12** now includes an output-device list, **Test arpeggio**, **Refresh
+outputs** and **Reset defaults**. Choose System default or an output exposed by
+SDL on Linux/Windows. The short C-E-G-C test previews the selected output and
+buffer without changing the song or saving preferences. Playback waits during
+the test and resumes afterwards, retaining its queued PCM and pause state.
+
+**OK** saves the confirmed output name as `audio_output_device` in the machine
+config (`null` means System default). Failed selections restore the previous
+output and do not save. An unavailable saved output falls back to System default
+at startup; its saved name remains available for reconnection. Reset defaults
+stages System default, 2048 samples and underrun detection ON; OK saves it.
+
+Device discovery is on demand. Ordinary playback retains the isolated audio
+process, two-block reserve and existing SID/conditioner path. See
+[validation and performance](docs/VALIDATION-v0.2.23.md) and
+[release notes](docs/RELEASE_NOTES-v0.2.23.md). Native Windows hardware validation
+remains separate from Linux SDL dummy tests.
+
 ## v0.2.22: isolated audio and underrun diagnostics
 
 Audio now runs in its own spawned process, keeping UI Python stalls away from
@@ -107,13 +127,13 @@ native project's path and saved/dirty state unchanged.
 browser; **Alt+Up** goes to its parent; Enter submits; Escape cancels. Directories
 and optional modified dates stay visible. See [browser guide](docs/FILE_BROWSER.md).
 
-All features below are included in the **v0.2.22 source candidate**; earlier
+All features below are included in the **v0.2.23 source candidate**; earlier
 incremental patches are not required. After publication, obtain the full ZIP and
 its checksum from [GitHub Releases](https://github.com/FlyingFathead/sidpulse-tracker/releases).
-The intended public release assets are `sidpulse-tracker-v0.2.22-full.zip` and
-`sidpulse-tracker-v0.2.22-SHA256SUMS.txt`. Incremental/checkpoint update packages
+The intended public release assets are `sidpulse-tracker-v0.2.23-full.zip` and
+`sidpulse-tracker-v0.2.23-SHA256SUMS.txt`. Incremental/checkpoint update packages
 are a separate local-maintenance workflow, not required release downloads.
-Song files, preferences, audio-buffer settings and dependencies are unchanged
+Song files, existing audio-buffer defaults and dependencies are unchanged
 by the file-browser update. See [issue/fix report](docs/ISSUES-v0.2.16.md) and
 [validation](docs/VALIDATION.md).
 
@@ -375,13 +395,13 @@ SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 
 ### Linux: install or update
 
-Download `sidpulse-tracker-v0.2.22-full.zip` and
-`sidpulse-tracker-v0.2.22-SHA256SUMS.txt` from the same GitHub release into one
+Download `sidpulse-tracker-v0.2.23-full.zip` and
+`sidpulse-tracker-v0.2.23-SHA256SUMS.txt` from the same GitHub release into one
 directory. The full ZIP extracts under `sidpulse-tracker/`.
 
 ```bash
-sha256sum -c sidpulse-tracker-v0.2.22-SHA256SUMS.txt &&
-unzip sidpulse-tracker-v0.2.22-full.zip &&
+sha256sum -c sidpulse-tracker-v0.2.23-SHA256SUMS.txt &&
+unzip sidpulse-tracker-v0.2.23-full.zip &&
 cd sidpulse-tracker &&
 bash run.sh
 ```
@@ -500,9 +520,12 @@ date column to keep filenames readable. Selected dates stay green on black.
 ## Audio buffers and diagnostics
 
 Press **Alt+F12**, open Escape > Settings > Audio settings, or choose Audio buffer in F12.
+Select an output, use Test arpeggio to preview it, or Refresh outputs after
+connecting hardware. Reset defaults stages the three audio defaults without
+changing appearance or other preferences.
 Drag the slider from Less delay to More stability, or use Left/Right. The current
 sample count and milliseconds update as you move. OK applies and saves; Cancel
-or Escape keeps the original setting. Tab reaches the buttons and detection checkbox; Enter activates
+or Escape keeps the original setting. Tab reaches every control; Enter activates
 the focused control. There is no numeric-entry prompt. Available steps are 256,
 512, 1024, 2048, 4096 and 8192 samples. Default: **2048 samples / 42.7 ms per buffer**.
 Existing explicitly saved values are retained; use the slider to change them.
@@ -528,7 +551,7 @@ requests PCM during playback/audition and none is ready. Each episode counts onc
 including a long starvation; normal startup, pauses and idle silence do not count.
 The old `gaps` counter polled short-Sound queue state, so its numbers are not directly
 comparable. Counters accumulate until Reset audio counters (Settings); reopening
-the device also starts a fresh gap count. Late worker wakes, current/peak render
+the device preserves these session counters. Late worker wakes, current/peak render
 budget and over-budget blocks help distinguish scheduling and rendering pressure.
 These are application measurements, not whole-PC CPU usage or definitive proof
 of every driver/hardware underrun. A quiet native emulator startup is explicitly
@@ -536,12 +559,12 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.22 full ZIP and SHA-256 checksum file** from GitHub Releases.
+Download the **v0.2.23 full ZIP and SHA-256 checksum file** from GitHub Releases.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.22-full.zip"
-$checksums = ".\sidpulse-tracker-v0.2.22-SHA256SUMS.txt"
+$zip = ".\sidpulse-tracker-v0.2.23-full.zip"
+$checksums = ".\sidpulse-tracker-v0.2.23-SHA256SUMS.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
     $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.17-full\.zip$'
 })

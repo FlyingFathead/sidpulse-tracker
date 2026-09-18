@@ -1,0 +1,9 @@
+EXACT MATCH: True cases: 8
+first-light 6581 PAL {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+first-light 6581 NTSC {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+first-light 8580 PAL {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+first-light 8580 NTSC {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+autumn-at-five 6581 PAL {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+autumn-at-five 6581 NTSC {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+autumn-at-five 8580 PAL {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}
+autumn-at-five 8580 NTSC {'raw_sha256': True, 'conditioned_sha256': True, 'events_sha256': True, 'final_state': True}

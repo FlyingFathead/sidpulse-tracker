@@ -1,0 +1,70 @@
+........................................................................ [  6%]
+........................................................................ [ 13%]
+......................................................................F. [ 20%]
+........................................................................ [ 27%]
+........................................................................ [ 34%]
+........................................................................ [ 41%]
+........................................................................ [ 47%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 68%]
+........................................................................ [ 75%]
+........................................................................ [ 82%]
+........................................................................ [ 89%]
+........................................................................ [ 95%]
+...........................................                              [100%]
+=================================== FAILURES ===================================
+____________ test_three_notes_f5_and_repeated_restart_do_not_freeze ____________
+
+    def test_three_notes_f5_and_repeated_restart_do_not_freeze():
+>       child('''
+            import time,pygame as pg
+            from sidpulse.app import App
+            from sidpulse.song.model import Song
+            app=App(Song(),audio=True)
+            app.restart_on_f5=True
+            def wait(test):
+                end=time.monotonic()+4
+                while not test():
+                    assert time.monotonic()<end,(app.audio.error,app.audio.playback)
+                    time.sleep(.002)
+            def key(k,scan=0,up=False):
+                app.handle(pg.event.Event(pg.KEYUP if up else pg.KEYDOWN,key=k,scancode=scan,mod=0,unicode=pg.key.name(k)))
+            try:
+                wait(lambda:app.audio.ready or app.audio.error)
+                assert not app.audio.error
+                for n in range(15):
+                    key(pg.K_F2);app.editor.row=0;app.editor.voice=n%3
+                    for k,scan in ((pg.K_z,29),(pg.K_2,31),(pg.K_p,19)):
+                        key(k,scan);key(k,scan,True)
+                    app.sync_audio()
+                    if n: wait(lambda:app.audio.playback.frames>=7000)
+                    key(pg.K_F5)
+                    wait(lambda:app.audio.playback.status=='playing' and app.audio.playback.frames<5000)
+                    app.renderer.render(app)
+                    assert not app.audio.error
+            finally:app.close()
+        ''',timeout=25)
+
+tests/test_checkpoint_026.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = '\n        import time,pygame as pg\n        from sidpulse.app import App\n        from sidpulse.song.model import Son...               app.renderer.render(app)\n                assert not app.audio.error\n        finally:app.close()\n    '
+timeout = 25
+
+    def child(code,timeout=15):
+        result=subprocess.run([sys.executable,'-c',textwrap.dedent(code)],cwd=Path(__file__).resolve().parents[1],
+                              env=os.environ.copy(),capture_output=True,text=True,timeout=timeout)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 24, in <module>
+E           File "<string>", line 10, in wait
+E         AssertionError: (None, PlaybackState(status='playing', mode='song', order=0, pattern=0, row=33, tick=4, speed=6, tempo=125, frames=194560, loops=0, notes=(76, 76, 76), instruments=(1, 1, 1), warning=''))
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['<python>', '-c', "\nimport time,pygame as pg\nfrom...w=33, tick=4, speed=6, tempo=125, frames=194560, loops=0, notes=(76, 76, 76), instruments=(1, 1, 1), warning=\'\'))\n').returncode
+
+tests/test_checkpoint_026.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_checkpoint_026.py::test_three_notes_f5_and_repeated_restart_do_not_freeze
+1 failed, 1050 passed in 173.56s (0:02:53)

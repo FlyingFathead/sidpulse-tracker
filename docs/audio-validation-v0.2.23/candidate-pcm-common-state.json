@@ -1,0 +1,266 @@
+[
+  {
+    "song": "first-light",
+    "model": "6581",
+    "clock": "PAL",
+    "frames": 576000,
+    "raw_sha256": "e7878e936bf07baaac9b761b3c2e676e37e3a85b3af9030a7ddc90091c41ab2b",
+    "conditioned_sha256": "1d489b0430832072599ee3c64a60522f97113ae2664b50a83077bbc5df308ba3",
+    "events_sha256": "555896bf8ff368601eb8f628d1614ad86930bb86c0e1ea955eb17049cc53f475",
+    "events": 4780,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 3,
+      "pattern": 3,
+      "row": 4,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 125,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        41,
+        17,
+        48
+      ],
+      "instruments": [
+        3,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "first-light",
+    "model": "6581",
+    "clock": "NTSC",
+    "frames": 576000,
+    "raw_sha256": "e8074c5bc2f0271a8ae4ce3ef1a36989e6c58177771e3285cb9ef9d5de4ef866",
+    "conditioned_sha256": "1b45a873f3368c9d613f4fdc6b4756a94fa92b2bba70a53e012d658ef39ef4e9",
+    "events_sha256": "5bc5d2eed15007502e94a1217d18da5ddde668d18baad3fbeb0b5e6fc5773144",
+    "events": 4740,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 3,
+      "pattern": 3,
+      "row": 4,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 125,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        41,
+        17,
+        48
+      ],
+      "instruments": [
+        3,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "first-light",
+    "model": "8580",
+    "clock": "PAL",
+    "frames": 576000,
+    "raw_sha256": "9e0ff9fafd0d6416636d2437a8309428db6220020749075b8dd4ca22632bbb14",
+    "conditioned_sha256": "69de561902ddc8a9b23f47aff3b980a435271d789e817fbaa6aedd9a81afe8bf",
+    "events_sha256": "555896bf8ff368601eb8f628d1614ad86930bb86c0e1ea955eb17049cc53f475",
+    "events": 4780,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 3,
+      "pattern": 3,
+      "row": 4,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 125,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        41,
+        17,
+        48
+      ],
+      "instruments": [
+        3,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "first-light",
+    "model": "8580",
+    "clock": "NTSC",
+    "frames": 576000,
+    "raw_sha256": "713a9de495be90ebd0dd4c893926a679a60acc4f7562c710f18d8d1ee4c9caf1",
+    "conditioned_sha256": "45fb309301061de6bb7aa13d2b01e5b8f845d8a3aac077859d02e9e1a6655bc3",
+    "events_sha256": "5bc5d2eed15007502e94a1217d18da5ddde668d18baad3fbeb0b5e6fc5773144",
+    "events": 4740,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 3,
+      "pattern": 3,
+      "row": 4,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 125,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        41,
+        17,
+        48
+      ],
+      "instruments": [
+        3,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "autumn-at-five",
+    "model": "6581",
+    "clock": "PAL",
+    "frames": 576000,
+    "raw_sha256": "ade54d1effafe4eec69102c32bc7b55084874bb49561b89b7f91634ed0b3e502",
+    "conditioned_sha256": "deee5e6420f0401254406ed02f5f7eb980cb4df6a05484cfd9f8d2725aecb1c9",
+    "events_sha256": "f88dafaa8afbca534e4a710f6a9d1a8c9906e0face4e695d8c6b9aaee5971789",
+    "events": 1156,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 2,
+      "pattern": 2,
+      "row": 0,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 80,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        55,
+        29,
+        41
+      ],
+      "instruments": [
+        1,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "autumn-at-five",
+    "model": "6581",
+    "clock": "NTSC",
+    "frames": 576000,
+    "raw_sha256": "f7fb7f0ebb6ba08e50d9ca3a2dc5010f0a4c6fb6ffc0d522a592c5404f0881d9",
+    "conditioned_sha256": "e616bcafccbb142913155b0a833f74f32664ba2972a4cd878bf5273d38be88e0",
+    "events_sha256": "e523e10dca94cc909ea05343d502a309cbfaff7c13ee74b82c267e2fdfe0abcf",
+    "events": 1163,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 2,
+      "pattern": 2,
+      "row": 0,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 80,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        55,
+        29,
+        41
+      ],
+      "instruments": [
+        1,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "autumn-at-five",
+    "model": "8580",
+    "clock": "PAL",
+    "frames": 576000,
+    "raw_sha256": "dc4eaec05a0ed919f432f6a704cb23555e827dcdcee2464597cad3b6829271d1",
+    "conditioned_sha256": "cd95e309deaa56fe5f77794ebb10ae1005989e87100313cf246d33ffcad81b44",
+    "events_sha256": "f88dafaa8afbca534e4a710f6a9d1a8c9906e0face4e695d8c6b9aaee5971789",
+    "events": 1156,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 2,
+      "pattern": 2,
+      "row": 0,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 80,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        55,
+        29,
+        41
+      ],
+      "instruments": [
+        1,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  },
+  {
+    "song": "autumn-at-five",
+    "model": "8580",
+    "clock": "NTSC",
+    "frames": 576000,
+    "raw_sha256": "03615d2690dd83abec59d28092b57dd3268d11dfcd600214823657d7270110b6",
+    "conditioned_sha256": "493feb36627ad204776a1b2887a1c8f7fb658fa1a8b3aa2721a34d7b4dc567e4",
+    "events_sha256": "e523e10dca94cc909ea05343d502a309cbfaff7c13ee74b82c267e2fdfe0abcf",
+    "events": 1163,
+    "final_state": {
+      "status": "playing",
+      "mode": "song",
+      "order": 2,
+      "pattern": 2,
+      "row": 0,
+      "tick": 0,
+      "speed": 6,
+      "tempo": 80,
+      "frames": 576000,
+      "loops": 0,
+      "notes": [
+        55,
+        29,
+        41
+      ],
+      "instruments": [
+        1,
+        2,
+        5
+      ],
+      "warning": ""
+    }
+  }
+]

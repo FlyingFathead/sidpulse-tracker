@@ -35,7 +35,10 @@ class App(InstrumentActions, FileActions):
         pg.key.set_repeat(350, 55)
         self.editor = Editor(song)
         self.audio_buffer = load_preferences() if audio_buffer is None else audio_buffer
-        self.audio = AudioEngine(self.editor.song, audio, self.audio_buffer)
+        from sidpulse.preferences import load_audio_output_device
+        self.audio_output_device = load_audio_output_device()
+        output_options = {'output_device': self.audio_output_device} if self.audio_output_device else {}
+        self.audio = AudioEngine(self.editor.song, audio, self.audio_buffer, **output_options)
         from sidpulse.preferences import load_audio_underrun_detection
         self.audio_underrun_detection = load_audio_underrun_detection()
         self.audio_warning = ''
@@ -184,6 +187,9 @@ class App(InstrumentActions, FileActions):
             self.change_page("info")
 
     def sync_audio(self):
+        if self.dialog and self.dialog.get('kind') == 'audio_buffer':
+            from sidpulse.ui.audio_buffer import sync
+            sync(self)
         self.update_audio_warning()
         scopes_visible = self.page == 'info'
         if scopes_visible != self.scopes_visible:
@@ -300,6 +306,21 @@ class App(InstrumentActions, FileActions):
             self.audio_buffer = value
             self.audio.send('buffer', value)
         self.editor.status = f'Audio buffer default: {value} samples ({value / 48:.2f} ms per block).'
+
+    def save_audio_settings(self, frames, detection, device):
+        from sidpulse.preferences import valid_output_device
+        if frames not in BUFFERS or type(detection) is not bool or not valid_output_device(device):
+            raise ValueError('Invalid audio settings')
+        save_preferences({'audio_buffer': frames, 'audio_underrun_detection': detection,
+                          'audio_output_device': device})
+        self.audio_buffer = frames
+        self.audio_output_device = device
+        self.audio_underrun_detection = detection
+        self.audio_warning = ''
+        self.audio_warning_until = 0.0
+        self.last_audio_gaps = self.audio.underruns
+        self.last_audio_late_callbacks = self.audio.late_callbacks
+        self.editor.status = f'Audio settings saved: {device or "System default"} / {frames} samples.'
 
     def confirm_discard(self, callback):
         self.release_audition()

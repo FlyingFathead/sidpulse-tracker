@@ -1,0 +1,2 @@
+PASS: python -m sidpulse --headless-smoke --example (exit 0)
+PASS: python -m sidpulse --headless-smoke --play-welcome-song (exit 0)

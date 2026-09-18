@@ -70,7 +70,7 @@ cat VERSION
 grep -nE 'version|__version__' pyproject.toml sidpulse/__init__.py
 ```
 
-For v0.2.22, each application-version declaration must resolve to `0.2.22`.
+For v0.2.23, each application-version declaration must resolve to `0.2.23`.
 
 ## 6. Interactive tracker checks
 
@@ -97,7 +97,16 @@ minimum:
 - overwrite Cancel returns to the same editable draft;
 - SID/PRG export uses the shared browser without renaming the native project;
 - `.sidpulse` save/load round-trip works;
-- audio playback has no obvious hangs, underruns or stuck notes.
+- audio playback has no obvious hangs, underruns or stuck notes;
+- Alt+F12 lists real outputs; selecting one and OK persists it across restart;
+- Test arpeggio is audible on the selected draft device, then song playback
+  resumes with its previous pause state and unchanged song;
+- Cancel and Reset defaults followed by Cancel leave the saved device unchanged;
+- Reset defaults followed by OK saves System default / 2048 / detection ON;
+- Refresh outputs finds a newly connected USB/HDMI device; an unavailable saved
+  device falls back to default with a visible message in Audio Settings;
+- test the above on native Linux and Windows hardware, including switching
+  between two physical outputs. SDL dummy output cannot prove audible routing.
 
 ## 7. Export validation
 

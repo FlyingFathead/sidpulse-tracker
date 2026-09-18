@@ -9,6 +9,20 @@ BUFFERS = (256, 512, 1024, 2048, 4096, 8192)
 DEFAULT_BUFFER = 2048
 
 
+def valid_output_device(value):
+    """None follows the OS default; preserve SDL names exactly, including spaces."""
+    return value is None or (isinstance(value, str) and bool(value.strip())
+                             and '\x00' not in value and len(value) <= 1024)
+
+
+def load_audio_output_device():
+    try:
+        value = json.loads(config_path().read_text()).get('audio_output_device')
+        return value if valid_output_device(value) else None
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
 def config_path():
     override = os.environ.get('SIDPULSE_CONFIG_HOME')
     if override:

@@ -1,0 +1,285 @@
+{
+  "baseline_version": "0.2.22",
+  "candidate_version": "0.2.23",
+  "tests": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "1084",
+    "time": "181.885",
+    "timestamp": "2026-09-18T21:22:10.732361+02:00"
+  },
+  "baseline_original_suite": {
+    "passed": 1050,
+    "failed": 1,
+    "reason": "restart telemetry polling window; corrected rewind check passes on unchanged baseline"
+  },
+  "pcm_frames": 4608000,
+  "pcm_cases": 8,
+  "pcm_exact_match": true,
+  "realtime": [
+    {
+      "version": "baseline",
+      "kind": "idle_no_scopes",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 49.89134199968248
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.07980155947865912,
+      "peak_render_load": 0.17092978126242997,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "candidate",
+      "kind": "idle_no_scopes",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 43.375982999350526
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.07577738504065976,
+      "peak_render_load": 0.3595865859153946,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "baseline",
+      "kind": "idle_scopes",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 43.86528200120665
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.1695191185228619,
+      "peak_render_load": 0.23905410941438276,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "candidate",
+      "kind": "idle_scopes",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 286,
+        "maximum": 47.79209600019385
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.18229316606099064,
+      "peak_render_load": 0.2465473828294762,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "baseline",
+      "kind": "cpu",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 286,
+        "maximum": 42.550543999823276
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.22156817421120292,
+      "peak_render_load": 0.2861617499974045,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "candidate",
+      "kind": "cpu",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 286,
+        "maximum": 44.2679700008739
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.2189680782739552,
+      "peak_render_load": 0.27776289846315194,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "baseline",
+      "kind": "gil_hold",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 45.104614000592846
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.17050926377033923,
+      "peak_render_load": 0.4935259687215421,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "candidate",
+      "kind": "gil_hold",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 286,
+        "maximum": 43.26942199986661
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.17524870204132545,
+      "peak_render_load": 0.3417316640224044,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null
+    },
+    {
+      "version": "baseline",
+      "kind": "ui_churn",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 44.426112001019646
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.14503613554919859,
+      "peak_render_load": 0.24701800784043826,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null,
+      "ui_frame_work_ms": {
+        "n": 746,
+        "mean": 2.944826340461043,
+        "median": 2.429130499876919,
+        "p95": 4.385305999676348,
+        "p99": 14.227277999452781,
+        "maximum": 18.142003000320983
+      }
+    },
+    {
+      "version": "candidate",
+      "kind": "ui_churn",
+      "frames": 2048,
+      "duration_seconds": 12.0,
+      "gaps": 0,
+      "missing_frames": 0,
+      "callback_intervals_ms": {
+        "n": 287,
+        "maximum": 46.955369998613605
+      },
+      "intervals_above_1_5_blocks": 0,
+      "render_load": 0.14467216910668676,
+      "peak_render_load": 0.5682962812443293,
+      "over_budget": 0,
+      "late_wakes": 0,
+      "error": null,
+      "ui_frame_work_ms": {
+        "n": 746,
+        "mean": 3.0421710750924733,
+        "median": 2.5273040000683977,
+        "p95": 4.246436999892467,
+        "p99": 15.438999000252807,
+        "maximum": 18.467054000211647
+      }
+    }
+  ],
+  "offline": [
+    {
+      "song": "first-light",
+      "frames": 512,
+      "scopes": false,
+      "baseline_median_mean_ms": 0.7768733999788916,
+      "candidate_median_mean_ms": 0.7850284186303421,
+      "change_percent": 1.0497229859681267
+    },
+    {
+      "song": "first-light",
+      "frames": 512,
+      "scopes": true,
+      "baseline_median_mean_ms": 2.017232108012346,
+      "candidate_median_mean_ms": 1.8807630626858252,
+      "change_percent": -6.7651632543658575
+    },
+    {
+      "song": "first-light",
+      "frames": 2048,
+      "scopes": false,
+      "baseline_median_mean_ms": 3.1197856648778974,
+      "candidate_median_mean_ms": 3.0208768084292466,
+      "change_percent": -3.1703734510403314
+    },
+    {
+      "song": "first-light",
+      "frames": 2048,
+      "scopes": true,
+      "baseline_median_mean_ms": 7.366116712769036,
+      "candidate_median_mean_ms": 7.181709856361502,
+      "change_percent": -2.5034473875205854
+    },
+    {
+      "song": "autumn-at-five",
+      "frames": 512,
+      "scopes": false,
+      "baseline_median_mean_ms": 0.794676606686456,
+      "candidate_median_mean_ms": 0.7706804733170429,
+      "change_percent": -3.019609885015895
+    },
+    {
+      "song": "autumn-at-five",
+      "frames": 512,
+      "scopes": true,
+      "baseline_median_mean_ms": 1.8385746826509906,
+      "candidate_median_mean_ms": 1.8100605226766977,
+      "change_percent": -1.5508839669857277
+    },
+    {
+      "song": "autumn-at-five",
+      "frames": 2048,
+      "scopes": false,
+      "baseline_median_mean_ms": 3.0548472819317154,
+      "candidate_median_mean_ms": 3.0158726967977385,
+      "change_percent": -1.2758276122180279
+    },
+    {
+      "song": "autumn-at-five",
+      "frames": 2048,
+      "scopes": true,
+      "baseline_median_mean_ms": 6.935943750017651,
+      "candidate_median_mean_ms": 6.8523324733642434,
+      "change_percent": -1.2054780094373552
+    }
+  ]
+}

@@ -44,7 +44,7 @@ class VoiceAllocator:
 
 
 class AudioEngine:
-    def __init__(self, song, enabled=True, buffer_frames=DEFAULT_BUFFER):
+    def __init__(self, song, enabled=True, buffer_frames=DEFAULT_BUFFER, output_device=None):
         from sidpulse.playback.sequencer import PlaybackState
         from sidpulse.preferences import BUFFERS
         if buffer_frames not in BUFFERS:
@@ -67,6 +67,12 @@ class AudioEngine:
         self.muted = (False, False, False)
         self.description = "Audio disabled"
         self.buffer_frames = buffer_frames
+        self.output_device = output_device
+        self.output_devices = ()
+        self.output_notice = self.output_list_error = ''
+        self.output_result = self.test_result = None
+        self.test_active = False
+        self.request_serial = 0
         self.playback = PlaybackState()
         self.startup = deepcopy(song)
         if enabled:
@@ -77,6 +83,11 @@ class AudioEngine:
     def send(self, name, *values):
         if self.thread and not self.stop_event.is_set():
             self.commands.put((name, deepcopy(values)))
+
+    def request(self, name, *values):
+        self.request_serial += 1
+        self.send(name, self.request_serial, *values)
+        return self.request_serial
 
     def configure(self, song):
         self.send("configure", song.sid_model, song.filter, song.clock)
@@ -97,11 +108,11 @@ class AudioEngine:
 
     def _run(self):
         import time
-        from sidpulse.audio.stream import PCMStream
+        from sidpulse.audio.routing import AudioOutput
         from sidpulse.audio.output import OutputConditioner
         from sidpulse.playback.sequencer import Sequencer
         from sidpulse.preferences import BUFFERS
-        channel = None
+        channel = output = None
         try:
             sid = ReSIDfpBackend(self.startup.sid_model, clock=self.startup.clock)
             set_filter(sid, self.startup.filter)
@@ -112,10 +123,21 @@ class AudioEngine:
             sequencer = Sequencer(sid, activity)
             audition = Audition(sid, self.startup.tempo, activity)
             conditioner = OutputConditioner()
-            def open_output():
+            output = AudioOutput(self.buffer_frames, self.output_device)
+            channel = output.channel
+            def publish_output():
+                self.output_device = output.device_name
+                self.output_devices = output.devices
+                self.output_notice = output.notice
+                self.output_list_error = output.list_error
+                self.buffer_frames = output.channel.frames
+                self.test_active = output.testing
+                for field, counter in (('underruns', 'gaps'), ('missing_frames', 'missing_frames'),
+                                       ('callback_count', 'callback_count'), ('late_callbacks', 'late_callbacks'),
+                                       ('max_callback_interval', 'max_callback_interval')):
+                    setattr(self, field, getattr(output.channel, counter, 0))
                 self.description = f"reSIDfp / 48 kHz / {self.buffer_frames} samples"
-                return PCMStream(self.buffer_frames)
-            channel = open_output()
+            publish_output()
             allocator = VoiceAllocator()
             audition_sources = {}
             audition_filter = deepcopy(self.startup.filter)
@@ -131,7 +153,43 @@ class AudioEngine:
                         name, values = self.commands.get_nowait()
                     except Empty:
                         break
-                    if name == "on" and sequencer.status == "stopped":
+                    if output.testing and name in ('on', 'play', 'pause', 'panic', 'configure', 'buffer', 'output'):
+                        output.stop_test()
+                        channel = output.channel
+                        publish_output()
+                        last_wake = time.perf_counter()
+                    if name == 'refresh_outputs':
+                        output.refresh()
+                        publish_output()
+                    elif name in ('output', 'test_output'):
+                        request, frames, device = values
+                        error = ''
+                        try:
+                            if name == 'output':
+                                previous_channel = output.channel
+                                output.switch(frames, device)
+                                if output.channel is not previous_channel:
+                                    conditioner.gain = 0.0  # retain the existing reopen fade-in
+                            else:
+                                output.start_test(frames, device)
+                        except Exception as exc:
+                            if output.channel.device is None:
+                                raise  # even the default failed; report unavailable audio
+                            error = str(exc)
+                        channel = output.channel
+                        publish_output()
+                        result = (request, not bool(error), error)
+                        if name == 'output':
+                            self.output_result = result
+                        else:
+                            self.test_result = result
+                        last_wake = time.perf_counter()
+                    elif name == 'stop_test':
+                        output.stop_test()
+                        channel = output.channel
+                        publish_output()
+                        last_wake = time.perf_counter()
+                    elif name == "on" and sequencer.status == "stopped":
                         token, note, instrument, *preferred = values
                         if not allocator.held:set_filter(sid,audition_filter)
                         voice = allocator.acquire(token, preferred[0] if preferred else None)
@@ -200,12 +258,15 @@ class AudioEngine:
                         channel.unpause()
                         conditioner.target = 0.0
                     elif name == "buffer" and values[0] in BUFFERS:
-                        # SDL requires reopening the device. Musical state stays
-                        # at the next generated frame; queued audio is discarded.
-                        channel.stop()
-                        channel.close()
-                        self.buffer_frames = values[0]
-                        channel = open_output()
+                        # Reopen without resetting musical state; keep pause state.
+                        try:
+                            output.switch(values[0], output.device_name)
+                        except Exception as exc:
+                            if output.channel.device is None:
+                                raise
+                            output.notice = f'Audio setting unchanged: {exc}'
+                        channel = output.channel
+                        publish_output()
                         conditioner.gain = 0.0
                         last_wake = time.perf_counter()
                     elif name == "reset_stats":
@@ -231,6 +292,13 @@ class AudioEngine:
                             conditioner = OutputConditioner()
                         set_filter(sid, filter_state)
                         sid.set_muted(self.muted)
+                if output.testing:
+                    output.pump_test()
+                    channel = output.channel
+                    publish_output()
+                    last_wake = time.perf_counter()
+                    self.stop_event.wait(.001)
+                    continue
                 if channel.callback_error is not None:
                     raise RuntimeError('Audio callback failed') from channel.callback_error
                 self.playback = sequencer.state
@@ -278,8 +346,9 @@ class AudioEngine:
         finally:
             self.activity = ActivitySnapshot()
             self.ready = False
-            if channel is not None:
-                try: channel.close()
+            self.test_active = False
+            if output is not None:
+                try: output.close()
                 except Exception as exc:
                     from sidpulse.diagnostics import record_exception
                     record_exception('Audio device close failed', exc)

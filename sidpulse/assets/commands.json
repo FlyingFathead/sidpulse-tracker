@@ -41,7 +41,7 @@
     {
       "id": "audio.settings",
       "command": "audio_settings",
-      "description": "Audio buffer and underrun detection settings",
+      "description": "Audio output, test arpeggio, buffer and underrun settings",
       "contexts": [
         "global"
       ],

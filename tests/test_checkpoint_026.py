@@ -152,9 +152,12 @@ def test_three_notes_f5_and_repeated_restart_do_not_freeze():
                 for k,scan in ((pg.K_z,29),(pg.K_2,31),(pg.K_p,19)):
                     key(k,scan);key(k,scan,True)
                 app.sync_audio()
-                if n: wait(lambda:app.audio.playback.frames>=7000)
+                # Snapshots arrive at 60 Hz and the two-block reserve may already
+                # exceed 5000 frames. Observe a real rewind, not a tiny startup window.
+                if n: wait(lambda:app.audio.playback.frames>=24000)
+                before=app.audio.playback.frames
                 key(pg.K_F5)
-                wait(lambda:app.audio.playback.status=='playing' and app.audio.playback.frames<5000)
+                wait(lambda:app.audio.playback.status=='playing' and (not n or app.audio.playback.frames<before))
                 app.renderer.render(app)
                 assert not app.audio.error
         finally:app.close()

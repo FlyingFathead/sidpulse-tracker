@@ -1,5 +1,6 @@
 {
   "audio_buffer": 2048,
+  "audio_output_device": null,
   "file_browser_show_modified": true,
   "theme": "Classic crimson",
   "font_size": 16,

@@ -9,7 +9,7 @@ from sidpulse.audio.device import pause_device, close_device, _pause_function
 
 
 class PCMStream:
-    def __init__(self, frames, open_device=True):
+    def __init__(self, frames, open_device=True, device_name=None):
         self.frames = frames
         self.blocks = deque()
         self.current = b''
@@ -24,12 +24,20 @@ class PCMStream:
         self.callback_count = self.late_callbacks = 0
         self.max_callback_interval = 0.0
         self.last_callback = None
+        self.device_name = device_name
         if open_device:
-            _pause_function()  # validate the safe control path before opening SDL
-            from pygame._sdl2 import AudioDevice, AUDIO_S16, init_subsystem, INIT_AUDIO
-            init_subsystem(INIT_AUDIO)
-            self.device = AudioDevice(None, False, 48000, AUDIO_S16, 1,
-                                      frames, 0, self.callback)
+            self.open_output()
+
+    def open_output(self):
+        """Reattach a closed stream without changing queued PCM or pause state."""
+        _pause_function()  # validate the safe control path before opening SDL
+        from pygame._sdl2 import AudioDevice, AUDIO_S16, init_subsystem, INIT_AUDIO
+        init_subsystem(INIT_AUDIO)
+        self.device = AudioDevice(self.device_name, False, 48000, AUDIO_S16, 1,
+                                  self.frames, 0, self.callback)
+        self.last_callback = None
+        if not self.priming and not self.paused:
+            pause_device(self.device, False)
 
     def callback(self, device, stream):
         try:
