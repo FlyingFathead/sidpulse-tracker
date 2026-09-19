@@ -861,6 +861,8 @@ See [PLACEHOLDERS.md](docs/PLACEHOLDERS.md), [CHECKPOINT.md](CHECKPOINT.md), [VA
 [EFFECTS.md](docs/EFFECTS.md), [PSID_EXPORT.md](docs/PSID_EXPORT.md), [PLAYBACK.md](docs/PLAYBACK.md), [SIDPULSE_FORMAT.md](docs/SIDPULSE_FORMAT.md),
 [DECISIONS.md](docs/DECISIONS.md), and the unchanged [v4 roadmap](docs/ROADMAP.md).
 
+---
+
 ## Acknowledgment
 
 Thanks to **Lasse Öörni and the GoatTracker contributors** for the extensive
@@ -874,3 +876,9 @@ code was incorporated. See the
 
 - [audio-bitsqueezer](https://github.com/FlyingFathead/audio-bitsqueezer) — Convert audio into compact 4-bit SID samples and playable C64 programs or EasyFlash cartridges, with a command-line interface and local browser UI.
 - [c64-3d-toolkit](https://github.com/FlyingFathead/c64-3d-toolkit) — Compile low-poly wireframe models and Blender scenes, animations and physics into C64 demos, with OBJ/MTL and SVG import support.
+
+---
+
+## Credits
+
+SIDpulse Tracker has been made by [FlyingFathead](https://github.com/FlyingFathead/). Special thanks to: ChaosWhisperer
