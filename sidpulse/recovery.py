@@ -124,11 +124,16 @@ class Autosave:
         settings = {'autosave_enabled': bool(enabled), 'autosave_minutes': minutes,
                     'autosave_directory': str(Path(directory).expanduser().absolute())}
         save_preferences(settings)
+        self.apply_settings(settings)
+
+    def apply_settings(self, settings):
+        """Apply already-persisted preferences without removing recovery files."""
+        self.flush()
         self.settings = settings
         self.saved_revision = None
         self.blocked = False; self.warning = None
-        self.next_due = time.monotonic() + minutes * 60
-        if enabled:
+        self.next_due = time.monotonic() + self.minutes * 60
+        if self.enabled:
             if not self.lock:
                 self.started = False; self.start()
             else:

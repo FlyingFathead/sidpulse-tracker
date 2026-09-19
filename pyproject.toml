@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sidpulse-tracker"
-version = "0.2.23"
+version = "0.2.30"
 description = "An homage to Impulse Tracker, reimagined as a modern SID-native tracker"
 requires-python = ">=3.10"
 authors = [{name = "Harry Horsperg (FlyingFathead)"}]
@@ -20,7 +20,7 @@ sidpulse = "sidpulse.__main__:main"
 include = ["sidpulse*"]
 
 [tool.setuptools.package-data]
-sidpulse = ["assets/*.ttf", "assets/*LICENSE.txt", "assets/*.json", "assets/*.bin", "assets/*.svg", "assets/*.sidpulse", "export/*.asm"]
+sidpulse = ["assets/*.ttf", "assets/*LICENSE.txt", "assets/*.json", "assets/*.bin", "assets/*.svg", "assets/*.png", "assets/*.sidpulse", "export/*.asm"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

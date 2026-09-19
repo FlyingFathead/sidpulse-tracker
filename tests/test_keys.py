@@ -36,9 +36,9 @@ def test_note_off_finnish_and_caps_preview():
     assert dispatch(key(pg.K_z, 29), "instrument").value[2] is True
 
 
-def test_shift_selection_moves_whole_voice():
+def test_shift_selection_moves_one_field_digit():
     cmd = dispatch(key(pg.K_RIGHT, mod=pg.KMOD_SHIFT))
-    assert cmd.value == (0, 9, True)
+    assert cmd.value == (0, 1, True)
 
 
 def test_non_note_columns_do_not_jazz():

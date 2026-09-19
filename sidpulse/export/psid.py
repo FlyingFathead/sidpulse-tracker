@@ -84,7 +84,8 @@ def _record_song(song, *, progress=None, phase="Recording playback..."):
     if not song.instruments:
         raise ExportError('The instrument bank is empty. Add instruments before PSID export; save the editable .sidpulse project at any time.')
     song=deepcopy(song)
-    warnings=[]
+    from sidpulse.project.format import compatibility_warnings
+    warnings=list(compatibility_warnings(song))
     if song.macros or song.filter_programs or any(i.macros for i in song.instruments.values()):
         raise ExportError('Unimplemented extension macro data: retain .sidpulse; use the F4 instrument programs for export')
     for pid,pat in song.patterns.items():
@@ -157,7 +158,16 @@ def _legacy_image(records, loop):
     return bytes(player + payload)
 
 
-def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=False,
+def _memo(cache, key, build):
+    """Reuse work only within one isolated, same-song comparison request."""
+    if cache is None:
+        return build()
+    if key not in cache:
+        cache[key] = build()
+    return cache[key]
+
+
+def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=False, _comparison_cache=None,
                  progress: Callable[[str, str], None] | None = None):
     """Compile without changing the song. Squeezing defaults ON for SID/PRG.
 
@@ -171,12 +181,16 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
     options = resolve_options(squeeze)
     source = song
     source_had_samples = bool(song.samples)
-    prepared, cleanup = prepare_song(song, options)
-    song, records, seconds, max_cycles, warnings = _record_song(prepared, progress=progress)
-    if options.enabled and any(vars(cleanup).values()):
-        _, reference, reference_seconds, _, _ = _record_song(source, progress=progress, phase="Checking source preservation...")
-        if records != reference or seconds != reference_seconds:
-            raise ExportError('Squeeze cleanup changed original playback; no export written')
+    prepared, cleanup = _memo(_comparison_cache, 'prepared', lambda: prepare_song(song, options))
+    def record_checked():
+        recorded = _record_song(prepared, progress=progress)
+        if options.enabled and any(vars(cleanup).values()):
+            reference = _record_song(source, progress=progress, phase="Checking source preservation...")
+            if recorded[1:3] != reference[1:3]:
+                raise ExportError('Squeeze cleanup changed original playback; no export written')
+        return recorded
+    song, records, seconds, max_cycles, warnings = _memo(_comparison_cache, 'recorded', record_checked)
+    warnings = list(warnings)
     if source_had_samples and not song.samples:
         warnings.append("Unused PCM bank omitted from export; the editable project is intact. "
                         "PCM/sample playback is not implemented in this SID-only version.")
@@ -194,10 +208,25 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
         try:
             if progress is not None:
                 progress("Squeezing song...", "Packing repeated voice, register and timing streams.")
-            candidates = list(optimized_stream_candidates(records, target_load))
+            candidates = list(_memo(_comparison_cache, 'v1', lambda: list(optimized_stream_candidates(records, target_load))))
+            if options.version in (2,201,202):
+                from sidpulse.export.squeeze_v2 import additional_candidates
+                if progress is not None:
+                    progress('SQUEEZER v2.0...', 'Joining overlapping phrases; retaining v1.0 fallback encodings.')
+                candidates.extend(_memo(_comparison_cache, 'v2', lambda: list(additional_candidates(records, tuple(candidates)))))
+            if options.version in (201,202):
+                from sidpulse.export.squeeze_v201 import additional_candidates
+                if progress is not None:
+                    progress('SQUEEZER v2.0.1...', 'Sharing packet phrases and repeat counts; retaining earlier encodings.')
+                candidates.extend(_memo(_comparison_cache, 'v201', lambda: list(additional_candidates(records, tuple(candidates)))))
+            if options.version==202:
+                from sidpulse.export.squeeze_v202 import additional_candidates
+                if progress is not None:
+                    progress('SQUEEZER v2.0.2...', 'Indexing shared literal blocks and phrases; retaining earlier layouts.')
+                candidates.extend(_memo(_comparison_cache, 'v202', lambda: list(additional_candidates(records, tuple(candidates)))))
             if progress is not None:
                 progress("Squeezing song...", "Finding reusable channel phrases and repeat counts.")
-            candidates.extend(channel_candidates(records, loop, target_load))
+            candidates.extend(_memo(_comparison_cache, 'channels', lambda: channel_candidates(records, loop, target_load)))
         except (ValueError, KeyError) as exc:
             raise ExportError('Squeeze construction failed; no export written: ' + str(exc)) from exc
         wrapper = COMPACT_PRG_WRAPPER if _prg else 0
@@ -221,8 +250,9 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
             try:
                 if progress is not None:
                     progress("Verifying playback...", f"{item.mode}: checking {len(records):,} musical ticks and loop behavior.")
-                checked = verify_replay(item.image(loop), len(item.player), records, loop,
-                                        gap_address=item.gap_address, load=item.load)
+                checked = _memo(_comparison_cache, ('verified', id(item)),
+                                lambda: verify_replay(item.image(loop), len(item.player), records, loop,
+                                                      gap_address=item.gap_address, load=item.load))
             except CycleBudgetError as exc:
                 reason = 'A compact layout exceeded the replay CPU budget: ' + str(exc)
                 continue
@@ -246,16 +276,21 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
                   'registers': 'Independent register-value streams'}
         algorithm = labels.get(candidate.mode, candidate.mode)
         if getattr(candidate, 'optimized', False):
-            algorithm += ' / cost-optimized phrase bank'
+            algorithm += (' / SQUEEZER v2.0.2 indexed blocks and phrases' if candidate.optimizer_version==202
+                          else ' / SQUEEZER v2.0.1 shared phrases' if candidate.optimizer_version==201
+                          else ' / SQUEEZER v2.0 phrase bank' if candidate.optimizer_version==2
+                          else ' / cost-optimized phrase bank')
         report = SqueezeReport(True, algorithm, legacy_size, len(payload), len(candidate.player),
                                candidate.data_bytes, candidate.zero_page_bytes, verified.stack_bytes, cleanup,
                                verified_calls=verified.calls, verified_max_cycles=verified.measured_max_cycles,
-                               phrase_blocks=getattr(candidate, 'blocks', 0),
-                               repeated_blocks=getattr(candidate, 'repeated_blocks', 0))
+                               phrase_blocks=(len(candidate.packed.phrases) if getattr(candidate, 'optimizer_version', 1) in (201,202) else getattr(candidate, 'blocks', 0)),
+                               repeated_blocks=getattr(candidate, 'repeated_blocks', 0),
+                               squeezer_version=options.version)
     else:
         payload = _legacy_image(records, loop)
         report = SqueezeReport(options.enabled, 'Legacy tick records', legacy_size, len(payload),
-                               DATA - LOAD, record_bytes + sequence_bytes, 4, 2, cleanup, reason)
+                               DATA - LOAD, record_bytes + sequence_bytes, 4, 2, cleanup, reason,
+                               squeezer_version=options.version)
     def title(text,label):
         if not isinstance(text,str):raise ExportError(f'{label} must be text')
         encoded=text.encode('cp1252',errors='replace')

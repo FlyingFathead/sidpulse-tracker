@@ -8,7 +8,7 @@ from dataclasses import dataclass, field, replace
 import math
 
 from sidpulse.sid.backend_residfp import frequency, note_on, note_off, PAL_CLOCK
-from sidpulse.song.model import OFF, CUT
+from sidpulse.song.model import OFF, CUT, ENVELOPE_FIELDS
 
 
 def supported(effect, value):
@@ -36,12 +36,15 @@ class Voice:
     gate: bool = False
     restarting: bool = False
     instrument_id: int | None = None
+    pulse_width: int | None = None
+    envelope: dict = field(default_factory=dict)
 
 
 class VoicePrograms:
-    def __init__(self, sid, activity=None):
+    def __init__(self, sid, activity=None, monitor=None):
         self.sid = sid
         self.activity = activity
+        self.monitor = monitor
         self.voices = [Voice() for _ in range(3)]
 
     def frequency(self, note):
@@ -60,11 +63,15 @@ class VoicePrograms:
         prepared = v.restarting or self.sid.registers[base + 5:base + 7] == bytes(2)
         v.note, v.instrument, v.age = note, deepcopy(inst), 0
         v.instrument_id = instrument_id
+        if self.monitor is not None:
+            self.monitor(voice, instrument_id)
         v.freq = v.target = self.frequency(note)
         v.phase, v.gate = 0, True
         v.restarting = False
         pitch = (inst.arpeggio[0] if inst.arpeggio_enabled and inst.arpeggio else 0) + (inst.pitch_sequence[0] if inst.pitch_sequence_enabled and inst.pitch_sequence else 0)
-        initial = replace(inst, waveform=inst.wave_sequence[0] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform)
+        initial = replace(inst, waveform=inst.wave_sequence[0] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform,
+                          pulse_width=inst.pulse_width if v.pulse_width is None else v.pulse_width,
+                          **v.envelope)
         note_on(self.sid, voice, note+pitch, initial, hard_restart=prepared)
         if self.activity is not None:
             self.activity.note_on(voice, instrument_id)
@@ -88,6 +95,16 @@ class VoicePrograms:
 
     def row(self, voice, cell, inst, instrument_id=None):
         v = self.voices[voice]
+        if cell.pulse_width is not None:
+            v.pulse_width = None if cell.pulse_width == -1 else cell.pulse_width
+        for field in ENVELOPE_FIELDS:
+            value = getattr(cell, field)
+            if value == -1:
+                v.envelope.pop(field, None)
+            elif value is not None:
+                v.envelope[field] = value
+        if any(getattr(cell, field) is not None for field in ENVELOPE_FIELDS):
+            self.write_envelope(voice)
         effect, value = cell.effect, cell.parameter or 0
         if effect in ('E','F','G','H','J','Q'):
             previous = v.memory.get(effect,0)
@@ -109,6 +126,14 @@ class VoicePrograms:
                 v.target = self.frequency(cell.note)  # no gate/instrument restart
             else:
                 self.trigger(voice,cell.note,inst,instrument_id)
+
+    def write_envelope(self, voice):
+        v = self.voices[voice]
+        if v.instrument is None or v.restarting:
+            return
+        a, d, s, r = (v.envelope.get(field, getattr(v.instrument, field)) for field in ENVELOPE_FIELDS)
+        self.write(voice * 7 + 5, a << 4 | d)
+        self.write(voice * 7 + 6, s << 4 | r)
 
     def tick(self, tick):
         for voice,v in enumerate(self.voices):
@@ -155,15 +180,16 @@ class VoicePrograms:
             phase=v.age%(4*inst.pulse_rate)
             # Triangle starts at centre, then rises/falls smoothly.
             triangle=(phase if phase<=inst.pulse_rate else 2*inst.pulse_rate-phase if phase<=3*inst.pulse_rate else phase-4*inst.pulse_rate)/inst.pulse_rate
-            pw=max(0,min(4095,round(inst.pulse_width+(inst.pulse_depth*triangle if inst.pulse_enabled else 0))))
+            pw_base = inst.pulse_width if v.pulse_width is None else v.pulse_width
+            pw=max(0,min(4095,round(pw_base+(inst.pulse_depth*triangle if inst.pulse_enabled else 0))))
             self.write(base+2,pw&255);self.write(base+3,pw>>8)
             v.age+=1
 
 
 class Audition(VoicePrograms):
     """Free keyboard notes use the same instrument programs at song-tempo ticks."""
-    def __init__(self,sid,tempo=125,activity=None):
-        super().__init__(sid,activity)
+    def __init__(self,sid,tempo=125,activity=None,monitor=None):
+        super().__init__(sid,activity,monitor)
         self.tempo=tempo
         self.remaining=0
         self.fraction=0.0

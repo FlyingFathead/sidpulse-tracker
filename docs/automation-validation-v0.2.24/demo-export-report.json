@@ -1,0 +1,16 @@
+{
+  "sid": {
+    "bytes": 19858,
+    "ticks": 6912,
+    "seconds": 189.89010989010006,
+    "max_cycles_bound": 7560,
+    "warnings": []
+  },
+  "prg": {
+    "bytes": 20171,
+    "ticks": 6912,
+    "seconds": 189.89010989010006,
+    "max_cycles_bound": 7560,
+    "warnings": []
+  }
+}

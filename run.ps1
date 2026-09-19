@@ -113,6 +113,7 @@ if (-not $sidpulseEnvironmentReady -or -not $sidpulsePackagesReady) {
     & $sidpulsePython -m pip install -r requirements.txt
     if ($LASTEXITCODE -ne 0) { throw 'SIDpulse dependency installation failed. Check the error above and run run.cmd again.' }
 }
+& $sidpulsePython (Join-Path $PSScriptRoot 'scripts\launch_banner.py')
 & $sidpulsePython -m sidpulse @args
 $sidpulseExitCode = $LASTEXITCODE
 if ($sidpulseExitCode -ne 0) {

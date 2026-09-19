@@ -1,0 +1,506 @@
+[
+  {
+    "page": "pattern",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 1.07809702,
+    "wall_ms_per_frame": 1.0782986149934004,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "pattern",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 1.077399175,
+    "wall_ms_per_frame": 1.0781426374978764,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.7351646699999997,
+    "wall_ms_per_frame": 0.7352829474984901,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.7574003550000001,
+    "wall_ms_per_frame": 0.7575818725035788,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.8299507499999997,
+    "wall_ms_per_frame": 0.8299533700028405,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.867168585,
+    "wall_ms_per_frame": 0.8672662249955465,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.5973768925,
+    "wall_ms_per_frame": 0.5974396425062878,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6287368550000005,
+    "wall_ms_per_frame": 0.6287389925000753,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.7747709125000002,
+    "wall_ms_per_frame": 0.7748080300007132,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.7716593574999997,
+    "wall_ms_per_frame": 0.7717272924946883,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.6362595399999993,
+    "wall_ms_per_frame": 0.6362618599996495,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6511647500000006,
+    "wall_ms_per_frame": 0.6511668324947095,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 0,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.518981220000001,
+    "wall_ms_per_frame": 0.5191538849976496,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 0,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.4985932925000003,
+    "wall_ms_per_frame": 0.4986266124979011,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "pattern",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 1.0942465350000008,
+    "wall_ms_per_frame": 1.094465082496754,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "pattern",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 1.0866003949999992,
+    "wall_ms_per_frame": 1.0867330825021781,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.7506601749999997,
+    "wall_ms_per_frame": 0.7507122950028133,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.7436112674999995,
+    "wall_ms_per_frame": 0.7436137850072555,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.8665112375000006,
+    "wall_ms_per_frame": 0.8666883349997079,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.8408625799999991,
+    "wall_ms_per_frame": 0.8408970949949435,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6127762849999985,
+    "wall_ms_per_frame": 0.6127799399928335,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.604745872500001,
+    "wall_ms_per_frame": 0.6047863524963759,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.7719176600000011,
+    "wall_ms_per_frame": 0.771980657500535,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.7788467175000013,
+    "wall_ms_per_frame": 0.7788484799948492,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6581514375000009,
+    "wall_ms_per_frame": 0.6583337800020672,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.6422341074999993,
+    "wall_ms_per_frame": 0.6422649324940721,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 1,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.49927204749999904,
+    "wall_ms_per_frame": 0.4993051400015247,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 1,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.4990469900000028,
+    "wall_ms_per_frame": 0.4990749250009685,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "pattern",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 1.117630567500001,
+    "wall_ms_per_frame": 1.117707134999364,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "pattern",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 1.2206179525000005,
+    "wall_ms_per_frame": 1.220705307496246,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.8334535849999992,
+    "wall_ms_per_frame": 0.8336083250014781,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "instrument",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.775429295000003,
+    "wall_ms_per_frame": 0.7754829824989429,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.8598304475000029,
+    "wall_ms_per_frame": 0.8598324599915941,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "samples",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.854474070000002,
+    "wall_ms_per_frame": 0.8544738625005266,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.6012868800000026,
+    "wall_ms_per_frame": 0.601340564999191,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "settings",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6926319225000022,
+    "wall_ms_per_frame": 0.692635262503245,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.812916967499997,
+    "wall_ms_per_frame": 0.8130695599993487,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "help",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.8213955899999981,
+    "wall_ms_per_frame": 0.821455152499766,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.6847972999999996,
+    "wall_ms_per_frame": 0.6847989574998792,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "orders",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.6948789449999992,
+    "wall_ms_per_frame": 0.6949013150006067,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 2,
+    "scrollbar_drawing": false,
+    "cpu_ms_per_frame": 0.5450976699999988,
+    "wall_ms_per_frame": 0.5451000800076145,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  },
+  {
+    "page": "files",
+    "repetition": 2,
+    "scrollbar_drawing": true,
+    "cpu_ms_per_frame": 0.5165829950000012,
+    "wall_ms_per_frame": 0.5166333474971907,
+    "size": [
+      960,
+      540
+    ],
+    "iterations": 400
+  }
+]

@@ -3,6 +3,7 @@ remain consistent on Finnish and other layouts; text fields use Unicode.
 """
 from dataclasses import dataclass
 import pygame as pg
+from sidpulse.commands.editor import FIELDS
 
 # USB/SDL scancodes, two staggered piano rows. C-4 at physical Z by default.
 NOTE_SCANCODES = {
@@ -37,8 +38,12 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command("mute" if key == pg.K_F9 else "solo")
     if page == "info" and not (alt or ctrl or shift) and key in (pg.K_q, pg.K_s):
         return Command("mute" if key == pg.K_q else "solo")
+    if page == "pattern" and ctrl and shift and not alt and key == pg.K_v:
+        return Command("paste_special")
     if ctrl and shift and key==pg.K_e:
         return Command("export")
+    if ctrl and shift and not alt and key == pg.K_r and page in ('pattern', 'instrument'):
+        return Command('pulse_record_arm')
     if ctrl and shift and key==pg.K_F2:
         return Command("control_focus")
     if ctrl and key == pg.K_RETURN:
@@ -114,8 +119,6 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command("pattern", (4 if shift and key != pg.K_EQUALS else 1) * (-1 if key in (pg.K_KP_MINUS, pg.K_MINUS) else 1))
         if key in (pg.K_UP, pg.K_DOWN, pg.K_LEFT, pg.K_RIGHT):
             dr, dc = {pg.K_UP: (-1, 0), pg.K_DOWN: (1, 0), pg.K_LEFT: (0, -1), pg.K_RIGHT: (0, 1)}[key]
-            if shift:
-                dc *= 9
             return Command("step_move", (dr, dc, shift))
         if key in (pg.K_PAGEUP, pg.K_PAGEDOWN):
             return Command("move", (-16 if key == pg.K_PAGEUP else 16, 0, shift))
@@ -176,8 +179,38 @@ def _dispatch_unchecked(event, page="pattern", column=0):
     return None
 
 
-def dispatch(event, page="pattern", column=0):
+def modern_command(event, page):
+    if event.type != pg.KEYDOWN:
+        return None
+    modifiers = event.mod & (pg.KMOD_CTRL | pg.KMOD_ALT | pg.KMOD_SHIFT)
+    ctrl = bool(modifiers & pg.KMOD_CTRL)
+    shift = bool(modifiers & pg.KMOD_SHIFT)
+    alt = bool(modifiers & pg.KMOD_ALT)
+    if page == 'pattern' and not alt:
+        if event.key == pg.K_INSERT and ctrl and not shift:
+            return Command('copy', False)
+        if event.key == pg.K_INSERT and shift and not ctrl:
+            return Command('paste', 'overwrite')
+        if ctrl and shift and event.key in (pg.K_INSERT, pg.K_DELETE):
+            return Command('roll', 1 if event.key == pg.K_INSERT else -1)
+    if page in ('instrument', 'samples') and not (ctrl or alt):
+        if event.key in (pg.K_PLUS, pg.K_KP_PLUS) or (event.key == pg.K_EQUALS and shift) or getattr(event, 'unicode', '') == '+':
+            return Command('octave', 1)
+        if not shift and event.key in (pg.K_MINUS, pg.K_KP_MINUS):
+            return Command('octave', -1)
+        if not shift and event.key in (pg.K_0, pg.K_KP0):
+            return Command('octave_reset')
+    return None
+
+
+def dispatch(event, page="pattern", column=0, mapping='modern'):
     from sidpulse.ui.registry import available, find_route, match_event, reason
+    override = modern_command(event, page) if mapping == 'modern' else None
+    if override:
+        capability = find_route(override, page)
+        if capability and not available(capability, keyboard=True):
+            return Command('pending', f"{capability['description']}: {reason(capability)}")
+        return override
     entry = match_event(event, page)
     if entry and not available(entry, keyboard=True):
         return Command("pending", f"{entry['description']}: {reason(entry)}")

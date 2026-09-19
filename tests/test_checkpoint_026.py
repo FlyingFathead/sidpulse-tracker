@@ -44,12 +44,12 @@ def test_whole_piano_range_in_both_note_subcolumns(app,column):
 def test_caps_lock_piano_from_every_voice_field_preserves_song(app,monkeypatch):
     calls=[];monkeypatch.setattr(app.audio,'send',lambda *args:calls.append(args))
     before=deepcopy(app.editor.song)
-    for column in range(9):
+    for column in range(16):
         app.editor.column=column
         for scan in NOTE_SCANCODES:
             key(app,pg.K_b,'b',scan,pg.KMOD_CAPS)
             key(app,pg.K_b,'b',scan,pg.KMOD_CAPS,True)
-    assert len([c for c in calls if c[0]=='on'])==9*len(NOTE_SCANCODES)
+    assert len([c for c in calls if c[0]=='on'])==16*len(NOTE_SCANCODES)
     assert app.editor.song==before and not app.dialog
 
 

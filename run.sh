@@ -7,4 +7,5 @@ fi
 if ! .venv/bin/python -c 'from importlib.metadata import version; assert version("pygame-ce") == "2.5.7"; assert version("pyresidfp") == "0.17.0"' 2>/dev/null; then
     .venv/bin/python -m pip install -r requirements.txt
 fi
+.venv/bin/python scripts/launch_banner.py
 exec .venv/bin/python -m sidpulse "$@"

@@ -28,7 +28,7 @@ class AnalysisUpdate:
     error: str | None = None
 
 
-def compile_worker(connection, song, options, kind):
+def compile_worker(connection, song, options, kind, *, compare=False):
     """Spawn entry point; the pipe is private to this one analysis job."""
     try:
         from sidpulse.export.psid import compile_song
@@ -38,7 +38,11 @@ def compile_worker(connection, song, options, kind):
             connection.send(("progress", phase, detail))
 
         compiler = compile_prg if kind == "prg" else compile_song
-        result = compiler(song, squeeze=options, progress=progress)
+        if compare and options.enabled:
+            from sidpulse.export.comparison import compile_comparison
+            result = compile_comparison(song, options, kind, progress=progress)
+        else:
+            result = compiler(song, squeeze=options, progress=progress)
         connection.send(("result", result))
     except Exception as exc:
         # Send text, not arbitrary exception objects (some cannot be unpickled).
@@ -49,6 +53,10 @@ def compile_worker(connection, song, options, kind):
             pass  # The UI cancelled and discarded this job's pipe.
     finally:
         connection.close()
+
+
+def comparison_worker(connection, song, options, kind):
+    compile_worker(connection, song, options, kind, compare=True)
 
 
 class AnalysisJob:

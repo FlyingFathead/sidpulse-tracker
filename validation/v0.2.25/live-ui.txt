@@ -1,0 +1,1 @@
+PASS: live native scope traces at 960px, output reset 4096 -> 2048, paused playback/song preserved, scope-off clears traces while playback continues

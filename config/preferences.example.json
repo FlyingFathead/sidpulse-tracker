@@ -21,19 +21,32 @@
     "WELL": "#000000",
     "CREAM": "#e9e8c8",
     "SLIDER": "#a92e42",
-    "SCOPE": "#cb4557"
+    "SCOPE": "#cb4557",
+    "REC_ARM": "#b53242",
+    "REC_SLIDER": "#348bdb"
   },
   "autosave_enabled": true,
   "autosave_minutes": 5,
   "autosave_directory": "",
   "restart_on_f5": false,
   "hide_welcome_on_startup": false,
+  "export_compare_squeezers": true,
+  "export_show_all_versions": true,
   "export_squeeze": {
     "enabled": true,
     "patterns": true,
     "instruments": true,
     "unused": true,
-    "streams": true
+    "streams": true,
+    "version": 202
   },
-  "audio_underrun_detection": true
+  "audio_underrun_detection": true,
+  "pattern_clipboard_buttons": true,
+  "confirm_cut": true,
+  "instrument_monitor_buttons": true,
+  "center_selection": true,
+  "control_panel_visible": null,
+  "channel_visualizers": true,
+  "keyboard_mapping": "modern",
+  "automation_display": 2
 }

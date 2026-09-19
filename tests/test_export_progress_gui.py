@@ -16,7 +16,7 @@ from sidpulse.ui.themes import palette
 
 class ControlledJob:
     """Deterministic UI completion control; real spawn tests live separately."""
-    def __init__(self, song, options, kind):
+    def __init__(self, song, options, kind, **kwargs):
         self.source = deepcopy(song)
         self.options = options
         self.kind = kind
@@ -116,7 +116,8 @@ def test_busy_indicator_and_cancel_stay_visible_at_supported_sizes(app, size, zo
     rect = app.dialog['progress_rect'].copy()
     assert app.screen.get_rect().contains(rect)
     assert all(app.screen.get_rect().contains(hit) for hit, _, _ in app.renderer.hits)
-    assert len(app.renderer.hits) == 1
+    assert [(action,value) for _,action,value in app.renderer.hits
+            if not action.startswith('squeeze_scroll_')] == [('squeeze_button','cancel')]
     key(app, pg.K_PAGEDOWN)
     frame(app)
     assert app.dialog['progress_rect'] == rect  # pinned above the scrolling body
@@ -229,7 +230,7 @@ def test_completed_job_waits_safely_under_a_notice(app):
 
 def test_real_slow_child_keeps_frame_loop_resize_and_cancel_responsive(monkeypatch):
     from test_export_analysis_job import stalled_worker
-    monkeypatch.setattr(ui, 'AnalysisJob', lambda *args: AnalysisJob(*args, worker=stalled_worker))
+    monkeypatch.setattr(ui, 'AnalysisJob', lambda *args, **kwargs: AnalysisJob(*args, worker=stalled_worker))
     app = App(audio=False)
     try:
         app.begin_export('prg')

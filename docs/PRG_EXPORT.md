@@ -37,6 +37,12 @@ the title, author and intended clock/model. **RUN/STOP** silences the music and
 returns to BASIC. Song looping follows F12's existing loop option; a non-looping
 song becomes silent at its end and waits for RUN/STOP.
 
+With squeezing enabled, startup also prints **Exported from v&lt;tracker version&gt;**
+and **Squeezer ver: &lt;version&gt;** (uppercase on the default C64 character set).
+The squeezer value is the selected v1.0/v2.0 strategy, including cases where it
+selects a fallback encoding. These credits fit in the existing loader text pool;
+music addresses, resident RAM allocation and the playback loop do not change.
+
 No c1541 or assembler is needed to export a PRG. A disk-image utility is only
 needed if your chosen transfer method requires a disk image. The exporter does
 not create a D64 image or handle physical transfer to hardware.

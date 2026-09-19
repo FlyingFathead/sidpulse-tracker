@@ -1,0 +1,17 @@
+{
+  "initial_records": 142,
+  "expected_records": 144,
+  "additional_measured_trials": [
+    {
+      "case": "info-scopes-off-1280x900",
+      "version": "0.2.27",
+      "repetition": 0
+    },
+    {
+      "case": "pattern-1280x900",
+      "version": "0.2.27",
+      "repetition": 3
+    }
+  ],
+  "reason": "Two expected GUI records were absent after the initial process exited. These are fresh measurements; no existing results were replaced or discarded."
+}

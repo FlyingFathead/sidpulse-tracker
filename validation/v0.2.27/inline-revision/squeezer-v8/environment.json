@@ -1,0 +1,7 @@
+{
+  "tracker": "0.2.27",
+  "python": "3.12.14",
+  "platform": "Linux x86_64",
+  "repetitions": 3,
+  "notes": "Serial compiler CPU/wall trials; complete trace and resident instruction verification on every compact export."
+}

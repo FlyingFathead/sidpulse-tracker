@@ -1,0 +1,62 @@
+[
+  {
+    "repetition": 0,
+    "comparison": false,
+    "cpu_ms_per_frame": 6.4474701425,
+    "wall_ms_per_frame": 6.454336867500388,
+    "size": [
+      960,
+      1080
+    ]
+  },
+  {
+    "repetition": 0,
+    "comparison": true,
+    "cpu_ms_per_frame": 6.783054345,
+    "wall_ms_per_frame": 6.786509265002678,
+    "size": [
+      960,
+      1080
+    ]
+  },
+  {
+    "repetition": 1,
+    "comparison": true,
+    "cpu_ms_per_frame": 6.78298877,
+    "wall_ms_per_frame": 6.7923336525018385,
+    "size": [
+      960,
+      1080
+    ]
+  },
+  {
+    "repetition": 1,
+    "comparison": false,
+    "cpu_ms_per_frame": 5.9969138200000005,
+    "wall_ms_per_frame": 5.997337227499884,
+    "size": [
+      960,
+      1080
+    ]
+  },
+  {
+    "repetition": 2,
+    "comparison": false,
+    "cpu_ms_per_frame": 5.935761402499997,
+    "wall_ms_per_frame": 5.93628158249885,
+    "size": [
+      960,
+      1080
+    ]
+  },
+  {
+    "repetition": 2,
+    "comparison": true,
+    "cpu_ms_per_frame": 6.817497387500002,
+    "wall_ms_per_frame": 6.817901282502135,
+    "size": [
+      960,
+      1080
+    ]
+  }
+]

@@ -74,6 +74,7 @@ class AudioEngine:
         self.test_active = False
         self.request_serial = 0
         self.playback = PlaybackState()
+        self.pulse_capture = None
         self.startup = deepcopy(song)
         if enabled:
             from sidpulse.audio.process import bridge
@@ -120,8 +121,10 @@ class AudioEngine:
             # not tracker time; first note still starts at sequencer frame zero.
             sid.render(48000)
             activity = InstrumentActivity()
-            sequencer = Sequencer(sid, activity)
-            audition = Audition(sid, self.startup.tempo, activity)
+            from sidpulse.audio.monitor import InstrumentMonitor
+            monitor = InstrumentMonitor(sid)
+            sequencer = Sequencer(sid, activity, monitor.note_on)
+            audition = Audition(sid, self.startup.tempo, activity, monitor.note_on)
             conditioner = OutputConditioner()
             output = AudioOutput(self.buffer_frames, self.output_device)
             channel = output.channel
@@ -202,8 +205,9 @@ class AudioEngine:
                         if not values[0]:
                             self.voice_waveforms = ((0.0,) * 128,) * 3
                     elif name == "monitor":
-                        self.muted = tuple(values[0])
-                        sid.set_muted(self.muted)
+                        monitor.set_voices(values[0])
+                    elif name == "instrument_monitor":
+                        monitor.set_instruments(*values)
                     elif name == "off":
                         voice = allocator.release(values[0])
                         if voice is not None:
@@ -223,14 +227,20 @@ class AudioEngine:
                         sid.set_clock(song.clock)
                         sid.reset()
                         set_filter(sid, song.filter)
-                        sid.set_muted(self.muted)
+                        monitor.reset()
                         sid.render(48000)
                         conditioner = OutputConditioner()
                         conditioner.target = 1.0
-                        audition = Audition(sid, audition.tempo, activity)
+                        audition = Audition(sid, audition.tempo, activity, monitor.note_on)
                         audition.tempo = song.tempo
                         sequencer.start(song, mode, order, row, pattern)
                         last_wake = time.perf_counter()
+                    elif name == 'pulse_record_start':
+                        sequencer.record_pulse(*values)
+                    elif name == 'pulse_record_value':
+                        sequencer.update_pulse_recording(*values)
+                    elif name == 'pulse_record_end':
+                        sequencer.finish_pulse_recording(*values)
                     elif name == "pause":
                         sequencer.pause()
                         if sequencer.status == "paused":
@@ -253,7 +263,8 @@ class AudioEngine:
                         activity.reset()
                         audition_sources.clear()
                         sequencer.stop()
-                        audition = Audition(sid, audition.tempo, activity)
+                        audition = Audition(sid, audition.tempo, activity, monitor.note_on)
+                        monitor.reset()
                         allocator.held.clear()
                         channel.unpause()
                         conditioner.target = 0.0
@@ -286,12 +297,14 @@ class AudioEngine:
                             channel.stop()
                             sid.set_model(model)
                             sid.set_clock(clock)
-                            audition = Audition(sid, audition.tempo, activity)
+                            audition = Audition(sid, audition.tempo, activity, monitor.note_on)
+                            monitor.reset()
                             set_filter(sid, filter_state)
                             sid.render(48000)
                             conditioner = OutputConditioner()
                         set_filter(sid, filter_state)
-                        sid.set_muted(self.muted)
+                        monitor.apply(force=True)
+                self.muted = monitor.mask
                 if output.testing:
                     output.pump_test()
                     channel = output.channel
@@ -302,6 +315,7 @@ class AudioEngine:
                 if channel.callback_error is not None:
                     raise RuntimeError('Audio callback failed') from channel.callback_error
                 self.playback = sequencer.state
+                self.pulse_capture = sequencer.pulse_recording.snapshot if sequencer.pulse_recording else None
                 self.activity = activity.snapshot(
                     sequencer.programs if sequencer.status != "stopped" else audition,
                     sid.registers, self.muted,
@@ -332,6 +346,8 @@ class AudioEngine:
                         self.over_budget += int(ratio > 1.0)
                         channel.write(pcm)
                         self.playback = sequencer.state
+                        self.muted = monitor.mask
+                        self.pulse_capture = sequencer.pulse_recording.snapshot if sequencer.pulse_recording else None
                         self.activity = activity.snapshot(
                             sequencer.programs if sequencer.status != "stopped" else audition,
                             sid.registers, self.muted,

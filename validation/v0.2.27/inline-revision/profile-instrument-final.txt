@@ -1,0 +1,34 @@
+         2939096 function calls (2727550 primitive calls) in 1.557 seconds
+
+   Ordered by: internal time
+   List reduced from 915 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    33704    0.269    0.000    0.269    0.000 {built-in method pygame.draw.rect}
+    73012    0.154    0.000    0.154    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+187918/4028    0.126    0.000    0.275    0.000 copy.py:118(deepcopy)
+    74320    0.080    0.000    0.080    0.000 {built-in method pygame.draw.line}
+      432    0.067    0.000    0.067    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+   484529    0.055    0.000    0.055    0.000 {method 'get' of 'dict' objects}
+    32400    0.047    0.000    0.184    0.000 renderer.py:104(text)
+    16420    0.045    0.000    0.128    0.000 renderer.py:127(control_text)
+   400038    0.044    0.000    0.044    0.000 {built-in method builtins.round}
+    11664    0.043    0.000    0.082    0.000 renderer.py:904(bank_monitor_buttons)
+20254/4028    0.037    0.000    0.268    0.000 copy.py:217(_deepcopy_dict)
+    11664    0.032    0.000    0.064    0.000 renderer.py:600(activity_dot)
+      432    0.031    0.000    0.793    0.002 renderer.py:611(instrument)
+    19013    0.026    0.000    0.026    0.000 {method 'size' of 'pygame.font.Font' objects}
+   157600    0.024    0.000    0.024    0.000 {built-in method builtins.max}
+     1432    0.020    0.000    0.020    0.000 {method 'render' of 'pygame.font.Font' objects}
+   254940    0.018    0.000    0.018    0.000 {built-in method builtins.id}
+     7780    0.017    0.000    0.107    0.000 instrument_graphs.py:22(button_frame)
+      432    0.017    0.000    0.189    0.000 instrument_graphs.py:184(draw_fields)
+     6048    0.017    0.000    0.162    0.000 instrument_graphs.py:34(button)
+    19440    0.017    0.000    0.026    0.000 renderer.py:195(hit)
+      432    0.015    0.000    1.170    0.003 renderer.py:231(render)
+    71576    0.014    0.000    0.014    0.000 {method 'move_to_end' of 'collections.OrderedDict' objects}
+     4023    0.014    0.000    0.039    0.000 format.py:147(_construct)
+   8046/2    0.014    0.000    0.265    0.133 copy.py:247(_reconstruct)
+
+
+

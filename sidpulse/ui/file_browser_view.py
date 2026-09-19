@@ -40,12 +40,13 @@ def draw(r, app, top, bottom):
     r.well(2, y, split - 4, height)
     r.text(3, y, 'Name (' + SUFFIXES[b.mode] + ')', c.CREAM, split - 6)
     show_dates = app.file_browser_show_modified and split - 6 >= 38
-    date_x = split - 19
-    name_width = date_x - 5 if show_dates else split - 6
+    date_x = split - 21
+    name_width = date_x - 5 if show_dates else split - 8
     if show_dates:
         r.text(date_x, y, 'Modified', c.CREAM, 16)
     b.visible_rows = max(1, int(height - 1))
     start = max(0, b.index - b.visible_rows + 1)
+    start = r.scroll_start('files',start,(str(b.directory),b.index),len(b.entries),b.visible_rows)
     for i, path in enumerate(b.entries[start:start + b.visible_rows], start):
         row = y + 1 + i - start
         selected = i == b.index
@@ -57,6 +58,7 @@ def draw(r, app, top, bottom):
         if show_dates and i:
             r.text(date_x, row, b.modified.get(path, 'Unavailable'), foreground if selected else c.ACCENT, 16)
         r.hit(2, row, split - 4, 1, 'file', i)
+    r.scroll_bar('files',split-3.5,y+1,b.visible_rows,len(b.entries),b.visible_rows)
     if not b.entries:
         r.text(3, y + 1, 'Directory unavailable. Ctrl+L to change it.', c.CREAM, split - 6)
     if r.cols >= 100:

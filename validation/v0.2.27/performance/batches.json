@@ -1,0 +1,43 @@
+{
+  "starter-23-vs-26": {
+    "total": 148,
+    "kinds": {
+      "audio": 70,
+      "gui": 70,
+      "live": 8
+    }
+  },
+  "interim-26-vs-27": {
+    "total": 147,
+    "kinds": {
+      "audio": 70,
+      "gui": 69,
+      "live": 8
+    }
+  },
+  "interim-buttons": {
+    "total": 40,
+    "kinds": {
+      "gui": 40
+    }
+  },
+  "interim-live512-repeat": {
+    "total": 4,
+    "kinds": {
+      "live": 4
+    }
+  },
+  "final-ui-and-live": {
+    "total": 144,
+    "kinds": {
+      "gui": 135,
+      "live": 9
+    }
+  },
+  "final-navigation": {
+    "total": 20,
+    "kinds": {
+      "gui": 20
+    }
+  }
+}

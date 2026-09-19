@@ -41,13 +41,13 @@ def test_backup_and_failed_replace_preserve_original(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize("mutation", [
-    lambda d: d.update(format_version=999),
+    lambda d: d.update(format_version=0),
     lambda d: d["song"].update(sid_model="9999"),
     lambda d: d["song"].update(orders=[99]),
     lambda d: d["song"]["patterns"][0]["rows"][0].pop(),
     lambda d: d["song"]["patterns"][0]["rows"][0][0].update(note=True),
     lambda d: d["song"]["instruments"][1].update(pulse_width=4096),
-    lambda d: d["song"].update(unknown_musical_data=[1, 2, 3]),
+    lambda d: d["song"].update(speed=0),
 ])
 def test_bad_projects_are_rejected(mutation):
     document = encode(Song())

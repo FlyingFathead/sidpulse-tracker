@@ -1,3 +1,100 @@
+# Changelog
+
+## v0.2.30
+
+- Show all squeezer versions by default, save the display choice in config,
+  retain optional Top 3 ranking, and add reusable overflow scrollbars.
+- Supplied SP application icon and optional Linux desktop launcher.
+- Actual F5 playback GIF/MP4 below the README logo.
+
+
+- SQUEEZER v2.0.2: indexed immutable blocks and phrase calls, with complete
+  player/dictionary RAM accounting and earlier encodings retained.
+- Four-version export comparison adapts to narrow windows; preserves ties,
+  immediate selection, cancellation and saved preferences.
+- Documents GoatTracker 2.77 and Luxocrates' Hubbard-player reference study,
+  independent implementation, rejected arithmetic prototype and measured limits.
+- Repeats full regression, 6502, source-preservation and matched CPU/RAM checks.
+
+## v0.2.29 - SQUEEZER v2.0.1 and measured export comparison
+
+- Share identical packet sequences with non-recursive calls, counted repeats and
+  common suffixes; include the new decoder/state cost in resident-size selection.
+- Preserve both earlier optimizers, players and explicit saved selections.
+- Compare v1.0/v2.0/v2.0.1 in three columns by default, highlight minima and select
+  the smallest valid output. Each column has its own Use Squeezer button.
+- Share source recording, candidate construction and verification inside one
+  cancellable comparison; switching completed results does not recompile.
+- Add a saved comparison toggle, current PRG version credits, independent 6502
+  checks and matched export/native performance reports. No native format bump.
+
+# v0.2.28 - distinct version for the revised automation and squeezer build
+
+- Bump application, launcher and package metadata to 0.2.28. New native saves
+  and squeezed PRG credits report the same version.
+- Give full/overlay archives, checksums and current release documents unique
+  v0.2.28 names; retain older documents and benchmark records as history.
+- Include inline channel A/D/S/R/PW recording, direct Disarm, centered banks,
+  SQUEEZER v2.0 with selectable v1.0, and measured UI caching improvements.
+- Preserve musical format versions, dependencies and executable run.sh.
+
+# v0.2.26 - clipboard feedback and Modern keyboard mapping
+
+- Give clipboard and octave buttons a pressed state, release-inside activation,
+  drag-away cancellation and a short visible response for quick clicks.
+- Show clipboard success/empty/error notices above F8: SILENCE, including for
+  keyboard actions and Paste Special. Preserve the selected field masks.
+- Add a saved Modern/Classic keyboard profile in Settings Menu and F12. Default
+  to Modern with Ctrl+Insert copy and Shift+Insert paste in F2. Retain Alt+C/O in
+  both modes and the previous Ctrl+Insert roll action in Classic.
+- Add Oct: current value [+1] [0] [-1] controls, including F3/F4. In Modern mode,
+  + / - / 0 also change/reset octave there. Reset means octave 4; limits are 0..7.
+- Keep pattern numeric input, text dialogs, song data and instrument definitions
+  intact. Reset user settings restores Modern. No dependencies or format changes.
+- Add instrument M/S beside activity dots, with press feedback and monitoring
+  based on actual triggers across all voices. Combine with channel monitoring;
+  leave song registers and exports unchanged. Sample M/S is visibly unavailable.
+- Hide PW recording options and their keyboard focus while disarmed. Show
+  Record to channel only when armed, with a configurable red REC_ARM color.
+- Display ADSR resets as R. Add staged R/RA/RAL entry in PW to restore all five
+  overrides atomically; R then Enter restores only PW. Add Reset all automation
+  button/menu action for selected rows/channels, preserving notes and FX.
+  Keep existing reset serialization, and defer VB because Hxy already exists.
+
+# v0.2.25 - field clipboard, compact playback and reset settings
+
+- Select F2 fields with mouse drag, Shift+click, Shift+arrows or a field-header
+  click. Copy, cut, overwrite, insert, mix and roll respect selected fields.
+  Keep legacy whole-channel block commands and one-step undo.
+- Add optional clipboard buttons, Pattern Edit Menu and Paste Special choices
+  for notes, automation or both. Notes means NOTE; automation means A/D/S/R/PW.
+- Collapse/expand the shared control/filter pane in pattern and Info views;
+  default to collapsed at narrow widths and save explicit visibility choices.
+- Show red per-channel scopes at narrow widths. Add a saved visualizer switch
+  which disables display-only scope processing as well as drawing.
+- Add Reset all settings to defaults at the bottom of Settings Menu. Default
+  confirmation to Cancel, retain song/preset/recovery data, and restore the old
+  output if saving the reset preferences fails.
+- Retain the existing music format, automation recording and export behavior.
+  Update the application writer stamp to 0.2.25.
+- Print a versioned, terminal-width startup banner from both launchers, warning
+  against closing the console or using Ctrl-C with unsaved work.
+
+# v0.2.24 - channel automation, PW recording and compatible loading
+
+- Add per-channel A/D/S/R/PW fields after the existing NOTE/IN/EX/FX fields.
+  Preserve full 12-bit PW, per-parameter resets, held-note control and the
+  existing instrument programs. Use teal automation colors.
+- Add audio-clocked, row-quantized PW touch recording with a visible channel
+  target, one pattern pass per gesture, cancellation and one-step undo.
+- Replace stale instrument edit text with per-cursor and live-gesture status.
+- Keep the blue shared-filter lane in pattern and playback views; publish live
+  filter/slide state and retain its display after stop or pause.
+- Stamp native saves with the app version. Keep ordinary saves compatible with
+  format 6; use format 7 for new row automation. Load structurally compatible
+  future versions with warnings and retain unknown fields through native edits.
+- Extend native load/save, real audio-process recording, 6502 export and UI tests.
+
 # v0.2.23 - output devices and test arpeggio
 
 - Add SDL playback-device selection and a saved `audio_output_device` machine

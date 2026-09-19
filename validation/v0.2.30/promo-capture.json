@@ -1,0 +1,49 @@
+{
+  "song": "autumn-at-five.sidpulse",
+  "source_sha256": "6fc3ff4190904ed0a52d4008778cf434966b77f7bf537d226a9caf722d5ca530",
+  "capture": "Actual F5 playback with native audio subprocess and SDL dummy drivers; native soundtrack rerendered and trimmed to first captured sequencer position",
+  "first_audio_frame": 96256,
+  "last_audio_frame": 483328,
+  "audio_sample_rate": 48000,
+  "audio_pcm_peak": 5017,
+  "audio_pcm_sha256": "ac7595d00fccabafc23105d3a6e178672f4e6cf1519270a0df142fb6030f59b6",
+  "size": [
+    960,
+    720
+  ],
+  "fps": 20,
+  "frames": 160,
+  "seconds": 8,
+  "distinct_pattern_rows": 44,
+  "all_three_scopes_active": true,
+  "mp4_streams": [
+    {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 720,
+      "sample_rate": null,
+      "channels": null,
+      "duration": "8.000000",
+      "nb_frames": "160"
+    },
+    {
+      "codec_name": "aac",
+      "width": null,
+      "height": null,
+      "sample_rate": "48000",
+      "channels": 1,
+      "duration": "8.000000",
+      "nb_frames": "376"
+    }
+  ],
+  "files": {
+    "sidpulse-f5-playback.gif": {
+      "bytes": 1383878,
+      "sha256": "b6fb3f182d45024517e8f432fb34a7d1cb72544dc61e8f3149911ca7f66f6a3a"
+    },
+    "sidpulse-f5-playback.mp4": {
+      "bytes": 415414,
+      "sha256": "52c5636c3ac71c8d21ec52dce88b44fdb7eda07b9ff6646dd924289182e5555d"
+    }
+  }
+}

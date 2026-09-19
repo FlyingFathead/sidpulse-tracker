@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 OFF, CUT = -1, -2
 NOTE_NAMES = ("C-", "C#", "D-", "D#", "E-", "F-", "F#", "G-", "G#", "A-", "A#", "B-")
 INSTRUMENT_PROGRAMS = ("arpeggio", "wave_sequence", "pitch_sequence", "pulse", "vibrato", "gate", "retrigger")
+ENVELOPE_FIELDS = ('attack', 'decay', 'sustain', 'release')
 
 
 def note_name(note):
@@ -19,14 +20,21 @@ def note_name(note):
 
 @dataclass
 class Cell:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
     note: int | None = None
     instrument: int | None = None
     effect: str = ""
     parameter: int | None = None
+    pulse_width: int | None = None  # None: hold, -1: instrument default, 000..FFF: base PW
+    attack: int | None = None
+    decay: int | None = None
+    sustain: int | None = None
+    release: int | None = None
 
 
 @dataclass
 class ControlCell:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
     # None means keep the running value. This is the one shared SID filter.
     cutoff: int | None = None
     resonance: int | None = None
@@ -38,6 +46,7 @@ class ControlCell:
 
 @dataclass
 class Pattern:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
     name: str = "Untitled pattern"
     rows: list[list[Cell]] = field(default_factory=lambda: [[Cell() for _ in range(3)] for _ in range(64)])
 
@@ -46,6 +55,7 @@ class Pattern:
 
 @dataclass
 class Instrument:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
     name: str = "Pulse lead"
     waveform: int = 0x40
     attack: int = 0
@@ -86,6 +96,7 @@ class Instrument:
 
 @dataclass
 class Filter:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
     cutoff: int = 0x400
     resonance: int = 0
     routing: int = 0
@@ -95,6 +106,10 @@ class Filter:
 
 @dataclass
 class Song:
+    _extra_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
+    _root_fields: dict = field(default_factory=dict, repr=False, kw_only=True)
+    _source_format: int = field(default=6, repr=False, compare=False, kw_only=True)
+    _saved_with: str = field(default='', repr=False, compare=False, kw_only=True)
     title: str = "Untitled"
     author: str = ""
     comments: str = ""

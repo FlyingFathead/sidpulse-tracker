@@ -4,7 +4,7 @@ from pathlib import Path
 import struct
 
 from sidpulse.export.psid import ExportError, LOAD, compile_song, save_export
-from sidpulse.export.squeeze import COMPACT_PRG_LOAD
+from sidpulse.export.squeeze import COMPACT_PRG_LOAD, squeezer_version_label
 
 PRG_LOAD = 0x0801
 TITLE = 0x0C00 - PRG_LOAD
@@ -13,8 +13,33 @@ TARGET = AUTHOR + 33
 PAL_FLAG = TARGET + 16
 
 
-def compile_prg(song, *, squeeze=None, progress=None):
-    result = compile_song(song, squeeze=squeeze, _prg=True, progress=progress)
+def stamp_export(loader,version):
+    """Fit export credits in the existing text pool; music links stay fixed.
+
+    The startup print text grows, the PAL/NTSC mismatch text is shortened,
+    and its single immediate print pointer is relinked. No playback code,
+    title/author storage, resident allocation or player ABI changes.
+    """
+    from sidpulse import __version__
+    start=loader.index(b'\r\rPLAYING - RUN/STOP RETURNS TO BASIC\r\0')
+    old=loader.index(b'\r\rTHIS TUNE USES A DIFFERENT VIDEO CLOCK.')
+    end=loader.index(0,old)+1
+    instructions=(f'\r\rEXPORTED FROM V{__version__}\r'
+                  f'SQUEEZER VER: {squeezer_version_label(version)}\r'
+                  'PLAYING - RUN/STOP TO EXIT\r\0').encode('ascii')
+    mismatch=b'\r\rDIFFERENT VIDEO CLOCK. USE PAL/NTSC.\r\0'
+    if len(instructions)+len(mismatch)>end-start:
+        raise ExportError('Export version credits exceed the PRG text pool')
+    old_address=PRG_LOAD+old;new_address=PRG_LOAD+start+len(instructions)
+    pointer=bytes((0xa9,old_address&255,0xa2,old_address>>8,0x20))
+    if loader[:start].count(pointer)!=1:raise ExportError('Unexpected PRG mismatch print pointer')
+    at=loader.index(pointer)
+    loader[at+1]=new_address&255;loader[at+3]=new_address>>8
+    loader[start:end]=(instructions+mismatch).ljust(end-start,b'\0')
+
+
+def compile_prg(song, *, squeeze=None, progress=None, _comparison_cache=None):
+    result = compile_song(song, squeeze=squeeze, _prg=True, progress=progress, _comparison_cache=_comparison_cache)
     if progress is not None:
         progress("Preparing PRG...", "Adding the standalone C64 loader and title display.")
     load = struct.unpack_from('>H', result.data, 8)[0]
@@ -24,6 +49,8 @@ def compile_prg(song, *, squeeze=None, progress=None):
     if load not in (LOAD, COMPACT_PRG_LOAD) or len(loader) != load - PRG_LOAD or loader[:12] != bytes.fromhex('0b080a009e32303631000000'):
         raise ExportError('Invalid bundled PRG loader')
     warnings = list(result.warnings)
+    if result.squeeze_report.enabled:
+        stamp_export(loader,result.squeeze_report.squeezer_version)
     title = 0x0961 - PRG_LOAD if compact else TITLE
     author, target_offset = title + 33, title + 66
     pal_flag = target_offset + 16

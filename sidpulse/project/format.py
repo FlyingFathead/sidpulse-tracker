@@ -1,14 +1,20 @@
 """Versioned JSON with strict validation and atomic, backed-up saves."""
-from dataclasses import asdict
+from dataclasses import fields, is_dataclass
+from copy import deepcopy
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import tempfile
 
 from sidpulse.song.model import Cell, ControlCell, Filter, Instrument, Pattern, Song, INSTRUMENT_PROGRAMS
+from sidpulse.song.model import ENVELOPE_FIELDS
+from sidpulse import __version__
 
 MAX_BYTES = 8 * 1024 * 1024
+CURRENT_FORMAT = 7
+AUTOMATION_FIELDS = ('pulse_width', *ENVELOPE_FIELDS)
 
 
 class ProjectError(ValueError):
@@ -91,6 +97,12 @@ def validate(song):
                     raise ProjectError("Effect must be empty or A..Z")
                 if cell.parameter is not None:
                     integer(cell.parameter, 0, 255, "effect parameter")
+                if cell.pulse_width is not None:
+                    integer(cell.pulse_width, -1, 4095, "row pulse width")
+                for field in ENVELOPE_FIELDS:
+                    value = getattr(cell, field)
+                    if value is not None:
+                        integer(value, -1, 15, 'row ' + field)
     for name, maximum in (("cutoff", 2047), ("resonance", 15), ("routing", 7), ("mode", 0x70), ("volume", 15)):
         integer(getattr(song.filter, name), 0, maximum, f"filter {name}")
     if song.filter.mode & 0x0F:
@@ -100,31 +112,103 @@ def validate(song):
             raise ProjectError(f"{name} must be an object")
 
 
+def _serialize(value):
+    if is_dataclass(value):
+        result = deepcopy(value._extra_fields)
+        for item in fields(value):
+            if item.name.startswith('_'):
+                continue
+            data = getattr(value, item.name)
+            if isinstance(value, Cell) and item.name in AUTOMATION_FIELDS and data is None:
+                continue  # ordinary saves remain readable by format-6 applications
+            result[item.name] = _serialize(data)
+        return result
+    if isinstance(value, dict):
+        return {key: _serialize(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_serialize(item) for item in value]
+    return deepcopy(value)
+
+
 def encode(song, editor=None):
     validate(song)
-    return {"format": "SIDPULSE", "format_version": 6, "song": asdict(song), "editor": editor or {}}
+    automation = any(getattr(cell, field) is not None for pattern in song.patterns.values()
+                     for row in pattern.rows for cell in row for field in AUTOMATION_FIELDS)
+    version = 7 if automation else 6
+    if song._source_format > CURRENT_FORMAT:
+        version = song._source_format  # do not label preserved future content as an older schema
+    metadata = deepcopy(editor or {})
+    metadata['saved_with_version'] = __version__
+    result = deepcopy(song._root_fields)
+    result.update(format='SIDPULSE', format_version=version, song=_serialize(song), editor=metadata)
+    return result
+
+
+def _construct(cls, raw):
+    if not isinstance(raw, dict):
+        raise ProjectError(f'{cls.__name__} must be an object')
+    known = {item.name for item in fields(cls) if not item.name.startswith('_')}
+    result = cls(**{key: value for key, value in raw.items() if key in known})
+    result._extra_fields = deepcopy({key: value for key, value in raw.items() if key not in known})
+    return result
+
+
+def compatibility_warnings(song):
+    messages = []
+    def version(text):
+        match = re.match(r'^(\d+)\.(\d+)\.(\d+)', text)
+        return tuple(map(int, match.groups())) if match else None
+    saved, current = version(song._saved_with), version(__version__)
+    if saved and current and saved > current:
+        messages.append(f'Saved with newer SIDpulse Tracker {song._saved_with}; this is {__version__}.')
+    if song._source_format > CURRENT_FORMAT:
+        messages.append(f'Newer project format {song._source_format}; this build understands formats 1..{CURRENT_FORMAT}.')
+    unknown = []
+    def walk(value, path):
+        if is_dataclass(value):
+            unknown.extend(f'{path}.{key}' for key in value._extra_fields)
+            for item in fields(value):
+                if not item.name.startswith('_'):
+                    walk(getattr(value, item.name), path+'.'+item.name)
+        elif isinstance(value, dict):
+            for key, item in value.items(): walk(item, f'{path}[{key}]')
+        elif isinstance(value, list):
+            for index, item in enumerate(value): walk(item, f'{path}[{index}]')
+    unknown.extend('project.'+key for key in song._root_fields)
+    walk(song, 'song')
+    if unknown:
+        messages.append(f'{len(unknown)} unfamiliar field(s) preserved, but not interpreted: '
+                        + ', '.join(unknown[:4]) + (' ...' if len(unknown) > 4 else ''))
+    if messages:
+        messages.append('Known data has been loaded. Playback/export uses supported features; unfamiliar data stays in native saves. '
+                        'Keep the original when editing future features: deleting their owning row, pattern or instrument also deletes its data.')
+    return tuple(messages)
 
 
 def decode(document):
     try:
-        if document.get("format") != "SIDPULSE" or type(document.get("format_version")) is not int or document["format_version"] not in (1, 2, 3, 4, 5, 6):
+        if document.get("format") != "SIDPULSE" or type(document.get("format_version")) is not int or document["format_version"] < 1:
             raise ProjectError("Unsupported project format/version; original file has not been modified")
         raw = dict(document["song"])
         raw.setdefault("tempo", 125)  # v0.1.0 project migration
-        for pat in raw["patterns"].values():
-            if set(pat)-{"name","rows","controls"}:
-                raise ProjectError("Unknown pattern fields; original file preserved")
-        raw["patterns"] = {int(k): Pattern(v["name"], [[Cell(**c) for c in row] for row in v["rows"]], {int(r): ControlCell(**c) for r,c in v.get("controls",{}).items()}) for k, v in raw["patterns"].items()}
-        raw["instruments"] = {int(k): Instrument(**v) for k, v in raw["instruments"].items()}
-        raw["filter"] = Filter(**raw["filter"])
-        song = Song(**raw)
+        raw['patterns'] = {int(k): _construct(Pattern, {**v,
+            'rows': [[_construct(Cell, c) for c in row] for row in v['rows']],
+            'controls': {int(r): _construct(ControlCell, c) for r, c in v.get('controls', {}).items()}})
+            for k, v in raw['patterns'].items()}
+        raw["instruments"] = {int(k): _construct(Instrument, v) for k, v in raw["instruments"].items()}
+        raw["filter"] = _construct(Filter, raw["filter"])
+        song = _construct(Song, raw)
         validate(song)
-        editor = document.get("editor", {})
+        editor = deepcopy(document.get("editor", {}))
         if not isinstance(editor, dict):
             raise ProjectError("Editor metadata must be an object")
-        # Unknown musical fields fail visibly, never disappear during a save.
-        if set(document) - {"format", "format_version", "song", "editor"}:
-            raise ProjectError("Unknown project fields; open with the version that created this file")
+        saved_with = editor.get('saved_with_version', '')
+        song._saved_with = saved_with if isinstance(saved_with, str) else ''
+        if isinstance(saved_with, str):
+            editor.pop('saved_with_version', None)
+        song._source_format = document['format_version']
+        song._root_fields = deepcopy({key: value for key, value in document.items()
+                                     if key not in {'format', 'format_version', 'song', 'editor'}})
         return song, editor
     except (KeyError, TypeError, AttributeError, ValueError) as exc:
         if isinstance(exc, ProjectError):

@@ -1,0 +1,63 @@
+{
+  "song": "autumn-at-five.sidpulse",
+  "source_sha256": "6fc3ff4190904ed0a52d4008778cf434966b77f7bf537d226a9caf722d5ca530",
+  "capture": "Complete first song pass, actual F5 native playback and scope telemetry. Frames sampled on sequencer time; same native audio rerendered from sample zero through the first loop boundary. Buffered telemetry is not sample-exact audiovisual synchronization.",
+  "size": [
+    960,
+    720
+  ],
+  "fps": 20,
+  "frames": 1920,
+  "seconds": 96.0,
+  "musical_ticks": 3072,
+  "orders_seen": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "distinct_pattern_rows": 512,
+  "all_three_scopes_active": true,
+  "audio_frames": 4608000,
+  "audio_pcm_peak": 7682,
+  "audio_pcm_sha256": "d43920a76b6b2afd2d2b09edeefa77b2e470c8fcc4e7429b707a9a59555c71b0",
+  "maximum_video_telemetry_lead_samples": 2048,
+  "mp4_streams": [
+    {
+      "codec_name": "h264",
+      "width": 960,
+      "height": 720,
+      "sample_rate": null,
+      "channels": null,
+      "duration": "96.000000",
+      "nb_frames": "1920"
+    },
+    {
+      "codec_name": "aac",
+      "width": null,
+      "height": null,
+      "sample_rate": "48000",
+      "channels": 1,
+      "duration": "96.000000",
+      "nb_frames": "4501"
+    }
+  ],
+  "files": {
+    "sidpulse-f5-playback-full.mp4": {
+      "bytes": 4869590,
+      "sha256": "595d6dfd3db41d0f48b45d11462e91ba7e40c6956bfa653ee70b2ade74964a81"
+    }
+  }
+}

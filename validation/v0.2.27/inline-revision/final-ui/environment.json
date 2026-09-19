@@ -1,0 +1,22 @@
+{
+  "python": "3.12.14",
+  "pygame": "2.5.7",
+  "pyresidfp": "0.17.0",
+  "platform": "Linux x86_64",
+  "drivers": "SDL dummy audio/video",
+  "affinity_available": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "source_sha256": "91032c512875fa96636d21ba05bacda2a309e4e67a30ee96f42b1f47e7c58430",
+  "source": "autumn-at-five-synthwave-mix_v8-pw-sweep.sidpulse",
+  "repetitions": 5,
+  "features": "M/S buttons and scopes enabled unless case explicitly says off"
+}

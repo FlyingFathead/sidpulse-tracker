@@ -2,11 +2,214 @@
 
 ![SIDpulse Tracker logo](sidpulse/assets/sidpulse-tracker-logo.svg)
 
+> **ATTENTION:** [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker/) is the one and only official, original source for **SIDpulse Tracker**. Steer clear of other sources or repositories claiming to be the official project.
+
+![F5 playback: Autumn at Five with all three SID voice scopes](docs/media/sidpulse-f5-playback.gif)
+
+[Watch Autumn at Five with audio (full song, 1:36)](docs/media/sidpulse-f5-playback-full.mp4)
+
+## Features at a glance
+
+- **Three SID voices:** compose for 6581 or 8580, PAL or NTSC, with native reSIDfp playback.
+- **Tracker workflow:** patterns, orders and instrument editing, with Modern and Classic keyboard layouts.
+- **Channel automation:** edit or record A/D/S/R and pulse width; override instruments without changing their original settings.
+- **Flexible editing:** select individual columns, copy notes or automation, paste special and undo changes.
+- **Live feedback:** three voice scopes, channel and instrument mute/solo, and audio performance counters.
+- **C64 exports:** SID and runnable PRG files, with four SQUEEZER versions, all-version comparison (optional Top 3) and measured size, RAM and playback cycles.
+- **Editable projects:** `.sidpulse` saves include version information and compatibility warnings when applicable.
+
+## Quick install
+
+Download the **full ZIP** and **SHA256SUMS-v0.2.30-final.txt** for this version. Use
+Python 3.10+; Python 3.12 is tested. The launchers create a local `.venv` and
+install the pinned dependencies on first launch, which needs internet access.
+
+**Linux**, from the download directory:
+
+```bash
+sha256sum --check --ignore-missing SHA256SUMS-v0.2.30-final.txt &&
+unzip sidpulse-tracker-v0.2.30-final-full.zip &&
+cd sidpulse-tracker &&
+./run.sh
+```
+
+**Windows:** [verify and extract the full ZIP](#windows), then double-click
+`run.cmd` inside `sidpulse-tracker`. Accept the first-run setup when prompted.
+
+Press **F5** to play, **F2** to edit patterns, **F4** for instruments and **F8**
+to stop. Keep the launcher terminal open while the tracker runs. For an existing
+installation, use the [v0.2.30 overlay instructions](docs/APPLY-v0.2.30.md).
+
 **The official site of SIDpulse Tracker, a homage to Impulse Tracker, reimagined as a modern SID-native tracker.**
 
 Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Python + pygame-ce desktop application, with Impulse Tracker and Schism Tracker as the main keyboard keymap and visual reference.
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
+
+## v0.2.30: smaller exports, version comparison and visible scrollbars
+
+**SQUEEZER v2.0.2** uses short IDs for repeated literal blocks and phrase calls.
+It saves another **1,245 bytes** on the native v8 stress arrangement, after
+including the larger player and dictionary. All three earlier versions remain
+available. **Show all versions** is on by default, with results ranked by file
+size, resident RAM and measured cycles. Uncheck it for **Top 3**; the checkbox
+saves `export_show_all_versions` immediately, including when you cancel export.
+The dropdown keeps every version selectable. Ties stay highlighted.
+
+Shared draggable scrollbars now expose overflow in the export panel, pattern
+grid, banks, help, settings, menus, file browser and long text. Keyboard and
+wheel navigation remain available; scrolling does not edit the song. See the
+[scrollbar behavior and implementation](docs/SCROLLBARS.md). The supplied SP
+[application icon](docs/DESKTOP_ICON.md) loads once at startup; Linux users can
+optionally install a matching application-menu launcher.
+
+Read the [design and reference findings](docs/SQUEEZER-v2.0.2.md),
+[performance report](docs/PERFORMANCE-v0.2.30.md),
+[validation](docs/VALIDATION-v0.2.30.md), and
+[overlay instructions](docs/APPLY-v0.2.30.md).
+
+## v0.2.29: shared playback phrases and three-version export comparison
+
+**SQUEEZER v2.0.1** stores identical playback packet sequences once and calls them
+with bounded repeats. v1.0 and v2.0 remain available. The export comparison is on
+by default: three columns show output size, resident RAM and measured maximum
+C64 cycles, with a **Use Squeezer** button beneath each. The smallest valid result
+is selected initially; choose another version immediately or turn comparison off.
+Shared analysis runs in the cancellable background worker.
+
+Read the [design and measurements](docs/SQUEEZER-v2.0.1.md),
+[release notes](docs/RELEASE_NOTES-v0.2.29.md),
+[performance report](docs/PERFORMANCE-v0.2.29.md),
+[validation](docs/VALIDATION-v0.2.29.md), and
+[overlay instructions](docs/APPLY-v0.2.29.md).
+
+## v0.2.28: lower UI cost and safer pattern editing
+
+The UI reuses rendered cells, M/S buttons and mouse geometry, and avoids scanning
+an unchanged song on every frame. M/S and channel visualizers remain on by
+default. See the [measured performance comparison](docs/PERFORMANCE-v0.2.28.md).
+
+F2 now has **Cut / Copy / Paste / Paste Special / Reset all automation**.
+Cut and Reset confirmations start on **Cancel**. Cut includes a saved
+**Don't show this again** checkbox; selected fields remain in the clipboard and
+can be restored with Undo. Reset always asks before replacing automation.
+
+**Settings Menu > UI Settings** groups display controls and includes an enabled-
+by-default **Instrument/sample M/S** toggle. Turning it off hides those buttons
+and bypasses instrument monitoring; channel M/S remains available. Parent-menu
+buttons stay pressed while their submenu is open.
+
+**Record automation** opens inline in F4, with **Automate what** (A/D/S/R/PW),
+**On channel** (1/2/3), and a blue slider. Drag or hold its arrow keys to record.
+Only one channel is armed, red with **(A)**, and the bank has a direct Disarm
+button. Instrument selection cannot redirect a take. UI Settings retains the
+old window as method 1; inline method 2 is the default.
+
+Instrument/sample banks start at 001 on new/load, center through the middle and
+clamp at their ends. Their selection survives view changes, independently of
+F2's **Center pattern row** preference.
+
+**SQUEEZER v2.0** adds overlap packing. The export panel's **Squeezer version**
+dropdown retains **v1.0** for A/B comparison. v2.0 includes v1.0 fallbacks and
+uses the same C64 decoder. Squeezed PRGs display the tracker and squeezer versions
+before playback. See [squeezer details](docs/SQUEEZER.md).
+
+See [release notes](docs/RELEASE_NOTES-v0.2.28.md),
+[validation](docs/VALIDATION-v0.2.28.md), and
+[applying the update](docs/APPLY-v0.2.28.md).
+
+## v0.2.26: responsive clipboard buttons and Modern keyboard mode
+
+F2 clipboard buttons now depress while held, activate on release inside, and
+show a brief **Copied to clipboard** / **Pasted from clipboard** notice above
+**F8: SILENCE**. An empty clipboard gets an explicit notice. Dragging away and
+releasing cancels the click; quick clicks still show a short pressed state.
+
+**Settings Menu > Keyboard mapping** selects **Modern** (the new default) or
+**Classic**. Modern uses **Ctrl+Insert** to copy and **Shift+Insert** to paste in
+F2. Classic preserves the previous shortcuts, including Ctrl+Insert to roll.
+Alt+C / Alt+O continue working in either mode. The setting is saved per user.
+
+The header now shows **Oct: 4 [+1] [0] [-1]** controls in pattern, instrument and
+sample views. The current value updates immediately; **0 resets to octave 4**.
+In Modern mode, **+ / - / 0** also perform these actions in F3/F4. These controls
+change the audition/note-entry octave; they do not transpose existing music.
+
+Instrument rows now have **M/S** buttons beside their activity indicators. Mute
+and solo follow that instrument across all three voices during playback and
+audition. They are session monitoring controls; songs and exports stay intact.
+Sample rows show disabled M/S until PCM/digi playback is implemented.
+
+**REC PW: OFF** shows only its arm button. Arming reveals **Record to channel**
+and the recording instructions. The arm color defaults to red and supports the
+`REC_ARM` color override in user preferences.
+
+Automation resets are now explicit: **R** in an ADSR field restores that
+parameter; **RAL** typed in PW restores all five parameters at that row/channel.
+The **Reset all automation** button applies all five resets to the current cell
+or selected rows/channels. Notes, instruments and FX remain, with one-step undo.
+**R then Enter** in PW restores only pulse width. Incomplete R/RA input is
+temporary and cancellable. See [automation](docs/AUTOMATION.md).
+
+See [keyboard profiles](docs/KEYBOARD_MAPPING.md),
+[release notes](docs/RELEASE_NOTES-v0.2.26.md),
+[validation](docs/VALIDATION-v0.2.26.md) and
+[applying the update](docs/APPLY-v0.2.26.md).
+
+## v0.2.25: field selection, compact playback and preference reset
+
+Drag across the F2 fields you want, or use **Shift+arrows**, then **Alt+C** to
+copy and **Alt+O** to paste at another row/channel. Selecting PW copies only PW;
+notes, instruments and effects at the destination remain intact. Click a field
+header to select that field for the whole pattern. **Ctrl+Shift+V** opens Paste
+Special with Notes / Automation / Both choices. The Copy / Paste / Paste Special
+buttons can be hidden in Settings.
+
+A triangle collapses or expands the blue **CTRL CH / FILTER** pane in F2 and
+playback Info. Narrow windows start collapsed to fit all three tracks; an explicit
+choice is saved across views and restarts. Red per-channel scopes also fit narrow
+Info panels. **Channel visualizers** in Settings disables both their drawing and
+the display-only SID scope processing when off.
+
+The bottom of **Esc > Settings Menu** now has **Reset all settings to defaults**.
+Its confirmation starts on **Cancel**. Reset restores user preferences including
+audio, appearance, autosave and display options. Songs, instruments, patterns,
+presets and existing recovery files are preserved.
+
+See [pattern selection and clipboard](docs/PATTERN_EDITING.md),
+[release notes](docs/RELEASE_NOTES-v0.2.25.md),
+[validation](docs/VALIDATION-v0.2.25.md) and
+[applying the update](docs/APPLY-v0.2.25.md).
+
+Both launchers print the current version and a terminal-width warning banner.
+Keep that console open while the tracker runs. Ctrl-C in the console interrupts
+the program without the normal save prompt; use the application's Quit command
+to exit normally.
+
+## v0.2.24: channel automation and PW recording
+
+F2 now shows **NOTE IN EX FX A D S R PW** on every voice. The teal automation
+fields control the sounding voice: ADSR accepts one hex digit each and PW uses
+three hex digits. Blank holds; **R** restores an ADSR setting, **R then Enter**
+restores PW, and **RAL** in PW restores all five channel overrides. Existing
+notes, instruments and FX keep their established positions and meanings.
+
+**F4 > General > REC PW** records Pulse width slider movements into the chosen
+channel's PW rows while playing. **Ctrl+Shift+R** arms recording, **Record to channel**
+chooses the voice, releasing keeps the take and **Ctrl+Backspace** undoes it.
+Recording uses row steps and ends at the current pattern pass boundary. The
+instrument preset stays intact. ADSR can be entered directly in F2.
+
+The main status line follows the cursor or active gesture. The blue shared-filter
+lane now also appears in the playback Info page with live values, including
+paused/stopped views. Native saves record the app version; newer compatible files
+open with a warning and unfamiliar fields are preserved. Ordinary projects stay
+format 6; projects using new row automation use format 7.
+
+See [automation and recording](docs/AUTOMATION.md),
+[compatibility details](docs/SIDPULSE_FORMAT.md),
+[release notes](docs/RELEASE_NOTES-v0.2.24.md) and
+[validation](docs/VALIDATION-v0.2.24.md).
 
 ## v0.2.23: output selection and test arpeggio
 
@@ -389,19 +592,20 @@ Run `bash run.sh --example` on Linux or `.\run.cmd --example` on Windows. **F5**
 ![Instrument editor](docs/preview-instruments-025.png)
 
 PSID export targets one PAL or NTSC 6581/8580 at $1000. Native projects save as
-**.sidpulse format 6**, reading formats 1–5. It preserves empty instrument banks
-and pattern references to empty slots. New saves require 0.2.5 or later.
+**.sidpulse format 6 or 7**, with backward-compatible loading of older formats.
+It preserves empty instrument banks and pattern references to empty slots.
+Format 7 carries row automation; see the compatibility notes below.
 SID import, PCM/digi, MIDI and remaining legacy effects are future work.
 
 ### Linux: install or update
 
-Download `sidpulse-tracker-v0.2.23-full.zip` and
-`sidpulse-tracker-v0.2.23-SHA256SUMS.txt` from the same GitHub release into one
+Download `sidpulse-tracker-v0.2.30-final-full.zip` and
+`SHA256SUMS-v0.2.30-final.txt` from the same release into one
 directory. The full ZIP extracts under `sidpulse-tracker/`.
 
 ```bash
-sha256sum -c sidpulse-tracker-v0.2.23-SHA256SUMS.txt &&
-unzip sidpulse-tracker-v0.2.23-full.zip &&
+sha256sum --check --ignore-missing SHA256SUMS-v0.2.30-final.txt &&
+unzip sidpulse-tracker-v0.2.30-final-full.zip &&
 cd sidpulse-tracker &&
 bash run.sh
 ```
@@ -425,7 +629,12 @@ To open saved work, use F9 or:
 bash run.sh path/to/song.sidpulse
 ```
 
-Song formats 1–5 load with defaults for newer fields. New saves use format 6; older SIDpulse Tracker builds reject them safely. Keep songs in `user_songs/` or another location of your choice; checkpoint ZIPs never include that folder.
+Older song formats load with defaults for newer fields. Saves use format 6, or
+format 7 when row automation is present. Newer-version and unsupported-feature
+warnings explain partial compatibility; keep an original copy before resaving
+such a project. See [native format compatibility](docs/SIDPULSE_FORMAT.md).
+Keep songs in `user_songs/` or another location of your choice; checkpoint ZIPs
+never include that folder.
 
 ## Keyboard transport
 
@@ -559,14 +768,14 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.23 full ZIP and SHA-256 checksum file** from GitHub Releases.
+Download the **v0.2.30 full ZIP and SHA-256 checksum file** from the same release.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.23-full.zip"
-$checksums = ".\sidpulse-tracker-v0.2.23-SHA256SUMS.txt"
+$zip = ".\sidpulse-tracker-v0.2.30-final-full.zip"
+$checksums = ".\SHA256SUMS-v0.2.30-final.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
-    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.17-full\.zip$'
+    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.30-final-full\.zip$'
 })
 if ($lines.Count -ne 1) { throw "Missing or ambiguous full-ZIP checksum." }
 $expected = ($lines[0] -split '\s+')[0]
@@ -651,3 +860,17 @@ See [PLACEHOLDERS.md](docs/PLACEHOLDERS.md), [CHECKPOINT.md](CHECKPOINT.md), [VA
 [IT_KEY_COMPAT.md](docs/IT_KEY_COMPAT.md), [COMMANDS.md](docs/COMMANDS.md),
 [EFFECTS.md](docs/EFFECTS.md), [PSID_EXPORT.md](docs/PSID_EXPORT.md), [PLAYBACK.md](docs/PLAYBACK.md), [SIDPULSE_FORMAT.md](docs/SIDPULSE_FORMAT.md),
 [DECISIONS.md](docs/DECISIONS.md), and the unchanged [v4 roadmap](docs/ROADMAP.md).
+
+## Acknowledgment
+
+Thanks to **Lasse Öörni and the GoatTracker contributors** for the extensive
+documentation on storing song data more compactly and optimizing playback
+routines. The GoatTracker documentation served as a useful reference for
+SIDpulse Tracker's squeezer. The implementation is independent; no GoatTracker
+code was incorporated. See the
+[optimization study](docs/SQUEEZER-v2.0.1.md#goattracker-reference-compressing-the-instruction-not-just-its-results).
+
+# My other Commodore 64-related projects
+
+- [audio-bitsqueezer](https://github.com/FlyingFathead/audio-bitsqueezer) — Convert audio into compact 4-bit SID samples and playable C64 programs or EasyFlash cartridges, with a command-line interface and local browser UI.
+- [c64-3d-toolkit](https://github.com/FlyingFathead/c64-3d-toolkit) — Compile low-poly wireframe models and Blender scenes, animations and physics into C64 demos, with OBJ/MTL and SVG import support.

@@ -27,13 +27,15 @@ class PlaybackState:
     notes: tuple = (None, None, None)
     instruments: tuple = (1, 1, 1)
     warning: str = ''
+    filter_values: tuple | None = None
 
 
 class Sequencer:
-    def __init__(self, sid, activity=None):
+    def __init__(self, sid, activity=None, monitor=None):
         self.sid = sid
         self.activity = activity
-        self.programs = VoicePrograms(sid, self.activity)
+        self.monitor = monitor
+        self.programs = VoicePrograms(sid, self.activity, self.monitor)
         self.filter = None
         self.filter_slide = 0
         self.song = None
@@ -50,18 +52,41 @@ class Sequencer:
         self.warning = ''
         self.next_tick = Fraction(0)
         self.jump_order = self.break_row = None
+        self.pulse_recording = None
+
+    def record_pulse(self, token, voice, value, field='pulse_width'):
+        from sidpulse.playback.pulse_recording import PulseRecording
+        from sidpulse.playback.automation_parameters import PARAMETERS
+        if voice not in range(3):
+            raise ValueError('Automation recording target must be voice 1, 2 or 3')
+        if field not in PARAMETERS:raise ValueError('Unsupported recording parameter')
+        self.finish_pulse_recording(reason='Transport restarted')
+        self.pulse_recording = PulseRecording(self, token, voice, value, field)
+
+    def update_pulse_recording(self, token, value):
+        take = self.pulse_recording
+        if take and take.token == token:
+            take.sample(self, value)
+
+    def finish_pulse_recording(self, token=None, cancel=False, reason='Touch released'):
+        take = self.pulse_recording
+        if not self._predicting and take and (token is None or token == take.token):
+            take.finish(self, cancel, reason)
 
     @property
     def state(self):
         return PlaybackState(self.status, self.mode, self.order, self.pattern, self.row,
                              self.tick, self.speed, self.tempo, self.frames, self.loops,
-                             tuple(self.notes), tuple(self.instruments), self.warning)
+                             tuple(self.notes), tuple(self.instruments), self.warning,
+                             (self.filter.cutoff, self.filter.resonance, self.filter.routing,
+                              self.filter.mode, self.filter.volume, self.filter_slide) if self.filter else None)
 
     def start(self, song, mode='song', order=0, row=0, pattern=None, loop=None):
+        self.finish_pulse_recording(reason='Transport restarted')
         self.loop_override = loop
         for voice in range(3):
             note_off(self.sid, voice, cut=True)
-        self.programs = VoicePrograms(self.sid, self.activity)
+        self.programs = VoicePrograms(self.sid, self.activity, self.monitor)
         self.filter = deepcopy(song.filter)
         self.filter_slide = 0
         set_filter(self.sid,self.filter)
@@ -82,6 +107,7 @@ class Sequencer:
         self.status = 'playing'
 
     def stop(self):
+        self.finish_pulse_recording(reason='Playback stopped')
         self.status = 'stopped'
         for voice in range(3):
             note_off(self.sid, voice, cut=True)
@@ -89,6 +115,7 @@ class Sequencer:
 
     def pause(self):
         if self.status == 'playing':
+            self.finish_pulse_recording(reason='Playback paused')
             self.status = 'paused'
         elif self.status == 'paused':
             self.status = 'playing'
@@ -115,6 +142,11 @@ class Sequencer:
 
     def _row_start(self):
         self._apply_update()
+        # Envelope recording must reach the row before its note is triggered.
+        # Preserve the established PW path after row processing.
+        envelope_take = (not self._predicting and self.pulse_recording
+                         and self.pulse_recording.field != 'pulse_width')
+        if envelope_take:self.pulse_recording.sample(self, row_start=True)
         self.jump_order = self.break_row = None
         cells = self.song.patterns[self.pattern].rows[self.row]
         for voice, cell in enumerate(cells):
@@ -151,6 +183,9 @@ class Sequencer:
                 if value is not None:setattr(self.filter,key,value)
             if control.slide is not None:self.filter_slide=control.slide
             set_filter(self.sid,self.filter)
+
+        if not self._predicting and self.pulse_recording and not envelope_take:
+            self.pulse_recording.sample(self, row_start=True)
 
     def _advance_row(self):
         if self.mode == 'pattern':

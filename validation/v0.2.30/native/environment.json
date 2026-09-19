@@ -1,0 +1,17 @@
+{
+  "baseline": "e4e38c1",
+  "candidate_version": "0.2.30",
+  "source": "autumn-at-five-synthwave-mix_v8-pw-sweep.sidpulse",
+  "source_sha256": "91032c512875fa96636d21ba05bacda2a309e4e67a30ee96f42b1f47e7c58430",
+  "python": "3.12.14",
+  "pygame": "2.5.7",
+  "pyresidfp": "0.17.0",
+  "platform": "Linux x86_64",
+  "drivers": "SDL dummy audio/video",
+  "cpus": [
+    0,
+    1
+  ],
+  "repetitions": 3,
+  "features": "M/S and channel scopes enabled; serial trials with no tests or export analysis alongside"
+}

@@ -24,16 +24,23 @@ LOG = logging.getLogger("sidpulse.keys")
 from sidpulse.ui.instrument_actions import InstrumentActions
 from sidpulse.ui.file_actions import FileActions
 from sidpulse.ui.file_browser import FileBrowser
+from sidpulse.ui.pulse_recording import PulseRecordingActions
+from sidpulse.ui.pattern_clipboard import PatternClipboardActions
 
 
-class App(InstrumentActions, FileActions):
+class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, FileActions):
     def __init__(self, song=None, path=None, audio=True, size=(1280, 900), zoom=1.0, audio_buffer=None):
+        from sidpulse.ui.window_identity import prepare, set_icon
+        prepare()
         pg.display.init()
         pg.font.init()
+        set_icon()
         self.screen = pg.display.set_mode(size, pg.RESIZABLE)
         pg.display.set_caption(f"SIDpulse Tracker {__version__}")
         pg.key.set_repeat(350, 55)
         self.editor = Editor(song)
+        from sidpulse.preferences import load_center_selection
+        self.editor.centered = load_center_selection()
         self.audio_buffer = load_preferences() if audio_buffer is None else audio_buffer
         from sidpulse.preferences import load_audio_output_device
         self.audio_output_device = load_audio_output_device()
@@ -54,10 +61,21 @@ class App(InstrumentActions, FileActions):
         self.previous_page = "pattern"
         self.property_index = 0
         self.instrument_focus = "list"
-        self.instrument_slot = self.editor.instrument
+        self.instrument_slot = 1
         self.instrument_tab = "general"
         self.instrument_button = 3
         self.instrument_drag = None
+        self.pulse_record_armed = False
+        self.pulse_record_voice = self.editor.voice
+        self.pulse_record_value = 0x800
+        self.automation_parameter = 'pulse_width'
+        self.automation_values = {'attack':8,'decay':8,'sustain':8,'release':8,'pulse_width':0x800}
+        from sidpulse.preferences import load_automation_display
+        self.automation_display = load_automation_display()
+        self.automation_state = {'focus': 3}
+        self.pulse_record_serial = 0
+        self.pulse_take = None
+        self.pulse_deferred_events = []
         self.graph_field = "arpeggio"
         self.graph_step = self.graph_page = 0
         self.graph_low = -12
@@ -66,14 +84,31 @@ class App(InstrumentActions, FileActions):
         self.help_scroll = 0
         self.help_topic = 0
         self.helper_strip = True
+        from sidpulse.preferences import load_pattern_clipboard_buttons, load_control_panel_visibility, load_channel_visualizers
+        self.pattern_clipboard_buttons = load_pattern_clipboard_buttons()
+        from sidpulse.preferences import load_confirm_cut
+        self.confirm_cut = load_confirm_cut()
+        from sidpulse.preferences import load_instrument_monitor_buttons
+        self.instrument_monitor_buttons = load_instrument_monitor_buttons()
+        self.pattern_drag = None
+        self.pattern_reset_entry = None
+        self.button_press = self.button_flash = None
+        self.clipboard_notice = None
+        from sidpulse.preferences import load_keyboard_mapping
+        self.keyboard_mapping = load_keyboard_mapping()
+        self.control_panel_visible = load_control_panel_visibility()
+        self.channel_visualizers = load_channel_visualizers()
         self.muted = [False, False, False]
         self.solo_voice = None
+        self.muted_instruments = set()
+        self.solo_instrument = None
         self.zoom = max(.5, min(3.0, zoom))
         self.path = Path(path).expanduser() if path else None
         self.running = True
         self.fullscreen = False
         self.window_size = size
         self.dialog = None
+        self.settings_reset_pending = None
         self.export_jobs = []
         self.intro_pending = False
         self.scopes_visible = False
@@ -156,7 +191,7 @@ class App(InstrumentActions, FileActions):
             self.editor.status = self.audio.error or "Audio not ready. Check the audio status below."
             return
         if mode == 'song' and self.audio.playback.status != 'stopped' and not self.restart_on_f5:
-            self.change_page('info')
+            if not self.inline_recording_visible:self.change_page('info')
             return
         ed = self.editor
         self.release_audition()
@@ -183,15 +218,19 @@ class App(InstrumentActions, FileActions):
         self.audio.send("play", ed.song, playback_mode, order, row, pattern)
         self.last_audio_revision = ed.history.revision
         ed.status = "Playing | F8 stop | Shift+F8 pause | F2 editor | Scroll Lock follow"
-        if mode in ("song", "restart"):
+        if mode in ("song", "restart") and not self.inline_recording_visible:
             self.change_page("info")
 
     def sync_audio(self):
+        self.sync_pulse_recording()
+        if self.settings_reset_pending:
+            from sidpulse.ui.settings_reset import sync
+            sync(self)
         if self.dialog and self.dialog.get('kind') == 'audio_buffer':
             from sidpulse.ui.audio_buffer import sync
             sync(self)
         self.update_audio_warning()
-        scopes_visible = self.page == 'info'
+        scopes_visible = self.page == 'info' and self.channel_visualizers
         if scopes_visible != self.scopes_visible:
             self.scopes_visible = scopes_visible
             self.audio.send('scopes', scopes_visible)
@@ -207,6 +246,7 @@ class App(InstrumentActions, FileActions):
             self.audio.configure(ed.song)
             self.audio_configuration=configuration
         if ed.history.revision != self.last_audio_revision:
+            self.prune_instrument_monitor()
             self.audio.send("update_song", ed.song)
             self.last_audio_revision = ed.history.revision
         state = self.audio.playback
@@ -219,6 +259,43 @@ class App(InstrumentActions, FileActions):
     def monitor_mask(self):
         # Solo temporarily overrides the mute set; unsolo restores it.
         return tuple(v != self.solo_voice if self.solo_voice is not None else self.muted[v] for v in range(3))
+
+    def preview_monitor_mask(self):
+        return self.audio.muted if self.audio.ready else self.monitor_mask()
+
+    def send_instrument_monitor(self):
+        self.audio.send('instrument_monitor', tuple(sorted(self.muted_instruments)) if self.instrument_monitor_buttons else (),
+                        self.solo_instrument if self.instrument_monitor_buttons else None)
+
+    def toggle_instrument_monitor_buttons(self):
+        value = not self.instrument_monitor_buttons
+        save_preferences({'instrument_monitor_buttons': value})
+        self.instrument_monitor_buttons = value
+        self.send_instrument_monitor()
+        self.editor.status = 'Instrument/sample M/S: ' + ('ON' if value else 'OFF; instrument mutes bypassed')
+
+    def toggle_instrument_monitor(self, action, number):
+        if not self.instrument_monitor_buttons or number not in self.editor.song.instruments:
+            return
+        if action == 'instrument_mute':
+            self.muted_instruments.symmetric_difference_update({number})
+        else:
+            self.solo_instrument = None if self.solo_instrument == number else number
+        self.send_instrument_monitor()
+        self.editor.status = f'Instrument {number:02d} monitor updated | M: mute | S: solo; repeat restores mutes'
+
+    def clear_instrument_monitor(self):
+        self.pattern_reset_entry = None
+        self.muted_instruments.clear()
+        self.solo_instrument = None
+        self.send_instrument_monitor()
+
+    def prune_instrument_monitor(self):
+        muted = self.muted_instruments.intersection(self.editor.song.instruments)
+        solo = self.solo_instrument if self.solo_instrument in self.editor.song.instruments else None
+        if (muted, solo) != (self.muted_instruments, self.solo_instrument):
+            self.muted_instruments, self.solo_instrument = muted, solo
+            self.send_instrument_monitor()
 
     def toggle_monitor(self, action, voice=None):
         voice = self.editor.voice if voice is None else voice
@@ -240,7 +317,7 @@ class App(InstrumentActions, FileActions):
         self.editor_metadata = deepcopy(data)
         ed = self.editor
         ed.pattern_grid = PatternGrid.from_metadata(data.get("pattern_grid"))
-        for key, lo, hi in (("row", 0, 255), ("voice", 0, 2), ("column", 0, 8), ("octave", 0, 7), ("skip", 0, 9)):
+        for key, lo, hi in (("row", 0, 255), ("voice", 0, 2), ("column", 0, len(FIELDS)-1), ("octave", 0, 7), ("skip", 0, 9)):
             value = data.get(key)
             if type(value) is int and lo <= value <= hi:
                 setattr(ed, key, value)
@@ -256,7 +333,10 @@ class App(InstrumentActions, FileActions):
         if type(data.get("helper_strip")) is bool:
             self.helper_strip = data["helper_strip"]
         ed.repair_cursor()
-        self.instrument_slot=ed.instrument
+        from sidpulse.project.format import compatibility_warnings
+        warnings = compatibility_warnings(ed.song)
+        if warnings:
+            self.notice('Project compatibility', '\n'.join(warnings))
 
     def metadata(self):
         result = deepcopy(self.editor_metadata)
@@ -384,11 +464,16 @@ class App(InstrumentActions, FileActions):
     def open_project(self, path):
         song, metadata = load(path)
         self.panic()
+        self.clear_instrument_monitor()
+        self.pulse_record_armed = False
         self.editor = Editor(song)
+        from sidpulse.preferences import load_center_selection
+        self.editor.centered = load_center_selection()
         self.last_audio_revision = 0
         self.audio_configuration = (self.editor.song.sid_model,self.editor.song.clock)
         self.playback_mark = None
         self.restore_metadata(metadata)
+        self.instrument_slot = self.sample_index = 1
         self.path = Path(path).expanduser()
         self.browser.remember_project(self.path)
         self.audio.configure(song)
@@ -398,8 +483,12 @@ class App(InstrumentActions, FileActions):
 
     def new_project(self):
         self.panic()
+        self.clear_instrument_monitor()
+        self.pulse_record_armed = False
         self.editor = Editor(Song())
-        self.instrument_slot = self.editor.instrument
+        from sidpulse.preferences import load_center_selection
+        self.editor.centered = load_center_selection()
+        self.instrument_slot = self.sample_index = 1
         self.instrument_focus = "list"
         self.last_audio_revision = 0
         self.audio_configuration = (self.editor.song.sid_model,self.editor.song.clock)
@@ -413,6 +502,11 @@ class App(InstrumentActions, FileActions):
         self.audio.configure(self.editor.song)
 
     def change_page(self, page):
+        self.automation_state.pop('slider_keys',None)
+        self.automation_state.pop('keyboard_touch',None)
+        self.pattern_reset_entry = None
+        self.finish_pattern_selection()
+        self.button_press = self.button_flash = None
         if self.page == 'orders':
             from sidpulse.ui.orders import commit_entry
             if not commit_entry(self): return
@@ -436,7 +530,10 @@ class App(InstrumentActions, FileActions):
             self.sync_file_text_input()
         self.property_index = 0
         self.instrument_focus = "list"
-        self.instrument_slot = self.editor.instrument
+        # Bank navigation survives view changes, including empty slots. The
+        # pattern note-entry instrument must not move the bank's highlight.
+        if page == "instrument" and self.instrument_slot in self.editor.song.instruments:
+            self.editor.instrument = self.instrument_slot
         self.instrument_tab = "general"
         self.instrument_button = 3
         self.instrument_drag = None
@@ -445,6 +542,8 @@ class App(InstrumentActions, FileActions):
         self.graph_low = -12
 
     def open_menu(self, title="Main Menu"):
+        self.pattern_reset_entry = None
+        self.button_press = self.button_flash = None
         self.release_audition()
         self.menu_path = [title]
         self.menu_indices = [0]
@@ -456,6 +555,7 @@ class App(InstrumentActions, FileActions):
             self.editor.status = f"{item.value}: not implemented yet"
             return
         if item.command == "submenu":
+            self.menu_indices[-1] = index
             self.menu_path.append(item.value)
             self.menu_indices.append(0)
         else:
@@ -478,7 +578,7 @@ class App(InstrumentActions, FileActions):
                 self.menu_path.clear()
                 self.execute(Command("quit"))
             else:
-                command = dispatch(event, self.page, self.editor.column)
+                command = dispatch(event, self.page, self.editor.column, self.keyboard_mapping)
                 if command and command.name in ("page", "open", "save", "quick_save", "save_as", "panic", "comments", "fullscreen", "pending", "play", "pause"):
                     self.menu_path.clear()
                     self.execute(command, event)
@@ -518,6 +618,18 @@ class App(InstrumentActions, FileActions):
     def change_property(self, delta=0, direct=None):
         ed = self.editor
         index = self.property_index
+        if self.page == 'settings' and index == 29:
+            self.open_keyboard_mapping()
+            return
+        if self.page == 'settings' and index == 28:
+            self.toggle_channel_visualizers()
+            return
+        if self.page == 'settings' and index == 27:
+            self.toggle_control_panel()
+            return
+        if self.page == 'settings' and index == 26:
+            self.toggle_pattern_clipboard_buttons()
+            return
         if self.page == 'settings' and index in (24, 25):
             field = 'rows_per_beat' if index == 24 else 'beats_per_bar'
             ed.pattern_grid = ed.pattern_grid.changed(field, delta=delta, direct=direct)
@@ -667,6 +779,9 @@ class App(InstrumentActions, FileActions):
             if key in (pg.K_UP, pg.K_DOWN):
                 self.sample_index = max(1, min(99, self.sample_index + (-1 if key == pg.K_UP else 1)))
         elif self.page in ("instrument", "settings"):
+            if self.page == 'settings' and self.property_index == 29 and key in (pg.K_RETURN,pg.K_LEFT,pg.K_RIGHT):
+                self.open_keyboard_mapping()
+                return
             if self.page == 'settings' and self.property_index in (24, 25) and key == pg.K_RETURN:
                 field = 'rows_per_beat' if self.property_index == 24 else 'beats_per_bar'
                 self.text_dialog('Pattern grid: ' + field.replace('_', ' '),
@@ -682,7 +797,7 @@ class App(InstrumentActions, FileActions):
                 open_dialog(self)
                 return
             if self.page == "instrument" and key == pg.K_TAB:
-                choices=("list","buttons","properties")
+                choices=("list","buttons","automation" if self.inline_recording_visible else "properties")
                 self.instrument_focus=choices[(choices.index(self.instrument_focus)+(-1 if shift else 1))%3]
                 return
             if self.page=="instrument" and self.instrument_focus=="buttons":
@@ -706,7 +821,8 @@ class App(InstrumentActions, FileActions):
                 elif key==pg.K_RETURN:
                     self.open_new_instrument() if self.instrument_slot not in ed.song.instruments else self.open_presets()
                 elif key==pg.K_RIGHT:
-                    if self.instrument_slot in ed.song.instruments:self.instrument_focus = "properties"
+                    if self.inline_recording_visible:self.instrument_focus = 'automation'
+                    elif self.instrument_slot in ed.song.instruments:self.instrument_focus = "properties"
                     else:self.open_new_instrument()
                 elif key == pg.K_INSERT:self.add_instrument()
                 elif key == pg.K_DELETE:self.confirm_delete_instrument()
@@ -724,7 +840,7 @@ class App(InstrumentActions, FileActions):
                 if key==pg.K_DELETE:self.confirm_delete_instrument();return
             if self.page=="instrument" and self.instrument_tab=="adsr" and key in (pg.K_UP,pg.K_DOWN):
                 self.property_index=max(2,min(5,self.property_index+(-1 if key==pg.K_UP else 1)));return
-            maximum = len(INSTRUMENT_FIELDS)-1 if self.page == "instrument" else 25
+            maximum = len(INSTRUMENT_FIELDS)-1 if self.page == "instrument" else 29
             if key in (pg.K_UP, pg.K_DOWN):
                 lo,hi=(9,19) if self.page=="instrument" and self.instrument_tab=="motion" else (0,8) if self.page=="instrument" else (0,maximum)
                 self.property_index = max(lo, min(hi, self.property_index + (-1 if key == pg.K_UP else 1)))
@@ -737,6 +853,15 @@ class App(InstrumentActions, FileActions):
                 self.change_property(delta)
             elif key == pg.K_RETURN:
                 if self.page == 'instrument' and not getattr(event, 'value_click', False):
+                    return
+                if self.page == 'settings' and self.property_index == 28:
+                    self.toggle_channel_visualizers()
+                    return
+                if self.page == 'settings' and self.property_index == 27:
+                    self.toggle_control_panel()
+                    return
+                if self.page == 'settings' and self.property_index == 26:
+                    self.toggle_pattern_clipboard_buttons()
                     return
                 if self.page == 'settings' and self.property_index == 13:
                     from sidpulse.ui.audio_buffer import open_dialog
@@ -803,6 +928,7 @@ class App(InstrumentActions, FileActions):
             self.change_page(value)
         elif name in ("move", "step_move"):
             dr, dc, select = value
+            if select: self.follow_playback = False
             ed.move(dr * (max(1, ed.skip) if name == "step_move" else 1), dc, select)
         elif name == "channel":
             if event and event.key == pg.K_TAB and value < 0 and ed.column != 0:
@@ -811,7 +937,7 @@ class App(InstrumentActions, FileActions):
                 ed.voice = max(0, min(2, ed.voice + value))
                 ed.column = 0 if event and event.key == pg.K_TAB else ed.column
         elif name == "home_end":
-            col, voice, row = (8, 2, len(ed.pattern.rows) - 1) if value else (0, 0, 0)
+            col, voice, row = (len(FIELDS)-1, 2, len(ed.pattern.rows) - 1) if value else (0, 0, 0)
             if ed.column != col:
                 ed.column = col
             elif ed.voice != voice:
@@ -839,9 +965,26 @@ class App(InstrumentActions, FileActions):
         elif name == "mark":
             ed.mark(value)
         elif name == "copy":
-            ed.copy(value)
+            self.copy_fields(bool(value))
         elif name == "paste":
-            ed.paste(value)
+            self.paste_fields(value or 'overwrite')
+        elif name == 'keyboard_mapping':
+            self.open_keyboard_mapping()
+        elif name == "paste_special":
+            self.open_paste_special()
+        elif name == 'reset_automation':
+            from sidpulse.ui.edit_confirmation import open_dialog
+            open_dialog(self, 'reset')
+        elif name == 'confirm_cut_toggle':
+            self.toggle_confirm_cut()
+        elif name == 'instrument_monitor_buttons':
+            self.toggle_instrument_monitor_buttons()
+        elif name == "channel_visualizers_toggle":
+            self.toggle_channel_visualizers()
+        elif name == "control_panel_toggle":
+            self.toggle_control_panel()
+        elif name == "pattern_clipboard_buttons":
+            self.toggle_pattern_clipboard_buttons()
         elif name == "transpose":
             ed.transpose(value)
         elif name == "roll":
@@ -869,10 +1012,17 @@ class App(InstrumentActions, FileActions):
             self.instrument_slot=ed.instrument
         elif name == "octave":
             ed.octave = max(0, min(7, ed.octave + value))
+            ed.status = f'Audition / note-entry octave: {ed.octave}'
+        elif name == 'octave_reset':
+            ed.octave = ed.DEFAULT_OCTAVE
+            ed.status = f'Octave reset to {ed.octave}'
         elif name == "skip":
             ed.skip = value
         elif name == "center":
-            ed.centered = not ed.centered
+            value = not ed.centered
+            save_preferences({'center_selection': value})
+            ed.centered = value
+            ed.status = 'Center pattern row: ' + ('ON' if value else 'OFF')
         elif name == "highlight":
             ed.highlight = not ed.highlight
         elif name == "pattern_length":
@@ -892,6 +1042,8 @@ class App(InstrumentActions, FileActions):
             self.panic()
         elif name in ("mute", "solo"):
             self.toggle_monitor(name, value)
+        elif name in ('instrument_mute', 'instrument_solo'):
+            self.toggle_instrument_monitor(name, value)
         elif name == "play":
             self.start_playback(value)
         elif name == "pause":
@@ -932,6 +1084,16 @@ class App(InstrumentActions, FileActions):
             self.instrument_focus="properties"
         elif name == "pending":
             ed.status = str(value) if ":" in str(value) else f"{value}: not implemented yet"
+        elif name == 'pulse_record_arm':
+            self.open_automation_recording()
+        elif name == 'pulse_record_disarm':
+            self.disarm_pulse_recording()
+        elif name == 'automation_display_toggle':
+            self.automation_display = 1 if self.automation_display == 2 else 2
+            save_preferences({'automation_display': self.automation_display})
+        elif name == 'automation_control':
+            from sidpulse.ui.automation_input import activate
+            activate(self,*value)
         elif name == "helper_toggle":
             self.helper_strip = not self.helper_strip
         elif name == "comments":
@@ -939,6 +1101,9 @@ class App(InstrumentActions, FileActions):
             self.dialog["multiline"]=True
         elif name == 'autosave_settings':
             from sidpulse.ui.autosave_settings import open_dialog
+            open_dialog(self)
+        elif name == 'reset_settings':
+            from sidpulse.ui.settings_reset import open_dialog
             open_dialog(self)
         elif name == "quit":
             self.confirm_quit()
@@ -973,6 +1138,14 @@ class App(InstrumentActions, FileActions):
     def dialog_event(self, event):
         from sidpulse.ui.dialogs import choices,focus
         dialog = self.dialog
+        if dialog.get('kind') == 'automation_recording':
+            from sidpulse.ui.automation_recording import handle_event
+            handle_event(self, event)
+            return
+        if dialog.get('kind') == 'pattern_edit_confirm':
+            from sidpulse.ui.edit_confirmation import handle_event
+            handle_event(self, event)
+            return
         if dialog.get('kind') == 'export_squeezer':
             from sidpulse.ui.export_squeezer import handle_event
             handle_event(self, event)
@@ -1006,6 +1179,29 @@ class App(InstrumentActions, FileActions):
                 if event.key==pg.K_RETURN and not event.mod&pg.KMOD_SHIFT:
                     key=choices(dialog)[focus(dialog)][1]
                     self.dialog_event(pg.event.Event(pg.KEYDOWN,key=key,mod=0,dialog_button=True));return
+        if dialog.get('kind') == 'reset_settings_pending':
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                from sidpulse.ui.settings_reset import cancel
+                cancel(self)
+            return
+        if dialog.get('kind') == 'keyboard_mapping':
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.dialog = None
+                elif event.key in (pg.K_m, pg.K_c):
+                    try:
+                        self.set_keyboard_mapping('modern' if event.key == pg.K_m else 'classic')
+                    except OSError as exc:
+                        dialog['error'] = str(exc)
+            return
+        if dialog.get('kind') == 'paste_special':
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.dialog = None
+                elif event.key in (pg.K_n, pg.K_a, pg.K_b):
+                    self.paste_fields(scope={pg.K_n:'notes',pg.K_a:'automation',pg.K_b:'both'}[event.key])
+                    self.dialog = None
+            return
         if dialog.get('kind') == 'notice':
             if event.type==pg.KEYDOWN and event.key in (pg.K_RETURN,pg.K_ESCAPE):
                 self.dialog=dialog.get('return_dialog')
@@ -1089,7 +1285,7 @@ class App(InstrumentActions, FileActions):
                     self.dialog = None
                     self.execute(Command({pg.K_l: "open", pg.K_s: "save", pg.K_n: "new"}[event.key]))
                 else:
-                    command = dispatch(event, self.page, self.editor.column)
+                    command = dispatch(event, self.page, self.editor.column, self.keyboard_mapping)
                     if command and command.name == "page":
                         self.dialog = None
                         self.execute(command, event)
@@ -1107,16 +1303,52 @@ class App(InstrumentActions, FileActions):
         if event.type in (pg.KEYDOWN, pg.KEYUP):
             LOG.debug("type=%s key=%s scan=%s mods=%s page=%s", event.type, event.key, getattr(event,'scancode',0), event.mod, self.page)
         try:
+            self.sync_pulse_recording()
+            if self.renderer.scrollbars.handle(self, event):
+                return
+            from sidpulse.ui.pressable import handle_event as handle_button_event
+            if handle_button_event(self, event):
+                return
+            if self.pattern_drag:
+                if event.type == pg.MOUSEMOTION:
+                    if getattr(event, 'buttons', (True,))[0]:
+                        self.update_pattern_selection(event.pos)
+                    else:
+                        self.finish_pattern_selection()
+                    return
+                if event.type == pg.MOUSEBUTTONUP and event.button == 1:
+                    self.update_pattern_selection(event.pos)
+                    self.finish_pattern_selection()
+                    return
+                if event.type in (pg.KEYDOWN, pg.QUIT, pg.WINDOWFOCUSLOST, pg.VIDEORESIZE, pg.MOUSEBUTTONDOWN):
+                    self.finish_pattern_selection()
+            if self.pulse_take and self.pulse_take['pending']:
+                if event.type != pg.MOUSEMOTION:
+                    self.pulse_deferred_events.append(event)
+                return
+            from sidpulse.ui.pattern_automation import handle_event as handle_automation_entry
+            if handle_automation_entry(self, event):
+                return
             if event.type==pg.MOUSEMOTION and self.instrument_drag:
                 self.update_instrument_drag(event.pos);return
             if event.type==pg.MOUSEBUTTONUP and event.button==1 and self.instrument_drag:
-                self.update_instrument_drag(event.pos);self.finish_instrument_drag();return
+                if not self.instrument_drag.get('keyboard'):
+                    self.update_instrument_drag(event.pos);self.finish_instrument_drag();return
             if event.type in (pg.KEYDOWN,pg.QUIT,pg.WINDOWFOCUSLOST,pg.VIDEORESIZE):
-                self.finish_instrument_drag(cancel=event.type==pg.KEYDOWN and event.key==pg.K_ESCAPE)
+                repeating_slider_key = (event.type == pg.KEYDOWN and event.key in (pg.K_LEFT,pg.K_RIGHT)
+                                        and self.instrument_drag and self.instrument_drag.get('keyboard'))
+                if not repeating_slider_key:
+                    self.finish_instrument_drag(cancel=event.type==pg.KEYDOWN and event.key==pg.K_ESCAPE)
+                if self.pulse_take and self.pulse_take['pending']:
+                    if not (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                        self.pulse_deferred_events.append(event)
+                    return
             if event.type == pg.QUIT:
                 self.confirm_quit()
             elif event.type == pg.WINDOWFOCUSLOST:
                 self.song_loop_key_held = False
+                self.automation_state.pop('slider_keys',None)
+                self.automation_state.pop('keyboard_touch',None)
                 self.release_audition()
                 if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length'):
                     self.dialog['drag_rect'] = None
@@ -1128,6 +1360,8 @@ class App(InstrumentActions, FileActions):
                 self.dialog_event(event)
             elif self.menu_path:
                 self.menu_event(event)
+            elif self.inline_recording_visible and self.automation_event(event):
+                pass
             elif self.page == "files" and self.file_event(event):
                 pass
             elif event.type==pg.KEYDOWN and self.page=="pattern" and self.control_focus and not event.mod & (pg.KMOD_ALT|pg.KMOD_CTRL):
@@ -1139,12 +1373,12 @@ class App(InstrumentActions, FileActions):
                     self.editor.edit("Clear filter row",[(("patterns",self.editor.pattern_id,"controls"),values)])
                 elif event.key==pg.K_TAB:self.control_focus=False
                 elif event.key>=pg.K_F1 or event.key==pg.K_ESCAPE:
-                    self.execute(dispatch(event,self.page,self.editor.column),event)
+                    self.execute(dispatch(event,self.page,self.editor.column,self.keyboard_mapping),event)
             elif event.type in (pg.KEYDOWN, pg.KEYUP):
                 if self.page == 'orders' and event.type == pg.KEYDOWN:
                     from sidpulse.ui.orders import entry_key
                     if entry_key(self,event): return
-                self.execute(dispatch(event, self.page, self.editor.column), event)
+                self.execute(dispatch(event, self.page, self.editor.column, self.keyboard_mapping), event)
             elif event.type == pg.DROPFILE:
                 self.confirm_discard(lambda: self.open_project(event.file))
             elif event.type == pg.MOUSEWHEEL:
@@ -1157,6 +1391,8 @@ class App(InstrumentActions, FileActions):
                     move(self,-event.y*3)
                 elif self.page == "help":
                     self.help_scroll -= event.y * 3
+                elif self.page == "samples":
+                    self.sample_index = max(1, min(99, self.sample_index - event.y))
                 elif self.page == "instrument":
                     x=pg.mouse.get_pos()[0]/max(1,self.renderer.cw)
                     if x<32:
@@ -1164,7 +1400,7 @@ class App(InstrumentActions, FileActions):
                     elif self.instrument_tab in ('general','motion','adsr'):
                         lo,hi=(9,19) if self.instrument_tab=='motion' else (2,5) if self.instrument_tab=='adsr' else (0,8)
                         self.property_index=max(lo,min(hi,self.property_index-event.y));self.instrument_focus='properties'
-                elif self.page == 'settings':self.property_index=max(0,min(25,self.property_index-event.y))
+                elif self.page == 'settings':self.property_index=max(0,min(29,self.property_index-event.y))
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 for rect, action, value in reversed(self.renderer.hits):
                     if not rect.collidepoint(event.pos):
@@ -1183,15 +1419,39 @@ class App(InstrumentActions, FileActions):
                         self.edit_control()
                     elif action == "control_focus":
                         self.control_focus=not self.control_focus
+                    elif action == "control_panel_toggle":
+                        self.toggle_control_panel()
                     elif action == "cell":
-                        self.control_focus=False
-                        self.editor.row, self.editor.voice, self.editor.column = value
+                        self.begin_pattern_selection(value, event.pos, bool(pg.key.get_mods() & pg.KMOD_SHIFT))
+                    elif action == "pattern_grid":
+                        self.begin_pattern_selection(self.pattern_position(event.pos), event.pos, bool(pg.key.get_mods() & pg.KMOD_SHIFT))
+                    elif action == "select_field":
+                        self.control_focus = False
+                        self.follow_playback = False
+                        self.editor.select_field(*value)
+                    elif action in ('pattern_cut', 'pattern_copy'):
+                        from sidpulse.ui.pressable import begin
+                        begin(self, rect, Command('copy', action == 'pattern_cut'), event.pos)
+                    elif action == "pattern_paste":
+                        from sidpulse.ui.pressable import begin
+                        begin(self, rect, Command('paste', 'overwrite'), event.pos)
+                    elif action == "paste_special":
+                        from sidpulse.ui.pressable import begin
+                        begin(self, rect, Command('paste_special'), event.pos)
+                    elif action in ('octave','octave_reset','instrument_mute','instrument_solo','reset_automation','pulse_record_arm','pulse_record_disarm'):
+                        from sidpulse.ui.pressable import begin
+                        begin(self, rect, Command(action, value), event.pos)
+                    elif action == 'bank_monitor_disabled':
+                        self.editor.status = ('Sample M/S unavailable: PCM/digi playback is not implemented.'
+                                              if value[0] == 'sample' else 'Empty instrument slot: nothing to mute or solo.')
+                    elif action == 'choose_sample':
+                        self.sample_index = value
                     elif action == "choose_instrument":
                         self.select_instrument_slot(number=value)
                         self.instrument_focus="list"
                     elif action == "setting_edit":
                         self.property_index=value
-                        if value in (2,10,15,16,17,19,21,23):self.change_property(1)
+                        if value in (2,10,15,16,17,19,21,23,26,27,28,29):self.change_property(1)
                         else:self.page_key(pg.event.Event(pg.KEYDOWN,key=pg.K_RETURN,mod=0))
                     elif action == "property":
                         self.property_index = value
@@ -1241,6 +1501,7 @@ class App(InstrumentActions, FileActions):
             for event in pg.event.get():
                 self.handle(event)
             self.sync_audio()
+            self.update_pattern_selection(scroll=True)
             # Snapshot only when due; file serialization/fsync run off the UI thread.
             self.autosave.tick(self.editor, self.metadata, self.path)
             if self.autosave.warning and self.dialog is None:self.show_autosave_warning()

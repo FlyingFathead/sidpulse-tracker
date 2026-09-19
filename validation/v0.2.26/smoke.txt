@@ -1,0 +1,3 @@
+PASS: python -m sidpulse --headless-smoke --example
+PASS: python -m sidpulse --headless-smoke --play-welcome-song
+Linux SDL dummy audio/video; separate user preferences per smoke run.

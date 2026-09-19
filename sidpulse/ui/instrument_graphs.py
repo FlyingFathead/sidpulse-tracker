@@ -31,10 +31,31 @@ def button_frame(r,rect,selected=False,fill=None):
     pg.draw.rect(r.screen,TEXT,rect,1)
 
 
-def button(r,x,y,w,label,action,value=None,selected=False):
-    rect=pg.Rect(round(x*r.cw),round(y*r.rh),round(w*r.cw),round(1.25*r.rh))
-    button_frame(r,rect,selected)
-    r.control_text(rect,label,CREAM if selected else TEXT)
+def button(r,x,y,w,label,action,value=None,selected=False,height=1.25,fill=None):
+    rect=pg.Rect(round(x*r.cw),round(y*r.rh),round(w*r.cw),round(height*r.rh))
+    cache=getattr(r,'button_cache',None)
+    if cache is None or rect.width<=0 or rect.height<=0:
+        button_frame(r,rect,selected,fill)
+        r.control_text(rect,label,CREAM if selected else TEXT)
+    else:
+        key=(rect.size,str(label),bool(selected),fill)
+        # Bevel lines extend past the right/bottom edge at larger thicknesses.
+        # Preserve those pixels and the surrounding background through alpha.
+        margin=max(2,round(r.rh/9))
+        bitmap=cache.get(key)
+        if bitmap is None:
+            screen=r.screen
+            bitmap=pg.Surface((rect.width+2*margin,rect.height+2*margin),pg.SRCALPHA).convert_alpha()
+            local=pg.Rect(margin,margin,*rect.size)
+            r.screen=bitmap
+            try:
+                button_frame(r,local,selected,fill)
+                r.control_text(local,label,CREAM if selected else TEXT)
+            finally:r.screen=screen
+            cache[key]=bitmap
+            if len(cache)>128:cache.popitem(last=False)
+        else:cache.move_to_end(key)
+        r.screen.blit(bitmap,rect.move(-margin,-margin))
     r.hits.append((rect,action,value))
     return rect
 
@@ -189,7 +210,10 @@ def draw_fields(r,app,left,top,bottom,motion,full_wave=False,right=None):
     indexes=[i for i in range(first,last) if not (full_wave and i==1)]
     selected=indexes.index(app.property_index) if app.property_index in indexes else 0
     start=max(0,min(len(indexes)-count,selected-count+1))
-    width=(r.cols-2 if right is None else right)-left
+    key = 'instrument-fields'
+    start=r.scroll_start(key,start,(motion,full_wave,selected),len(indexes),count)
+    edge=(r.cols-2 if right is None else right)
+    width=edge-left-(2 if len(indexes)>count else 0)
     for row,index in enumerate(indexes[start:start+count]):
         field=FIELDS[index];value=getattr(inst,field);y=top+row*1.4
         r.hit(left,y,width,1.3,'property',index)
@@ -229,3 +253,5 @@ def draw_fields(r,app,left,top,bottom,motion,full_wave=False,right=None):
         else:
             r.control_text(r.well(x,y,max(5,width-24),1.1),value,GOLD,align='left')
             r.hit(x,y,max(5,width-24),1.1,'edit_instrument_field',index)
+
+    r.scroll_bar(key,edge-1.5,top,count*1.4,len(indexes),count)

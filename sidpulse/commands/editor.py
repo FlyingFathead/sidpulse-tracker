@@ -1,31 +1,44 @@
 """Editor semantics; physical keyboard details never enter this module."""
 from copy import deepcopy
 from dataclasses import replace
+import time
 
 from sidpulse.commands.history import History
-from sidpulse.song.model import Cell, Instrument, Pattern, Song
+from sidpulse.song.model import Cell, Instrument, Pattern, Song, ENVELOPE_FIELDS
 from sidpulse.playback.voices import supported
 from sidpulse.ui.pattern_grid import PatternGrid
 
-FIELDS = ("note", "note", "instrument", "instrument", "expression", "expression", "effect", "parameter", "parameter")
+from sidpulse.commands.pattern_fields import FIELDS, COLUMN_OFFSETS, CURSOR_HINTS
+from sidpulse.commands.blocks import BlockEditing
 
 
-class Editor:
+class Editor(BlockEditing):
+    DEFAULT_OCTAVE = 4
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        self.status_time = time.monotonic()
+        self._status = value
+
     def __init__(self, song=None):
         self.song = song or Song()
         self.saved = deepcopy(self.song)
         self.history = History()
         self.pattern_id = self.song.orders[0]
         self.order = self.row = self.voice = self.column = 0
-        self.octave = 4
+        self.octave = self.DEFAULT_OCTAVE
         self.instrument = min(self.song.instruments, default=1)
         self.skip = 1
         self.anchor = None
         self.selection_end = None
         self.clipboard = None
+        self.clipboard_fields = None
         self.last_cell = Cell(48, 1)
         self.stored_pattern = None
-        self.centered = False
+        self.centered = True
         self.highlight = True
         self.pattern_grid = PatternGrid()
         self.edit_mask = {"note", "instrument"}
@@ -80,13 +93,13 @@ class Editor:
         return changed
 
     def move(self, rows=0, columns=0, select=False):
-        if select and self.anchor is None:
-            self.anchor = (self.row, self.voice)
+        if select and (self.anchor is None or len(self.anchor) != 3):
+            self.anchor = (self.row, self.voice, self.column)
         self.row = max(0, min(len(self.pattern.rows) - 1, self.row + rows))
-        position = max(0, min(26, self.voice * 9 + self.column + columns))
-        self.voice, self.column = divmod(position, 9)
+        position = max(0, min(3 * len(FIELDS) - 1, self.voice * len(FIELDS) + self.column + columns))
+        self.voice, self.column = divmod(position, len(FIELDS))
         if select:
-            self.selection_end = (self.row, self.voice)
+            self.selection_end = (self.row, self.voice, self.column)
 
     def advance(self):
         self.row = (self.row + self.skip) % len(self.pattern.rows)
@@ -97,6 +110,11 @@ class Editor:
             cell.instrument = self.instrument
         if note >= 0 and "effect" in self.edit_mask:
             cell.effect, cell.parameter = self.last_cell.effect, self.last_cell.parameter
+        if note >= 0 and "pulse_width" in self.edit_mask:
+            cell.pulse_width = self.last_cell.pulse_width
+        for field in ENVELOPE_FIELDS:
+            if note >= 0 and field in self.edit_mask:
+                setattr(cell, field, getattr(self.last_cell, field))
         self.edit("Set note", [(self.cell_path(), cell)])
         self.last_cell = deepcopy(cell)
         self.advance()
@@ -107,11 +125,40 @@ class Editor:
         state = "" if supported(cell.effect, cell.parameter or 0) else " (stored; unsupported in playback/export)"
         return f"Set {kind} {code}{state}"
 
+    def reset_automation(self, selection=False):
+        r0, r1, v0, v1 = self.bounds() if selection else (self.row, self.row, self.voice, self.voice)
+        updates = [(self.cell_path(row, voice) + (field,), -1)
+                   for row in range(r0, r1+1) for voice in range(v0, v1+1)
+                   for field in (*ENVELOPE_FIELDS, 'pulse_width')]
+        self.edit('Reset all A D S R PW to instrument defaults', updates)
+        if not selection:
+            self.last_cell = deepcopy(self.cell)
+        self.status = f'Reset all A D S R PW: {r1-r0+1} row(s), CH {v0+1}' + (f'..{v1+1}' if v1 != v0 else '')
+
     def enter_digit(self, char):
         field = FIELDS[self.column]
         cell = deepcopy(self.cell)
         if field == "expression":
             self.status = "EX is reserved: the SID has no independent per-voice volume register"
+        elif field == "pulse_width" and len(char) == 1 and char.upper() in "0123456789ABCDEFR":
+            if char.upper() == 'R':
+                cell.pulse_width = -1
+            else:
+                shift = (FIELDS.index("pulse_width") + 2 - self.column) * 4
+                old = max(0, cell.pulse_width or 0)
+                cell.pulse_width = (old & ~(15 << shift)) | (int(char, 16) << shift)
+            self.edit("Set row pulse width", [(self.cell_path(), cell)])
+            self.last_cell = deepcopy(cell)
+            if char.upper() == 'R' or self.column == FIELDS.index('pulse_width') + 2:
+                self.column = FIELDS.index('pulse_width')
+                self.advance()
+            else:
+                self.column += 1
+        elif field in ENVELOPE_FIELDS and len(char) == 1 and char.upper() in '0123456789ABCDEFR':
+            setattr(cell, field, -1 if char.upper() == 'R' else int(char, 16))
+            self.edit('Set row ' + field, [(self.cell_path(), cell)])
+            self.last_cell = deepcopy(cell)
+            self.advance()
         elif self.column == 1 and len(char) == 1 and char in "0123456789":
             if char not in "01234567":
                 self.status = "Note octave must be 0..7; note unchanged"
@@ -143,12 +190,13 @@ class Editor:
         elif field == "parameter" and char and char.upper() in "0123456789ABCDEF":
             old = cell.parameter or 0
             nibble = int(char, 16)
-            cell.parameter = nibble * 16 + (old & 15) if self.column == 7 else (old & 240) + nibble
+            first = FIELDS.index('parameter')
+            cell.parameter = nibble * 16 + (old & 15) if self.column == first else (old & 240) + nibble
             self.edit(self.effect_edit_label("effect parameter", cell), [(self.cell_path(), cell)])
-            if self.column == 7:
-                self.column = 8
+            if self.column == first:
+                self.column += 1
             else:
-                self.column = 7
+                self.column = first
                 self.advance()
         elif field == "effect" and len(char) == 1 and "A" <= char.upper() <= "Z":
             cell.effect = char.upper()
@@ -192,79 +240,6 @@ class Editor:
                 if dest<len(rows):controls[dest]=deepcopy(c)
             updates.append((("patterns",self.pattern_id,"controls"),controls))
         self.edit("Delete row" if delete else "Insert row", updates)
-
-    def bounds(self):
-        a = self.anchor or (self.row, self.voice)
-        b = self.selection_end or (self.row, self.voice)
-        return min(a[0], b[0]), max(a[0], b[0]), min(a[1], b[1]), max(a[1], b[1])
-
-    def mark(self, kind):
-        if kind == "start":
-            self.anchor = self.selection_end = (self.row, self.voice)
-        elif kind == "end":
-            self.anchor = self.anchor or (self.row, self.voice)
-            self.selection_end = (self.row, self.voice)
-        elif kind == "all":
-            if self.bounds() == (0, len(self.pattern.rows) - 1, self.voice, self.voice) and self.anchor is not None:
-                self.anchor, self.selection_end = (0, 0), (len(self.pattern.rows) - 1, 2)
-            else:
-                self.anchor, self.selection_end = (0, self.voice), (len(self.pattern.rows) - 1, self.voice)
-        elif kind == "clear":
-            self.anchor = self.selection_end = self.clipboard = None
-
-    def copy(self, cut=False):
-        r0, r1, v0, v1 = self.bounds()
-        self.clipboard = deepcopy([row[v0:v1 + 1] for row in self.pattern.rows[r0:r1 + 1]])
-        if cut:
-            self.edit("Cut block", [(self.cell_path(r, v), Cell()) for r in range(r0, r1 + 1) for v in range(v0, v1 + 1)])
-        self.status = f"{'Cut' if cut else 'Copied'} {r1 - r0 + 1} rows x {v1 - v0 + 1} voices"
-
-    def paste(self, mode="overwrite"):
-        if not self.clipboard:
-            self.status = "Clipboard is empty; Alt+B / Alt+E, then Alt+C"
-            return
-        rows = deepcopy(self.pattern.rows)
-        if mode == "insert":
-            count = len(self.clipboard)
-            for v in range(min(len(self.clipboard[0]), 3 - self.voice)):
-                lane = [row[self.voice + v] for row in rows]
-                lane[self.row:self.row] = [Cell() for _ in range(count)]
-                for r in range(len(rows)):
-                    rows[r][self.voice + v] = lane[r]
-        for dr, row in enumerate(self.clipboard):
-            for dv, cell in enumerate(row):
-                r, v = self.row + dr, self.voice + dv
-                if r >= len(rows) or v >= 3:
-                    continue
-                if mode == "mix" and rows[r][v] != Cell():
-                    continue
-                rows[r][v] = deepcopy(cell)
-        self.edit(f"Paste block ({mode})", [(("patterns", self.pattern_id, "rows"), rows)])
-
-    def transpose(self, amount):
-        r0, r1, v0, v1 = self.bounds()
-        updates = []
-        for r in range(r0, r1 + 1):
-            for v in range(v0, v1 + 1):
-                cell = self.pattern.rows[r][v]
-                if cell.note is not None and cell.note >= 0:
-                    updates.append((self.cell_path(r, v), replace(cell, note=max(0, min(95, cell.note + amount)))))
-        self.edit("Transpose block", updates)
-
-    def roll(self, amount):
-        r0, r1, v0, v1 = self.bounds()
-        rows = deepcopy(self.pattern.rows)
-        for v in range(v0, v1 + 1):
-            lane = [rows[r][v] for r in range(r0, r1 + 1)]
-            lane = lane[-1:] + lane[:-1] if amount > 0 else lane[1:] + lane[:1]
-            for i, r in enumerate(range(r0, r1 + 1)):
-                rows[r][v] = lane[i]
-        self.edit("Roll block", [(("patterns", self.pattern_id, "rows"), rows)])
-
-    def set_block_instrument(self):
-        r0, r1, v0, v1 = self.bounds()
-        self.edit("Set block instrument", [(self.cell_path(r, v), replace(self.pattern.rows[r][v], instrument=self.instrument))
-                  for r in range(r0, r1 + 1) for v in range(v0, v1 + 1)])
 
     def select_pattern(self, number):
         number = max(0, min(255, number))

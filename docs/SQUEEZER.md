@@ -1,6 +1,6 @@
 # SIDpulse Tracker File Squeezer
 
-**v0.2.21 source candidate. Export-only; enabled by default.** Applies to `.sid`
+**SQUEEZER v2.0.2, with selectable v1.0, v2.0 and v2.0.1. Export-only; enabled by default.** Applies to `.sid`
 and `.prg`, never the editable `.sidpulse`, preview, undo, editor pattern numbers,
 or native format version. This is a resident representation, not a disk cruncher
 that expands the full song into another RAM buffer.
@@ -10,6 +10,8 @@ that expands the full song into another RAM buffer.
 ```text
 SIDpulse Tracker File Squeezer
 [x] Squeeze song
+    Squeezer version: [ v2.0.2 v ]
+    [x] Compare available versions
     [x] Condense duplicate patterns
     [x] Condense identical instruments
     [x] Discard unused patterns, instruments and samples
@@ -25,6 +27,73 @@ not the song. Earlier candidate `compact`/`phrases` opt-outs and the old
 `export_squeezer` container are read where present. Cancelling does not save edits.
 Analyze can take several seconds: the host compiler tries alternatives and
 executes the selected player for verification.
+
+When enabled, **Squeezer version** opens a dropdown with **v2.0.2**, **v2.0.1**, **v2.0** and **v1.0**.
+Use the mouse or Tab, Enter, arrows and Enter; Escape closes the dropdown.
+With comparison off, changing version invalidates the displayed analysis. With
+comparison on, completed results switch immediately. The selected version is
+saved only when continuing with an export; Cancel preserves prior preferences.
+The dropdown is hidden with squeezing off and disabled during analysis.
+
+v1.0 retains the previous optimizer in `phrase_optimizer.py` unchanged. v2.0
+adds `squeeze_v2.py`: it joins overlaps between any remaining literal fragments
+and searches all possible phrase positions using sorted, bounded byte slices.
+It compares these candidates against all v1.0 candidates, retaining the existing
+complete-size and timing checks. A v1.0 encoding can still win under v2.0.
+The resident player, musical tick/write trace and scratch requirements are
+unchanged. The new search is export work, outside the UI/audio thread, and can
+take longer than v1.0. It is a heuristic improvement, not maximum compression.
+
+v2.0.1 adds single-level calls over repeated packet sequences. It shares the
+sequence of three-byte references as well as the literal bytes they point to.
+Counted repeats and shared suffixes avoid storing the same passage repeatedly.
+Its larger decoder/state is included in selection; all v1.0/v2.0 candidates remain
+available. This reduces resident RAM on the stress arrangement but can increase
+C64 playback cycles. See [v2.0.1 design and measured findings](SQUEEZER-v2.0.1.md).
+
+v2.0.2 gives frequently used literal blocks and single-execution phrases one-byte
+IDs. The full dictionary and decoder cost is included in selection; every earlier
+version remains available. See [v2.0.2 design and findings](SQUEEZER-v2.0.2.md).
+
+### Version comparison
+
+**Compare available versions** is enabled by default. The completed export panel
+shows **all versions** by default, each with file bytes, total resident RAM and measured maximum
+C64 cycles per call, plus **Use Squeezer v…**. The smallest valid file is selected
+initially; ties prefer lower resident RAM, lower verified cycles. Complete ties show **Joint best** on all leaders and
+keep the current version if tied, otherwise choosing the newer one. Green values mark each metric's minimum, including ties. A pressed Use
+button identifies the version that will actually be exported. You can choose a
+larger result to reduce playback CPU. A dash means no measured CPU result, not
+zero cost. A version that exceeds the memory limit is unavailable; it cannot win.
+
+The **Show all versions** checkbox defaults on, including unavailable candidates.
+Uncheck it for the **Top 3** valid results. Its Boolean config key is
+`export_show_all_versions`: missing or invalid values default to `true`, and an
+explicit `false` is preserved. Checkbox changes save immediately, even if export
+is then cancelled, and apply to SID and PRG menus after restarting. Reset all
+settings restores `true`. Showing all uses four columns on wide screens and two
+on narrow screens.
+The version dropdown also keeps every version accessible. Selecting a larger
+result and returning to Top 3 preserves that choice.
+
+Selection works with mouse or Tab/arrows and Enter. A right-hand scrollbar can
+be dragged or clicked to page; wheel, PgUp/PgDn and Home/End also scroll. Footer
+actions remain fixed and controls remain reachable at small sizes. The master Squeeze switch hides the comparison
+controls. Turning comparison off runs only the selected version. The Boolean
+`export_compare_squeezers` preference defaults to `true`, is saved when continuing
+with export, and is restored by Reset all settings. Cancel preserves the saved
+setting. Native project files do not contain this preference.
+
+A comparison runs in the existing cancellable worker, not the display or audio
+thread. One request shares source recording, candidate construction and verified
+results. Repeated draws and switching completed columns do not compile anything.
+Changing packing options or the source discards these results. Failure of an
+ordered-write verification aborts the operation; an oversized version is shown
+as unavailable without hiding other valid versions.
+
+Run `scripts/compare_squeezers.py --out comparison` for SID/PRG A/B results on
+every bundled native example. Explicit input paths, `--repetitions` and
+`--write-exports` are supported. Inputs are hashed and checked for preservation.
 
 ### Responsive pre-analysis (v0.2.21)
 
@@ -162,6 +231,8 @@ GUI/audio/VICE/hardware release checks are described in
 | Single byte-stream player/state | 406 bytes; ZP $F8..$F9; 4 stack bytes |
 | Five byte-stream player/state | 474 bytes; ZP $F8..$F9; 4 stack bytes |
 | Register-value player/state | 580 bytes; ZP $F8..$F9; 4 stack bytes |
+| Phrase-call single / five-stream / register player/state | 492 / 572 / 741 bytes; ZP $F8..$F9; 4 stack bytes |
+| Indexed single / five-stream / register player, dictionary and state | 912 / 992 / 1,161 bytes; ZP $F8..$F9; 4 stack bytes |
 | Counted raw channel player/state | 462 bytes; ZP $F8..$FB; 4 stack bytes |
 | Counted template player/state | 474 bytes; ZP $F8..$FB; 4 stack bytes |
 | PSID load / init / play | $1000 / $1000 / $1003 |
@@ -171,8 +242,12 @@ GUI/audio/VICE/hardware release checks are described in
 
 State is already inside the player size; it is not counted twice. The PRG's
 printer uses all four ZP bytes even with a two-byte-ZP music decoder. This release
-corrects that earlier accounting omission. The wrapper's title, clock check,
-CIA polling and RUN/STOP restoration are unchanged from the latest v0.2.18.
+corrects that earlier accounting omission. The wrapper's clock check, CIA polling and RUN/STOP restoration are unchanged.
+With squeezing enabled, startup credits now include tracker and squeezer versions
+inside the existing text allocation; the clock-mismatch message is shorter.
+
+The v2.0.1 phrase and v2.0.2 indexed formats extend the base packet format
+below; their full layouts and costs are documented in the linked version guides.
 
 Byte-stream packets use tags 1..127 for literals and $81..$FF for a length plus
 LE16 pointer to an immutable literal slice. No recursive references or history
@@ -211,5 +286,5 @@ Bundled example measurements are in
 prebuilt example SID/PRG files are historical fixtures; re-export native projects
 to exercise the new compiler. No external cruncher or assembler is needed at
 runtime. For developers, `python scripts/build_squeeze_players.py --check` uses
-64tass to independently rebuild all ten linked compact players, their metadata
+64tass to independently rebuild all twenty-two linked compact players, their metadata
 and the compact PRG wrapper. Linux CI now includes that check.

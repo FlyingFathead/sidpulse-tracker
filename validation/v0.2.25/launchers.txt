@@ -1,0 +1,4 @@
+PASS: bash -n run.sh
+PASS: banner uses VERSION and widths 42, 80 and 132
+PASS: run.sh --headless-smoke --example with 96-column banner and exit code 0
+Windows CMD/PowerShell invocation and CRLF checked in source; native Windows execution not available.

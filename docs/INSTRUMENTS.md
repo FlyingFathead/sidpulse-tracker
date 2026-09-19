@@ -105,3 +105,5 @@ These are instrument-program switches. Explicit pattern J/H/Q/S effects still
 work independently. Sync and ring already have their own switches. Hardware
 ADSR stays active; its four controls edit the chip's envelope. Switching off
 automatic gate-off does not disable keyboard key release or pattern note-off.
+
+PW row automation and F4 touch recording are documented in [AUTOMATION.md](AUTOMATION.md).

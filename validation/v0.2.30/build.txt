@@ -1,0 +1,212 @@
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-single.bin
+Data:        406   $1000-$1195   $0196
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-single-prg.bin
+Data:        406   $09b4-$0b49   $0196
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-lanes.bin
+Data:        474   $1000-$11d9   $01da
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-lanes-prg.bin
+Data:        474   $09b4-$0b8d   $01da
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-registers.bin
+Data:        580   $1000-$1243   $0244
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_player.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-registers-prg.bin
+Data:        580   $09b4-$0bf7   $0244
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-single.bin
+Data:        492   $1000-$11eb   $01ec
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-single-prg.bin
+Data:        492   $09b4-$0b9f   $01ec
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-lanes.bin
+Data:        572   $1000-$123b   $023c
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-lanes-prg.bin
+Data:        572   $09b4-$0bef   $023c
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-registers.bin
+Data:        741   $1000-$12e4   $02e5
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_phrases.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-phrases-registers-prg.bin
+Data:        741   $09b4-$0c98   $02e5
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-single.bin
+Data:        912   $1000-$138f   $0390
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-single-prg.bin
+Data:        912   $09b4-$0d43   $0390
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-lanes.bin
+Data:        992   $1000-$13df   $03e0
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-lanes-prg.bin
+Data:        992   $09b4-$0d93   $03e0
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-registers.bin
+Data:       1161   $1000-$1488   $0489
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/squeeze_indexed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/squeeze-indexed-registers-prg.bin
+Data:       1161   $09b4-$0e3c   $0489
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/player_channels.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/channel-raw.bin
+Data:        462   $1000-$11cd   $01ce
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/player_channels.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/channel-raw-prg.bin
+Data:        462   $09b4-$0b81   $01ce
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/player_channels.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/channel-templates.bin
+Data:        474   $1000-$11d9   $01da
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/player_channels.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/channel-templates-prg.bin
+Data:        474   $09b4-$0b8d   $01da
+Passes:            2
+64tass Turbo Assembler Macro V1.58.2974?
+64TASS comes with ABSOLUTELY NO WARRANTY; This is free software, and you
+are welcome to redistribute it under certain conditions; See LICENSE!
+
+Assembling file:   WORKDIR/sidpulse-tracker/sidpulse/export/prg_loader_squeezed.asm
+Output file:       /tmp/sidpulse-player-build-ti2ua4yf/prg-loader-squeezed.bin
+Data:        435   $0801-$09b3   $01b3
+Passes:            2
+squeeze-single.bin: 406 bytes verified
+squeeze-single-prg.bin: 406 bytes verified
+squeeze-lanes.bin: 474 bytes verified
+squeeze-lanes-prg.bin: 474 bytes verified
+squeeze-registers.bin: 580 bytes verified
+squeeze-registers-prg.bin: 580 bytes verified
+squeeze-phrases-single.bin: 492 bytes verified
+squeeze-phrases-single-prg.bin: 492 bytes verified
+squeeze-phrases-lanes.bin: 572 bytes verified
+squeeze-phrases-lanes-prg.bin: 572 bytes verified
+squeeze-phrases-registers.bin: 741 bytes verified
+squeeze-phrases-registers-prg.bin: 741 bytes verified
+squeeze-indexed-single.bin: 912 bytes verified
+squeeze-indexed-single-prg.bin: 912 bytes verified
+squeeze-indexed-lanes.bin: 992 bytes verified
+squeeze-indexed-lanes-prg.bin: 992 bytes verified
+squeeze-indexed-registers.bin: 1161 bytes verified
+squeeze-indexed-registers-prg.bin: 1161 bytes verified
+channel-raw.bin: 462 bytes verified
+channel-raw.json: 224 bytes verified
+channel-raw-prg.bin: 462 bytes verified
+channel-raw-prg.json: 224 bytes verified
+channel-templates.bin: 474 bytes verified
+channel-templates.json: 271 bytes verified
+channel-templates-prg.bin: 474 bytes verified
+channel-templates-prg.json: 271 bytes verified
+prg-loader-squeezed.bin: 435 bytes verified
+replay-players.json: 6011 bytes verified

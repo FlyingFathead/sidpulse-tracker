@@ -1,0 +1,29 @@
+{
+  "raw_sha256": "03c686e9e377846227a89c286d0e2bd6c4cf0214e454490992e8c932d83141d4",
+  "conditioned_sha256": "ff2f04ee861f396a6baa75c3f68eadb0f6b9c5a3ffd9d68937bbcec7a5e2d261",
+  "events_sha256": "4ded8c3a4684545f117855e510d5338fea8079dbaac7741f799e7229eda712ae",
+  "frames": 576000,
+  "state": {
+    "status": "playing",
+    "mode": "song",
+    "order": 2,
+    "pattern": 2,
+    "row": 8,
+    "tick": 4,
+    "speed": 6,
+    "tempo": 91,
+    "frames": 576000,
+    "loops": 0,
+    "notes": [
+      53,
+      29,
+      33
+    ],
+    "instruments": [
+      25,
+      2,
+      3
+    ],
+    "warning": ""
+  }
+}

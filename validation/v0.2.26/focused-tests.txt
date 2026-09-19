@@ -1,0 +1,8 @@
+75 passed in 3.78s
+Command: python -m pytest -q tests/test_instrument_monitor.py tests/test_recording_controls.py tests/test_row_automation.py tests/test_graphical_instruments.py tests/test_settings_reset.py
+
+61 passed in 1.98s
+Command: python -m pytest -q tests/test_modern_controls.py tests/test_audio.py tests/test_app.py
+
+76 passed in 1.80s
+Command: python -m pytest -q tests/test_automation_reset.py tests/test_row_automation.py tests/test_field_clipboard.py tests/test_modern_controls.py

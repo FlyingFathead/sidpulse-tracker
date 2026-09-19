@@ -1,0 +1,51 @@
+         5642908 function calls (5432456 primitive calls) in 2.828 seconds
+
+   Ordered by: cumulative time
+   List reduced from 301 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001    3.671    3.671 benchmark.py:74(gui)
+      432    0.002    0.000    3.338    0.008 benchmark.py:89(frame)
+      432    0.020    0.000    3.327    0.008 renderer.py:191(render)
+      432    0.115    0.000    1.874    0.004 renderer.py:692(info)
+    31104    0.215    0.000    1.237    0.000 renderer.py:486(voice_cell)
+      432    0.001    0.000    1.068    0.002 editor.py:66(dirty)
+   330480    0.397    0.000    1.062    0.000 renderer.py:97(text)
+    15552    0.227    0.000    1.046    0.000 <string>:2(__eq__)
+   343008    0.439    0.000    0.439    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+    19872    0.343    0.000    0.343    0.000 {built-in method pygame.draw.rect}
+    10800    0.013    0.000    0.336    0.000 renderer.py:115(rect)
+187900/4028    0.128    0.000    0.287    0.000 copy.py:118(deepcopy)
+        1    0.000    0.000    0.281    0.281 app.py:32(__init__)
+20254/4028    0.045    0.000    0.280    0.000 copy.py:217(_deepcopy_dict)
+   8046/2    0.014    0.000    0.278    0.139 copy.py:247(_reconstruct)
+ 2522/218    0.004    0.000    0.243    0.001 copy.py:191(_deepcopy_list)
+     4752    0.008    0.000    0.197    0.000 renderer.py:166(well)
+      432    0.002    0.000    0.153    0.000 renderer.py:474(control_toggle)
+        1    0.001    0.001    0.143    0.143 editor.py:26(__init__)
+        1    0.001    0.001    0.136    0.136 engine.py:47(__init__)
+   730754    0.097    0.000    0.097    0.000 {method 'get' of 'dict' objects}
+    11664    0.033    0.000    0.093    0.000 renderer.py:120(control_text)
+     2592    0.003    0.000    0.083    0.000 renderer.py:156(header_field)
+   569011    0.082    0.000    0.082    0.000 {built-in method builtins.max}
+   756434    0.079    0.000    0.079    0.000 {built-in method builtins.round}
+      432    0.068    0.000    0.068    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+855624/855620    0.064    0.000    0.064    0.000 {built-in method builtins.len}
+     1296    0.005    0.000    0.063    0.000 renderer.py:810(monitor_buttons)
+    41904    0.057    0.000    0.057    0.000 {built-in method pygame.draw.line}
+   341563    0.056    0.000    0.056    0.000 {method 'move_to_end' of 'collections.OrderedDict' objects}
+        1    0.000    0.000    0.049    0.049 format.py:219(load)
+     4320    0.011    0.000    0.048    0.000 instrument_graphs.py:22(button_frame)
+        1    0.001    0.001    0.047    0.047 format.py:188(decode)
+     4023    0.014    0.000    0.039    0.000 format.py:147(_construct)
+      432    0.013    0.000    0.037    0.000 renderer.py:174(meter)
+      432    0.002    0.000    0.033    0.000 renderer.py:651(octave_controls)
+      432    0.005    0.000    0.033    0.000 renderer.py:889(helper)
+     1296    0.003    0.000    0.029    0.000 instrument_graphs.py:34(button)
+      432    0.004    0.000    0.023    0.000 renderer.py:65(configure)
+    12529    0.022    0.000    0.022    0.000 {method 'size' of 'pygame.font.Font' objects}
+   199096    0.021    0.000    0.021    0.000 {built-in method builtins.getattr}
+   198009    0.021    0.000    0.021    0.000 {method 'append' of 'list' objects}
+     1445    0.019    0.000    0.019    0.000 {method 'render' of 'pygame.font.Font' objects}
+   253572    0.019    0.000    0.019    0.000 {built-in method builtins.id}
+    31104    0.007    0.000    0.018    0.000 {built-in method builtins.all}

@@ -1,0 +1,41 @@
+{
+  "notes": "Fresh processes, native v8 input; seven pages warmed ten frames each at 960x1080; audio disabled for UI memory isolation. Linux /proc/self/status VmRSS and VmHWM counters from one snapshot. Includes icon loading; no promo media is loaded by the app.",
+  "records": [
+    {
+      "label": "baseline",
+      "repetition": 0,
+      "steady_rss_kib": 44420,
+      "peak_rss_kib": 44420
+    },
+    {
+      "label": "candidate",
+      "repetition": 0,
+      "steady_rss_kib": 44392,
+      "peak_rss_kib": 44392
+    },
+    {
+      "label": "candidate",
+      "repetition": 1,
+      "steady_rss_kib": 44380,
+      "peak_rss_kib": 44380
+    },
+    {
+      "label": "baseline",
+      "repetition": 1,
+      "steady_rss_kib": 44212,
+      "peak_rss_kib": 44212
+    },
+    {
+      "label": "baseline",
+      "repetition": 2,
+      "steady_rss_kib": 44260,
+      "peak_rss_kib": 44260
+    },
+    {
+      "label": "candidate",
+      "repetition": 2,
+      "steady_rss_kib": 44372,
+      "peak_rss_kib": 44372
+    }
+  ]
+}

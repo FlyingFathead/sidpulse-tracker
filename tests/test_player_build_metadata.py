@@ -18,13 +18,13 @@ def test_normal_64tass_label_output_parser(tmp_path):
 def test_all_linked_player_assets_match_metadata_and_have_no_full_song_workspace():
     assets = ROOT/'sidpulse/assets'
     manifest = json.loads((assets/'replay-players.json').read_text())
-    assert len(manifest) == 10
+    assert len(manifest) == 22
     for name, info in manifest.items():
         binary = (assets/(name+'.bin')).read_bytes()
         assert len(binary) == info['size']
         assert hashlib.sha256(binary).hexdigest() == info['sha256']
         assert info['load'] <= info['gap'] < info['load']+len(binary)
-        assert 0 < info['workspace_bytes'] <= 139
+        assert 0 < info['workspace_bytes'] <= (217 if info.get('phrase_calls') else 139)
         assert binary[0] == binary[3] == 0x4c
         if name.startswith('channel-'):
             assert json.loads((assets/(name+'.json')).read_text()) == info

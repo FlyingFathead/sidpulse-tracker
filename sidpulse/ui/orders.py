@@ -144,6 +144,7 @@ def draw(r, app, top, bottom):
     selected_order = min(app.order_entry_index,min(255,len(ed.song.orders)))
     app.order_entry_index = selected_order
     start = max(0, selected_order-visible+1)
+    start = r.scroll_start('orders',start,selected_order,min(256,len(ed.song.orders)+1),visible)
     for n in range(visible):
         i = start+n; y = y0+n
         if i > 255: break
@@ -160,12 +161,14 @@ def draw(r, app, top, bottom):
             r.text(12,y,ed.song.patterns[number].name,c['TEXT'],split-13)
             r.hit(1,y,split-1,1,'order',i)
         if i <= len(ed.song.orders): r.hit(5,y,6,1,'order_value',i)
-    ids = bank_ids(app); rowx = r.cols-6
+    r.scroll_bar('orders',split-1.5,y0,visible,min(256,len(ed.song.orders)+1),visible)
+    ids = bank_ids(app); rowx = r.cols-8
     if not compact:
         r.text(right,top+2,'Pat   Name',c['TEXT'],width-6)
         r.text(rowx,top+2,'Rows',c['TEXT'],4)
     r.well(right,y0-.15,width,visible+.3)
     start = max(0,ids.index(app.bank_pattern)-visible+1)
+    start = r.scroll_start('patterns',start,app.bank_pattern,len(ids),visible)
     used = set(ed.song.orders)
     for number in ids[start:start+visible]:
         y = y0+ids.index(number)-start
@@ -174,9 +177,10 @@ def draw(r, app, top, bottom):
         color = c['CREAM'] if selected else c['ACCENT']
         pattern = ed.song.patterns[number]
         r.control_text(pg.Rect(box.x,box.y,round(5*r.cw),box.height),f'{number:03d}',c['YELLOW'])
-        r.text(right+5,y,pattern.name or '(unnamed)',color,width-11)
+        r.text(right+5,y,pattern.name or '(unnamed)',color,width-13)
         r.text(rowx,y,f'{len(pattern.rows):3d}',color,4)
         r.hit(right,y,width,1,'bank_pattern',number)
+    r.scroll_bar('patterns',r.cols-2.5,y0,visible,len(ids),visible)
     chosen = ed.song.patterns[app.bank_pattern]
     y = y0+visible+(.2 if compact else .65)
     if compact:

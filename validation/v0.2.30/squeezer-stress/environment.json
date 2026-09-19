@@ -1,0 +1,15 @@
+{
+  "tracker": "0.2.30",
+  "python": "3.12.14",
+  "platform": "Linux x86_64",
+  "repetitions": 3,
+  "isolated": true,
+  "notes": "Serial compiler CPU/wall trials. Peak RSS is whole host process, not C64 RAM; cumulative unless isolated. Complete replay verification on every selected compact export. Earlier 1.0/2.0 receive one current-build preservation trial; their repeated baselines are in v0.2.29.",
+  "repetitions_by_version": {
+    "1": 1,
+    "2": 1,
+    "201": 3,
+    "202": 3,
+    "compare": 3
+  }
+}

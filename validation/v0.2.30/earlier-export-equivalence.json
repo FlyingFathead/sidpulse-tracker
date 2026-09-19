@@ -1,0 +1,290 @@
+{
+  "note": "All earlier-version SIDs identical. Earlier-version PRG changes confined to tracker version credit, 29 to 30; resident player and music payload identical.",
+  "exports": [
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v1.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "bee3352d99d2fd0c511c8183bfbc85bf8c055b56575cb631bd075ded3169aaf9",
+      "after_sha256": "f35afb7c049be831740a1c9f038deb0f81dc3c9d6b72b885e8b5be29b2ab80b3"
+    },
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v1.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "ea9c2bba7cab28b214c0822b08ab286397d9e2ac22a5d48200f5d599ad8dee37",
+      "after_sha256": "ea9c2bba7cab28b214c0822b08ab286397d9e2ac22a5d48200f5d599ad8dee37"
+    },
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.1.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "696420913cf93d2b98572a07dc72bd1ee139ff8f7d7cd5a72e7bd0d4a2e241d3",
+      "after_sha256": "e7acea4671a1bc0d22a50fe71cda111e5154ba7841122743ced1b267aa6d6173"
+    },
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.1.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "075f4f2fd087d06dd7bdeef22f785c568fcfa6360502707113e6b118fe17a313",
+      "after_sha256": "075f4f2fd087d06dd7bdeef22f785c568fcfa6360502707113e6b118fe17a313"
+    },
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "fdd515c1da94471ae3bf75f0a2a38f50428cdcfbdef4f16e34b5c4f33a0ad322",
+      "after_sha256": "1bfbb35a30d201fe745183fe8ca0f23b15b8537a7d5cc9705ebf7766eeb9d9f1"
+    },
+    {
+      "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "51463cf8efc976cd6f06400d9c642c64290d516eb471233f1c2ea627d6512584",
+      "after_sha256": "51463cf8efc976cd6f06400d9c642c64290d516eb471233f1c2ea627d6512584"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v1.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "8a7259088ad8c4d2e58cc182fa2966f23256d5fd5a20515621a1f023cead73d6",
+      "after_sha256": "755a15c435560b18f0dbc1eb01be4150a504fbdc3af81de6863525bf70819bdc"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v1.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "038186f86223e77c3e50d3fccdf14541b5c20b6fc54af7a932d347f76848fa2a",
+      "after_sha256": "038186f86223e77c3e50d3fccdf14541b5c20b6fc54af7a932d347f76848fa2a"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v2.0.1.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "ff681bf813fd78df4136843db5010ba4465edbd86e9f90c577a62ef84a7a7360",
+      "after_sha256": "a106d56e3bc2f5486823567b6b5c7cda65126cddd5a2e0cd7f794ced75c82487"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v2.0.1.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "48bd13894e4e4e74be5507a42826ce4893355b1da10213e41988908b4b477a3e",
+      "after_sha256": "48bd13894e4e4e74be5507a42826ce4893355b1da10213e41988908b4b477a3e"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v2.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "f35cc0b1a18dade43826bfe2e51fef274f084fcf517642dc013f8309a605358f",
+      "after_sha256": "594b3a43357e0e50135f1e3b21ed7de091d466ca18d6708d9b51d39cc2970e5f"
+    },
+    {
+      "file": "autumn-at-five-ntsc-squeezer-v2.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "48bd13894e4e4e74be5507a42826ce4893355b1da10213e41988908b4b477a3e",
+      "after_sha256": "48bd13894e4e4e74be5507a42826ce4893355b1da10213e41988908b4b477a3e"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v1.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "95ac4df7d14ca4bcf972adda978b58260310f684550fc3bba2570ac53037acb6",
+      "after_sha256": "29066d6f7cb7d6526cd296225133954cda959cd3da445c1bee0eb09b250e6215"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v1.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "33773d5e7b562b1a5e0ee2cf4000b02499d2e19bd12013ce974a9b7e3ba39af4",
+      "after_sha256": "33773d5e7b562b1a5e0ee2cf4000b02499d2e19bd12013ce974a9b7e3ba39af4"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v2.0.1.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "bd7b96b4787dba17682f3ff58c7774f75a2cd9b1962573069821e3089ddb9173",
+      "after_sha256": "c1e13857b4a861b9b96c5fb84c7d7b1ef89448fb18a61da1b2b93d30e2ff6902"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v2.0.1.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "a0d288477313c866e08154f6877687719df2330928f224a32bede3ec7951b199",
+      "after_sha256": "a0d288477313c866e08154f6877687719df2330928f224a32bede3ec7951b199"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v2.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "5fe7044614ede2fc7ee723a26ed1cefe9d213cc6753c0fd44a2ee33bcda215a8",
+      "after_sha256": "fa16a7e285fb5d1c48d1a4158b3dff021bc2d1b264a829a57d0b7286258c7c19"
+    },
+    {
+      "file": "autumn-at-five-squeezer-v2.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "a0d288477313c866e08154f6877687719df2330928f224a32bede3ec7951b199",
+      "after_sha256": "a0d288477313c866e08154f6877687719df2330928f224a32bede3ec7951b199"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v1.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "86c57947ed530ac74b5be66113f1452370ff4eb0ea024e9549c6704a2529f560",
+      "after_sha256": "6e6ad7e574e71a564558bc2f2f6cd1068ef23146ec77c44d8368292154b819b1"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v1.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420",
+      "after_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v2.0.1.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "c1e11b3475a9835a9db9de286a5b557b95e7bea518981b86c746940cae3cfa13",
+      "after_sha256": "2bf6521ae4cb0526c59c17fcaf0fb3c817d5f0f10e30433cc6bfdada99f6dd4e"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v2.0.1.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420",
+      "after_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v2.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "d67672d95e106208e7dec494926b407d1f6677895aa4a96f81b494ecf4880730",
+      "after_sha256": "049bf36199be5592e31c3dc15829c5399f5e5cdbf3833bbf00d7e392e1714306"
+    },
+    {
+      "file": "first-light-ntsc-squeezer-v2.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420",
+      "after_sha256": "16022dec92d00e3a0cb94f6fd462dedc8c2651a22fef71e30a678bce97ea9420"
+    },
+    {
+      "file": "first-light-squeezer-v1.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "0b44b092b8c5f129ae796e8fce14c3c801c8f5a3d986a325865b85e2dfd5ef87",
+      "after_sha256": "5e0a278655785edac886736f98e74cabf740e07c9d1b6d30ffd1a2ec18ba70fc"
+    },
+    {
+      "file": "first-light-squeezer-v1.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7",
+      "after_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7"
+    },
+    {
+      "file": "first-light-squeezer-v2.0.1.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "c6f18c8e09bb3c77437eb8fd5b1fd62a3486c6474a52a5d24522894dbb52072c",
+      "after_sha256": "f0ec48b03042661e7d9244878fbc8d5f5d1f880587331f4b27dc02a66750a5db"
+    },
+    {
+      "file": "first-light-squeezer-v2.0.1.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7",
+      "after_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7"
+    },
+    {
+      "file": "first-light-squeezer-v2.0.prg",
+      "changed_offsets": [
+        253,
+        254
+      ],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "a43dd941e7ef3d790d22b23dcda73fe939e9e6bc2217ab3bb8efa7c0a2b5223d",
+      "after_sha256": "85988eaa87e232f9e3f207f08c075e05ee3b6b8e10f7ad8c2a159b195e08aa22"
+    },
+    {
+      "file": "first-light-squeezer-v2.0.sid",
+      "changed_offsets": [],
+      "source": "v0.2.29",
+      "candidate": "v0.2.30",
+      "before_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7",
+      "after_sha256": "cfc2f5c6c0894d8ace4e04e54b0b9b36efb3b1dae7e7496681d4c3e8000896e7"
+    }
+  ]
+}

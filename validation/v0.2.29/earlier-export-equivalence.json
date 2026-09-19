@@ -1,0 +1,34 @@
+[
+  {
+    "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v1.0.sid",
+    "music_identical": true,
+    "file_identical": true,
+    "changed_byte_offsets": [],
+    "sha256": "ea9c2bba7cab28b214c0822b08ab286397d9e2ac22a5d48200f5d599ad8dee37"
+  },
+  {
+    "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v1.0.prg",
+    "music_identical": true,
+    "file_identical": false,
+    "changed_byte_offsets": [
+      254
+    ],
+    "sha256": "bee3352d99d2fd0c511c8183bfbc85bf8c055b56575cb631bd075ded3169aaf9"
+  },
+  {
+    "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.sid",
+    "music_identical": true,
+    "file_identical": true,
+    "changed_byte_offsets": [],
+    "sha256": "51463cf8efc976cd6f06400d9c642c64290d516eb471233f1c2ea627d6512584"
+  },
+  {
+    "file": "autumn-at-five-synthwave-mix_v8-pw-sweep-squeezer-v2.0.prg",
+    "music_identical": true,
+    "file_identical": false,
+    "changed_byte_offsets": [
+      254
+    ],
+    "sha256": "fdd515c1da94471ae3bf75f0a2a38f50428cdcfbdef4f16e34b5c4f33a0ad322"
+  }
+]

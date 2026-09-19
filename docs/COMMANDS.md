@@ -10,6 +10,9 @@ The table inventories command groups and historical bindings. Some entries such 
 
 | ID | Context | Shortcut | Action / target | Applicable | Implemented | Binding active | Visible | Help | Menu |
 |---|---|---|---|---|---|---|---|---|---|
+| ui.automation_display | global | (menu only) | Switch between inline automation display 2 (default) and legacy window 1 → App.execute | true | true | false | true | true | true |
+| instrument.disarm_automation | instrument | (menu only) | Disarm automation from the instrument list, keeping the current take → App.disarm_pulse_recording | true | true | false | true | true | false |
+| instrument.record_pw | pattern, instrument | Ctrl+Shift+R | Open inline channel automation recording (A/D/S/R/PW); one armed channel → App.open_automation_recording | true | true | true | true | true | true |
 | audio.reset_stats | global | (menu only) | Reset audio diagnostics → App.execute | true | true | false | true | true | true |
 | settings.f5_restart | global | (menu only) | Restart on repeated F5: optional, off by default → App.execute | true | true | false | true | true | true |
 | audio.settings | global | Alt+F12 | Audio output, test arpeggio, buffer and underrun settings → App.execute | true | true | true | true | true | true |
@@ -63,37 +66,37 @@ The table inventories command groups and historical bindings. Some entries such 
 | pattern.mask | pattern | , | Toggle field-copy mask → Editor.edit_mask | true | true | true | true | true | true |
 | pattern.digits | pattern | 0..9 / A..F | Numeric field entry / hex effect parameters → Editor.enter_digit | true | true | true | true | true | true |
 | pattern.letters | pattern | A..Z | Effect letter entry → Editor.enter_digit | true | true | true | true | true | true |
-| pattern.arrows | pattern | Arrows / Shift+Arrows | Arrows → Editor.move | true | true | true | true | true | true |
+| pattern.arrows | pattern | Arrows / Shift+Arrows | Move cursor; Shift+arrows select fields → Editor.move | true | true | true | true | true | true |
 | pattern.page_move | pattern | PgUp/PgDn / Ctrl+Home/End | Page move → Editor.move | true | true | true | true | true | true |
 | pattern.voice | pattern | Tab/Shift+Tab / Alt+Left/Right / Ctrl+Left/Right | Voice → Editor.voice | true | true | true | true | true | true |
 | pattern.home_end | pattern | Home/End | Home end → Editor cursor | true | true | true | true | true | true |
 | pattern.edge | pattern | Ctrl+PgUp/PgDn | Edge → Editor.row | true | true | true | true | true | true |
 | pattern.pattern | pattern | +/- / Shift+keypad +/- | Pattern → Editor.select_pattern | true | true | true | true | true | true |
 | pattern.order_pattern | pattern | Ctrl +/- | Order pattern → Editor.select_pattern | true | true | true | true | true | true |
-| pattern.octave | global | Keypad / and * / Alt+Home/End | Octave → Editor.octave | true | true | true | true | true | true |
+| pattern.octave | global | Keypad / and * / Alt+Home/End / F3/F4: + / - (Modern) | Octave → Editor.octave | true | true | true | true | true | true |
 | pattern.instrument | global | Ctrl+Up/Down / < / > | Instrument → Editor.select_instrument | true | true | true | true | true | true |
 | pattern.skip | pattern | Alt+0..9 | Skip → Editor.skip | true | true | true | true | true | true |
 | pattern.repeat | pattern | Space | Repeat → Editor.repeat_field | true | true | true | true | true | true |
 | pattern.pick | pattern | Enter | Pick → Editor.last_cell | true | true | true | true | true | true |
-| pattern.center | pattern | Ctrl+C | Center → Editor.centered | true | true | true | true | true | true |
+| pattern.center | pattern | Ctrl+C | Center the selected pattern row; instrument and sample lists always center and clamp at both ends → App.execute(center) | true | true | true | true | true | true |
 | pattern.highlight | pattern | Ctrl+H | Highlight → Editor.highlight | true | true | true | true | true | true |
 | pattern.pattern_length | pattern | Ctrl+F2 | Pattern length → Editor pattern rows | true | true | true | true | true | true |
 | pattern.snapshot | pattern | Alt+Enter | Snapshot → Editor.stored_pattern | true | true | true | true | true | true |
 | pattern.restore | pattern | Alt+Backspace | Restore → Editor.edit | true | true | true | true | true | true |
-| pattern.start | pattern | Alt+B | Block start → Editor.mark | true | true | true | true | true | true |
-| pattern.end | pattern | Alt+E | Block end → Editor.mark | true | true | true | true | true | true |
+| pattern.start | pattern | Alt+B | Mark whole-voice block start → Editor.mark | true | true | true | true | true | true |
+| pattern.end | pattern | Alt+E | Mark whole-voice block end → Editor.mark | true | true | true | true | true | true |
 | pattern.all | pattern | Alt+L | Select voice / whole pattern → Editor.mark | true | true | true | true | true | true |
 | pattern.unmark | pattern | Alt+U | Clear selection and clipboard → Editor.mark | true | true | true | true | true | true |
-| pattern.copy | pattern | Alt+C | Copy block → Editor.copy | true | true | true | true | true | true |
-| pattern.cut_block | pattern | Alt+Z | Cut block → Editor.copy | true | true | true | true | true | true |
-| pattern.paste_insert | pattern | Alt+P | Insert paste → Editor.paste | true | true | true | true | true | true |
-| pattern.paste_overwrite | pattern | Alt+O | Overwrite paste → Editor.paste | true | true | true | true | true | true |
-| pattern.paste_mix | pattern | Alt+M | Mix into empty cells → Editor.paste | true | true | true | true | true | true |
+| pattern.copy | pattern | Alt+C / Ctrl+Insert (Modern) | Copy selected fields or whole marked block → Editor.copy | true | true | true | true | true | true |
+| pattern.cut_block | pattern | Alt+Z | Cut selected fields or whole marked block → Editor.copy | true | true | true | true | true | true |
+| pattern.paste_insert | pattern | Alt+P | Insert copied fields; shift only those lanes → Editor.paste | true | true | true | true | true | true |
+| pattern.paste_overwrite | pattern | Alt+O / Shift+Insert (Modern) | Overwrite copied fields only → Editor.paste | true | true | true | true | true | true |
+| pattern.paste_mix | pattern | Alt+M | Mix into empty selected fields (whole blocks: empty cells) → Editor.paste | true | true | true | true | true | true |
 | pattern.set_instrument | pattern | Alt+S | Set selected instrument on block → Editor.block_instrument | true | true | true | true | true | true |
 | pattern.transpose | pattern | Alt+Q/A / Alt+Shift+Q/A | Transpose semitone / octave → Editor.transpose | true | true | true | true | true | true |
 | pattern.insert | pattern | Insert / Alt+Insert | Insert voice / whole row → Editor.insert_delete | true | true | true | true | true | true |
 | pattern.delete | pattern | Delete / Alt+Delete | Delete voice / whole row → Editor.insert_delete | true | true | true | true | true | true |
-| pattern.roll | pattern | Ctrl+Insert/Delete | Roll selected block → Editor.roll | true | true | true | true | true | true |
+| pattern.roll | pattern | Ctrl+Insert/Delete (Classic) / Ctrl+Shift+Insert/Delete (Modern) | Roll selected fields down/up; Ctrl+Delete also retains roll-up in Modern → Editor.roll | true | true | true | true | true | true |
 | pattern.audition_cell | pattern | 4 | Audition cell while held → AudioEngine.send | true | true | true | true | true | true |
 | pattern.audition_row | pattern | 8 | Audition row while held → AudioEngine.send | true | true | true | true | true | true |
 | instrument.navigation | instrument | Arrows / Tab / Enter / Insert / PgUp/PgDn: General / Motion | Bank / properties / buttons / new instrument; click yellow values to type → App.page_key | true | true | true | true | true | true |
@@ -268,5 +271,17 @@ The table inventories command groups and historical bindings. Some entries such 
 | ui.helper | global | (menu only) | Toggle bottom context helper → App.helper_strip | true | true | false | true | true | true |
 | pattern.control_focus | global | Ctrl+Shift+F2 | Toggle CTRL CH / FILTER row editor → App.edit_control | true | true | true | true | true | true |
 | app.about | global | (menu only) | About SIDpulse Tracker / vector logo → App about dialog | true | true | false | true | true | true |
+| pattern.paste_special | pattern | Ctrl+Shift+V | Paste notes, automation or both from the copied fields → App.open_paste_special | true | true | true | true | true | true |
+| display.clipboard_buttons | global | (menu only) | Show/hide pattern clipboard buttons; saved in preferences → App.toggle_pattern_clipboard_buttons | true | true | false | true | true | true |
+| display.control_panel | global | (menu only) | Expand/collapse shared filter column; saved across views → App.toggle_control_panel | true | true | false | true | true | true |
+| display.channel_visualizers | global | (menu only) | Show/hide channel visualizers and enable/disable display-only scope processing → App.toggle_channel_visualizers | true | true | false | true | true | true |
+| settings.reset_defaults | global | (menu only) | Reset user preferences after confirmation; Cancel selected by default → settings_reset.open_dialog | true | true | false | true | true | true |
+| settings.keyboard_mapping | global | (menu only) | Choose Modern (default) or Classic keyboard mapping → App.open_keyboard_mapping | true | true | false | true | true | true |
+| audition.octave_reset | global | F3/F4: 0 (Modern) | Reset audition/note-entry octave to 4 → Editor.DEFAULT_OCTAVE | true | true | true | true | true | false |
+| instrument.monitor_mute | instrument | (menu only) | Mute the instrument across all three voices (preview only) → App.execute | true | true | false | true | true | false |
+| instrument.monitor_solo | instrument | (menu only) | Solo the instrument across all three voices (preview only) → App.execute | true | true | false | true | true | false |
+| pattern.reset_automation | pattern | PW: type RAL (current cell) / Reset all automation button (selection) | Reset all A D S R PW to instrument defaults; preserve notes, instruments and FX → App.execute | true | true | true | true | true | true |
+| display.instrument_monitor_buttons | global | (menu only) | Enable instrument/sample M/S buttons and instrument monitoring; on by default → App.toggle_instrument_monitor_buttons | true | true | false | true | true | true |
+| settings.confirm_cut | global | (menu only) | Confirm before Cut; on by default; available in UI Settings → App.toggle_confirm_cut | true | true | false | true | true | true |
 
 Schism reference: https://github.com/schismtracker/schismtracker/tree/84d2c46c1d3b5660edbc3eca259bf1219e59623e/helptext

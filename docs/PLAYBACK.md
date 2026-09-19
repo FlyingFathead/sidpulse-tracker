@@ -249,3 +249,5 @@ existing flag with **F12 > Loop song at end** and SID/PRG export. ON restarts at
 order 000, OFF stops. Ctrl+S saves; Ctrl+Backspace undoes. F6 is a separate pattern
 loop. Received loop edits during the last row apply at the next song-end decision;
 explicit one-pass overrides still win. Bxx jumps and queued PCM are unchanged.
+
+The Info page includes the blue shared-filter lane and live filter state. Per-channel ADSR/PW row automation and PW touch recording use the same sequencer as export; see [AUTOMATION.md](AUTOMATION.md).

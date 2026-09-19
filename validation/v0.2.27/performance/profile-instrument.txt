@@ -1,0 +1,51 @@
+         3435413 function calls (3224961 primitive calls) in 2.435 seconds
+
+   Ordered by: cumulative time
+   List reduced from 302 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001    3.240    3.240 benchmark.py:74(gui)
+      432    0.002    0.000    2.912    0.007 benchmark.py:89(frame)
+      432    0.017    0.000    2.902    0.007 renderer.py:191(render)
+      432    0.033    0.000    1.490    0.003 renderer.py:526(instrument)
+      432    0.001    0.000    1.019    0.002 editor.py:66(dirty)
+    15552    0.216    0.000    0.998    0.000 <string>:2(__eq__)
+    11664    0.033    0.000    0.759    0.000 renderer.py:797(bank_monitor_buttons)
+   103680    0.712    0.000    0.712    0.000 {built-in method pygame.draw.rect}
+    31104    0.068    0.000    0.455    0.000 instrument_graphs.py:22(button_frame)
+    36720    0.035    0.000    0.455    0.000 renderer.py:115(rect)
+187900/4028    0.129    0.000    0.282    0.000 copy.py:118(deepcopy)
+        1    0.000    0.000    0.277    0.277 app.py:32(__init__)
+20254/4028    0.038    0.000    0.274    0.000 copy.py:217(_deepcopy_dict)
+   8046/2    0.014    0.000    0.272    0.136 copy.py:247(_reconstruct)
+    39744    0.104    0.000    0.259    0.000 renderer.py:120(control_text)
+ 2522/218    0.004    0.000    0.237    0.001 copy.py:191(_deepcopy_list)
+     8208    0.013    0.000    0.228    0.000 renderer.py:166(well)
+      432    0.020    0.000    0.202    0.000 instrument_graphs.py:184(draw_fields)
+    32400    0.051    0.000    0.199    0.000 renderer.py:97(text)
+    73008    0.164    0.000    0.164    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+     6048    0.010    0.000    0.153    0.000 instrument_graphs.py:34(button)
+   167616    0.138    0.000    0.138    0.000 {built-in method pygame.draw.line}
+        1    0.001    0.001    0.137    0.137 editor.py:26(__init__)
+        1    0.001    0.001    0.136    0.136 engine.py:47(__init__)
+     2592    0.003    0.000    0.082    0.000 renderer.py:156(header_field)
+    11664    0.035    0.000    0.069    0.000 renderer.py:515(activity_dot)
+      432    0.067    0.000    0.067    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+      432    0.011    0.000    0.066    0.000 renderer.py:595(wave_buttons)
+   482786    0.058    0.000    0.058    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.049    0.049 format.py:219(load)
+   423362    0.048    0.000    0.048    0.000 {built-in method builtins.round}
+        1    0.001    0.001    0.046    0.046 format.py:188(decode)
+      432    0.013    0.000    0.044    0.000 renderer.py:889(helper)
+    42337    0.044    0.000    0.044    0.000 {method 'size' of 'pygame.font.Font' objects}
+     4023    0.013    0.000    0.039    0.000 format.py:147(_construct)
+   250633    0.038    0.000    0.038    0.000 {built-in method builtins.max}
+      432    0.013    0.000    0.037    0.000 renderer.py:174(meter)
+      432    0.002    0.000    0.033    0.000 renderer.py:651(octave_controls)
+    19440    0.019    0.000    0.029    0.000 renderer.py:188(hit)
+      432    0.006    0.000    0.024    0.000 renderer.py:65(configure)
+   253572    0.018    0.000    0.018    0.000 {built-in method builtins.id}
+     1432    0.018    0.000    0.018    0.000 {method 'render' of 'pygame.font.Font' objects}
+    30822    0.010    0.000    0.015    0.000 copy.py:231(_keep_alive)
+      432    0.007    0.000    0.014    0.000 themes.py:14(palette)
+    16092    0.004    0.000    0.014    0.000 copy.py:252(<genexpr>)

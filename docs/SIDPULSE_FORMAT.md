@@ -1,18 +1,18 @@
-# .sidpulse format 6
+# .sidpulse formats 6 and 7
 
 `.sidpulse` is the editable, lossless source document. `.sid` is the compiled
 PSID export. They are separate files; export does not consume or change the source.
 
-UTF-8 JSON root: `format: "SIDPULSE"`, `format_version: 6`, `song`, `editor`.
+UTF-8 JSON root: `format: "SIDPULSE"`, `format_version: 6` (ordinary projects) or `7` (row automation), `song`, `editor`.
 The song keeps title, author, multiline Unicode comments, SID model, PAL/NTSC clock,
 speed, tempo, pattern bank/order list, SID instrument bank, separate sample and
 extension macro/filter-program banks, initial shared filter and export settings.
 Opaque extension banks and unknown nested editor metadata round-trip intact even
-when not playable. Unknown musical schema fields/versions fail visibly rather
-than vanishing on the next save. Non-finite JSON numbers are not written.
+when not playable. Unfamiliar fields are preserved with their owning objects; structurally compatible
+newer versions load with warnings. Invalid core structures still fail visibly. Non-finite JSON numbers are not written.
 
 Patterns contain 1..256 rows of exactly three cells. Each cell stores note,
-instrument, effect and parameter. Notes: null empty, -1 off, -2 cut, 0=C-0 through
+instrument, effect and parameter, plus optional row automation. Notes: null empty, -1 off, -2 cut, 0=C-0 through
 95=B-7. Pattern IDs 0..255; orders reference existing patterns. Instruments 1..99
 have a separate namespace from samples. EX remains an unimplemented UI reserve.
 
@@ -44,8 +44,9 @@ Song notes are full text in `song.comments`. F12 export options populate
 are preserved by native saves but rejected by the current compiler.
 
 Version 1 loads with tempo 125; version 2 already has tempo. Both default new
-program fields to disabled and control rows to empty. Saves always write format
-6, which older builds deliberately reject. Loading never changes the input file.
+program fields to their migration defaults and control rows to empty. Loading
+never changes the input file. Saves use format 6 without row automation and
+format 7 when an automation value or reset is present.
 
 Saves serialize and validate first, write a same-directory temporary file,
 flush/fsync, back up the existing target as `.sidpulse.bak`, and atomically replace.
@@ -72,3 +73,39 @@ instruments without deleting any pattern data. Native playback treats these slot
 as silent; adding an instrument back to a slot restores its pattern use. Native
 saving preserves everything. The PSID compiler reports empty banks or references
 to missing instruments in played patterns. Formats 1–5 remain readable.
+
+
+## Format 7 and version-aware loading (application 0.2.24)
+
+Optional Cell fields: `attack`, `decay`, `sustain`, `release` (0..15), and
+`pulse_width` (0..4095). Each also accepts null/omission (hold the running value)
+and -1 (restore the instrument setting). Empty fields are omitted when saving.
+The fields are runtime channel overrides; the instrument definition is unchanged.
+They persist through notes/instrument changes until reset or transport restart.
+
+`editor.saved_with_version` stores the SIDpulse Tracker version that wrote the
+file, independently of `format_version`. Historical files without the field load
+normally. The reader uses both version information and the actual contents:
+
+- A newer saved-with version raises a compatibility notice while loading.
+- A newer schema loads when the core song/three-voice structure is compatible.
+- Unknown object fields are retained with the owning cell, control cell,
+  instrument, pattern, filter or song; unknown root fields are retained too.
+- Known edits, native saving, copy/paste and undo preserve associated extensions.
+- Unknown features are not executed. Native playback/export uses supported
+  features; export reports compatibility warnings. Existing unsupported macro
+  banks and effects retain their explicit export rejection rules.
+- Deleting/replacing an owning object also deletes/replaces its extension data.
+  Native formats do not preserve deleted objects merely for future compatibility.
+- Corrupt core data, incompatible row/channel structures and out-of-range known
+  values still fail visibly without overwriting the original file.
+
+Saving retained future-format data keeps its higher schema number and stamps the
+current writer version. No unused automation is added to ordinary format-6 cells,
+so those ordinary saves remain readable by v0.2.23. That historical application's
+strict reader cannot interpret format-7 automation; tolerant loading is provided
+by this update and is the contract for subsequent readers.
+
+An unfamiliar field that a future release introduces should be added to the
+known model and migrated explicitly. Do not discard extension dictionaries or
+reduce the schema marker merely because the current reader cannot execute them.

@@ -1,0 +1,8 @@
+{
+  "tracker": "0.2.29",
+  "python": "3.12.14",
+  "platform": "Linux x86_64",
+  "repetitions": 3,
+  "isolated": true,
+  "notes": "Serial compiler CPU/wall trials. Peak RSS is whole host process, not C64 RAM; cumulative unless isolated. Complete replay verification on every selected compact export."
+}

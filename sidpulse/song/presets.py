@@ -81,7 +81,8 @@ def user_presets():
             if path.stat().st_size>65536:raise ValueError('Preset is too large')
             raw=json.loads(path.read_text(encoding='utf-8'))
             if raw.get('format')!='SIDPULSE_INSTRUMENT' or raw.get('version') not in (1,2):raise ValueError('Unknown preset version')
-            inst=Instrument(**raw['instrument']);song=Song(instruments={1:inst});validate(song)
+            from sidpulse.project.format import _construct
+            inst=_construct(Instrument,raw['instrument']);song=Song(instruments={1:inst});validate(song)
             presets.append(('User',inst))
         except (OSError,ValueError,TypeError,KeyError,AttributeError) as exc:errors.append(path.name+': '+str(exc))
     return presets,errors
@@ -89,7 +90,7 @@ def user_presets():
 
 def save_user_preset(inst):
     import json,uuid
-    from dataclasses import asdict
+    from sidpulse.project.format import _serialize
     from sidpulse.preferences import config_path
     from sidpulse.project.format import validate
     from sidpulse.song.model import Song
@@ -97,7 +98,7 @@ def save_user_preset(inst):
     folder=config_path().parent/'presets';folder.mkdir(parents=True,exist_ok=True)
     path=folder/('instrument-'+uuid.uuid4().hex+'.json')
     with path.open('x',encoding='utf-8') as stream:
-        json.dump({'format':'SIDPULSE_INSTRUMENT','version':2,'instrument':asdict(inst)},stream,indent=2,ensure_ascii=False)
+        json.dump({'format':'SIDPULSE_INSTRUMENT','version':2,'instrument':_serialize(inst)},stream,indent=2,ensure_ascii=False)
         stream.write('\n')
     return path
 

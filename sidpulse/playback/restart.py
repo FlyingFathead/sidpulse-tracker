@@ -34,11 +34,12 @@ def prepare_restarts(seq):
     future = copy(seq)
     future._predicting = True
     future.activity = None  # future loop restarts must never publish real note activity
+    future.monitor = None  # lookahead must never change the live preview mute mask
     if seq.restart_loop is not None:
         future.loop_override = seq.restart_loop
     future.sid = ProbeSID(seq.sid)
     future.programs = VoicePrograms(future.sid)
-    future.programs.voices = [replace(v, memory=dict(v.memory)) for v in seq.programs.voices]
+    future.programs.voices = [replace(v, memory=dict(v.memory), envelope=dict(v.envelope)) for v in seq.programs.voices]
     future.filter = deepcopy(seq.filter)
     future.notes, future.instruments = list(seq.notes), list(seq.instruments)
     seen = set()

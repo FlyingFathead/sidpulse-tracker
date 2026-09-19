@@ -51,7 +51,6 @@ def save_buffer(size):
 
 def save_preferences(updates):
     path = config_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
     data = {}
     try:
         data = json.loads(path.read_text())
@@ -60,6 +59,17 @@ def save_preferences(updates):
     except (OSError, ValueError):
         pass
     data.update(updates)
+    write_preferences(data)
+
+
+def reset_preferences():
+    """Atomically clear user preferences; leave projects and other files alone."""
+    write_preferences({})
+
+
+def write_preferences(data):
+    path = config_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
     fd, name = tempfile.mkstemp(dir=path.parent, suffix='.tmp')
     try:
         with os.fdopen(fd, 'w') as stream:
@@ -135,8 +145,10 @@ def load_squeeze_options():
                     data[current] = data[old]
     except (OSError, ValueError, AttributeError):
         data = {}
-    return SqueezeOptions(**{field.name: data[field.name] for field in fields(SqueezeOptions)
-                             if type(data.get(field.name)) is bool})
+    values={field.name:data[field.name] for field in fields(SqueezeOptions)
+            if field.name!='version' and type(data.get(field.name)) is bool}
+    if type(data.get('version')) is int and data['version'] in (1,2,201,202):values['version']=data['version']
+    return SqueezeOptions(**values)
 
 
 def save_squeeze_options(options):
@@ -145,3 +157,83 @@ def save_squeeze_options(options):
     if not isinstance(options, SqueezeOptions):
         raise TypeError('Expected SqueezeOptions')
     save_preferences({'export_squeeze': asdict(options)})
+
+
+def load_squeeze_comparison():
+    try:
+        value = json.loads(config_path().read_text()).get('export_compare_squeezers', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_squeeze_show_all_versions():
+    try:
+        value = json.loads(config_path().read_text()).get('export_show_all_versions', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_pattern_clipboard_buttons():
+    try:
+        value = json.loads(config_path().read_text()).get("pattern_clipboard_buttons", True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_confirm_cut():
+    try:
+        value = json.loads(config_path().read_text()).get('confirm_cut', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_instrument_monitor_buttons():
+    try:
+        value = json.loads(config_path().read_text()).get('instrument_monitor_buttons', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_center_selection():
+    try:
+        value = json.loads(config_path().read_text()).get('center_selection', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_automation_display():
+    try:
+        value = json.loads(config_path().read_text()).get('automation_display', 2)
+        return value if type(value) is int and value in (1, 2) else 2
+    except (OSError, ValueError, AttributeError):
+        return 2
+
+
+def load_control_panel_visibility():
+    try:
+        value = json.loads(config_path().read_text()).get("control_panel_visible")
+        return value if type(value) is bool else None
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
+def load_channel_visualizers():
+    try:
+        value = json.loads(config_path().read_text()).get("channel_visualizers", True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_keyboard_mapping():
+    try:
+        value = json.loads(config_path().read_text()).get('keyboard_mapping', 'modern')
+        return value if value in ('modern', 'classic') else 'modern'
+    except (OSError, ValueError, AttributeError):
+        return 'modern'

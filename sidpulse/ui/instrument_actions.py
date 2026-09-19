@@ -8,10 +8,17 @@ from sidpulse.ui.instrument_graphs import ADSR,clamp,grid_value,envelope_value
 class InstrumentActions:
     def instrument_buttons(self):
         from sidpulse.ui.instruments import PROGRAM_ROWS
+        if self.inline_recording_visible and self.renderer.cols<84:
+            return ([('pulse_record_arm',None),('instrument_tab','general')]
+                    + ([('pulse_record_disarm',None)] if self.pulse_record_armed else []))
         targets=[('add_instrument',None),('delete_instrument',None),('choose_presets',None)]
+        if self.pulse_record_armed:
+            targets.append(('pulse_record_disarm', None))
         targets += [('instrument_tab',tab) for tab in ('general','motion','roll','adsr')]
         targets.append(('save_user_preset',None))
         if self.instrument_slot in self.editor.song.instruments:
+            if self.instrument_tab in ('general','automation'):
+                targets.append(('pulse_record_arm', None))
             if self.instrument_tab=='motion':
                 targets += [('toggle_program',program) for program in PROGRAM_ROWS.values()]
             elif self.instrument_tab=='roll':
@@ -226,6 +233,8 @@ class InstrumentActions:
                      'confirm_instrument':remove,'confirm_selected':False}
 
     def choose_instrument_tab(self,tab):
+        if self.inline_recording_visible and self.instrument_slot not in self.editor.song.instruments:
+            self.close_automation_recording();return
         if self.instrument_slot not in self.editor.song.instruments:self.open_new_instrument();return
         self.finish_instrument_drag()
         self.instrument_tab=tab;self.instrument_focus='properties'
@@ -236,6 +245,11 @@ class InstrumentActions:
     def finish_instrument_drag(self,cancel=False):
         gesture=self.instrument_drag
         if gesture is None:return
+        if gesture.get('automation_preview'):
+            self.instrument_drag=None;return
+        if gesture.get('recording'):
+            self.finish_pulse_drag(cancel)
+            return
         self.instrument_drag=None
         inst=self.editor.song.instruments[gesture['instrument']]
         updates=[]
@@ -243,7 +257,9 @@ class InstrumentActions:
             after=deepcopy(getattr(inst,field));setattr(inst,field,before)
             updates.append((('instruments',gesture['instrument'],field),after))
         self.editor.history.revision+=1
-        if not cancel:self.editor.edit('Draw instrument '+gesture['field'],updates)
+        if not cancel:
+            verb = 'Adjusted' if gesture['kind'] == 'slider' else 'Drew'
+            self.editor.edit(verb+' instrument '+gesture['field'].replace('_', ' '),updates)
 
     def begin_instrument_drag(self,data,pos):
         self.finish_instrument_drag()
@@ -258,6 +274,11 @@ class InstrumentActions:
     def update_instrument_drag(self,pos):
         drag=self.instrument_drag
         if not drag:return
+        if drag.get('automation_preview'):
+            self.pulse_record_value=self.pulse_slider_value(drag,pos);return
+        if drag.get('recording'):
+            self.update_pulse_drag(pos)
+            return
         inst=self.editor.song.instruments[drag['instrument']]
         field=drag['field'];rect=drag['rect']
         if drag['kind']=='roll':
@@ -340,6 +361,8 @@ class InstrumentActions:
         elif action=='delete_instrument':self.confirm_delete_instrument()
         elif action=='instrument_tab':
             if self.instrument_slot in self.editor.song.instruments:self.choose_instrument_tab(value)
+        elif action=='pulse_record_arm':self.open_automation_recording()
+        elif action=='pulse_record_disarm' and pos is None:self.disarm_pulse_recording()
         elif action=='graph_drag':self.begin_instrument_drag(value,pos)
         elif action=='graph_field':
             self.graph_field=value;self.graph_step=0;self.graph_page=0

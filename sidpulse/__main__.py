@@ -61,6 +61,9 @@ def main():
             welcome = not (args.project or args.example or args.play_welcome_song or args.headless_smoke) and (args.welcome or show_on_startup())
         if args.project:
             song, metadata = load(args.project)
+            from sidpulse.project.format import compatibility_warnings
+            for warning in compatibility_warnings(song):
+                print('Compatibility: ' + warning, file=sys.stderr)
         else:
             song = welcome_song() if args.play_welcome_song or welcome else example_song() if args.example else Song()
         if args.export_sid or args.export_prg:

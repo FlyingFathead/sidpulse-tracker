@@ -19,6 +19,7 @@ STATE_FIELDS = (
     'callback_count', 'max_callback_interval',
     'output_device', 'output_devices', 'output_notice', 'output_list_error',
     'output_result', 'test_result', 'test_active',
+    'pulse_capture',
 )
 
 

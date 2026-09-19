@@ -69,7 +69,9 @@ def test_exported_6502_matches_every_ordered_sid_write_of_first_light(squeeze):
     mem.events=[];call(cpu,0x1003);assert mem.events==[(4,0),(11,0),(18,0)]
     mem.events=[];call(cpu,0x1003);assert not mem.events
     # Only owned RAM, stack, zero page, SID and CIA timer/control are touched.
-    assert all(0x100<=a<0x200 or 0x1000<=a<0x1200 or 0xF8<=a<=0xFB or
+    player_end=0x1000+result.squeeze_report.player_bytes
+    zero_page_end=0xF8+result.squeeze_report.zero_page_bytes
+    assert all(0x100<=a<0x200 or 0x1000<=a<player_end or 0xF8<=a<zero_page_end or
                0xD400<=a<=0xD418 or a in (0xDC04,0xDC05,0xDC0E) for a,v in mem.writes)
 
 

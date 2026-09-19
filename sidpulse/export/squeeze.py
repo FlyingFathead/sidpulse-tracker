@@ -13,6 +13,11 @@ from .stream_packer import PackedStreams, StreamReader, pack_streams, verify_str
 COMPACT_PRG_LOAD = 0x09B4
 COMPACT_PRG_WRAPPER = COMPACT_PRG_LOAD - 0x0801
 LEGACY_PRG_WRAPPER = 0x1000 - 0x0801
+SQUEEZER_VERSIONS = (202, 201, 2, 1)
+
+
+def squeezer_version_label(version):
+    return {1: '1.0', 2: '2.0', 201: '2.0.1', 202: '2.0.2'}[version]
 
 
 @dataclass(frozen=True)
@@ -22,10 +27,13 @@ class SqueezeOptions:
     instruments: bool = True
     unused: bool = True
     streams: bool = True
+    version: int = 202
 
     def __post_init__(self):
-        if any(type(getattr(self, field.name)) is not bool for field in fields(self)):
+        if any(type(getattr(self, field.name)) is not bool for field in fields(self) if field.name!='version'):
             raise ValueError('Squeeze options must be true or false')
+        if type(self.version) is not int or self.version not in SQUEEZER_VERSIONS:
+            raise ValueError('Squeezer version must be 1, 2, 201 or 202')
 
 
 @dataclass(frozen=True)
@@ -55,6 +63,7 @@ class SqueezeReport:
     verified_max_cycles: int = 0
     phrase_blocks: int = 0
     repeated_blocks: int = 0
+    squeezer_version: int = 1
 
     @property
     def saved_bytes(self) -> int:
@@ -227,6 +236,7 @@ class StreamCandidate:
     optimized: bool = False
     zero_page_bytes: int = 2
     stack_bytes: int = 4
+    optimizer_version: int = 1
 
     @property
     def data_bytes(self):
@@ -247,14 +257,14 @@ class StreamCandidate:
         return bytes(player) + self.packed.link(data_address)
 
 
-def verify_candidate(packed: PackedStreams, records: list[bytes], lanes: bool, *, registers: bool = False) -> tuple[int, bool]:
+def verify_candidate(packed: PackedStreams, records: list[bytes], lanes: bool, *, registers: bool = False, reader_type=StreamReader) -> tuple[int, bool]:
     """Decode the entire candidate and compare every timed, ordered write.
 
     CPU bounds include cold packet setup on the actual stream boundaries,
     decoder dispatch, SID writes, delay tokens and init/loop reset overhead.
     They are deliberately conservative; tests also execute the actual 6510.
     """
-    reader = StreamReader(packed)
+    reader = reader_type(packed)
     conductor = 25 if registers else 4 if lanes else 0
     timing, events = None, bytearray()
     tick, maximum, safe = 0, 0, True

@@ -1,0 +1,15 @@
+{
+  "baseline": "3caa048",
+  "candidate": "v0.2.30 final display preference",
+  "song": "autumn-at-five-synthwave-mix_v8-pw-sweep.sidpulse",
+  "sha256": "91032c512875fa96636d21ba05bacda2a309e4e67a30ee96f42b1f47e7c58430",
+  "python": "3.12.14",
+  "pygame": "2.5.7",
+  "pyresidfp": "0.17.0",
+  "drivers": "SDL dummy",
+  "cpus": [
+    0,
+    1
+  ],
+  "notes": "Three alternating-order serial trials, fresh processes, M/S and scopes on. No concurrent heavy work. Export drawing uses the actual previously verified completed stress-song results without compiling. Default comparison is old Top 3 versus new all four; explicit top3/all isolate matching content. Five-second audio/live checks supplement the earlier 15-second release tests. Audio/playback/SID/export source files are byte-identical."
+}

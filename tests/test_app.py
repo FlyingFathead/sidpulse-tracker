@@ -76,9 +76,9 @@ def test_resize_zoom_preserve_song_and_cursor_visibility(app, size, zoom):
     app.handle(pg.event.Event(pg.VIDEORESIZE, w=size[0], h=size[1]))
     app.zoom = zoom
     last_row=len(app.editor.pattern.rows)-1
-    app.editor.voice, app.editor.column, app.editor.row = 2, 8, last_row
+    app.editor.voice, app.editor.column, app.editor.row = 2, 15, last_row
     app.renderer.render(app)
-    hits = [rect for rect, action, data in app.renderer.hits if action == "cell" and data == (last_row, 2, 8)]
+    hits = [rect for rect, action, data in app.renderer.hits if action == "cell" and data == (last_row, 2, 15)]
     assert len(hits) == 1
     assert app.screen.get_rect().contains(hits[0])
     assert hits[0].bottom <= (app.renderer.lines - 3) * app.renderer.rh
@@ -130,7 +130,8 @@ def test_context_help_topic_menu_and_return(app):
 def test_disabled_menu_and_shortcuts_do_not_act(app):
     before = deepcopy(app.editor.song)
     app.open_menu("Settings Menu")
-    app.activate_menu(1)  # MIDI remains disabled
+    from sidpulse.ui.menus import menu_items
+    app.activate_menu(next(i for i,item in enumerate(menu_items('Settings Menu')) if item.value=='MIDI configuration'))
     assert app.menu_path and "not implemented" in app.editor.status
     app.menu_path.clear()
     app.handle(event(pg.K_F1, mod=pg.KMOD_SHIFT))  # MIDI shortcut remains inactive

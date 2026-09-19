@@ -57,3 +57,34 @@ def test_playback_page_requests_scopes_and_keeps_buttons_separate(monkeypatch):
         assert app.editor.song == before
     finally:
         app.close()
+
+
+@pytest.mark.parametrize('size,expanded', [((960,1080),True),((960,1080),False),((960,540),True),((800,600),False)])
+def test_scopes_remain_visible_and_separate_from_labels_at_half_width(size,expanded):
+    app=App(audio=False,size=size)
+    try:
+        app.control_panel_visible=expanded
+        app.change_page('info');app.sync_audio();app.renderer.render(app)
+        scopes=[r for r,a,v in app.renderer.hits if a=='voice_scope']
+        controls=[r for r,a,v in app.renderer.hits if a in ('mute','solo','control_panel_toggle')]
+        assert len(scopes)==3
+        assert all(app.screen.get_rect().contains(scope) and scope.width>=40 and scope.height>=5 for scope in scopes)
+        assert all(not scope.colliderect(control) for scope in scopes for control in controls)
+    finally:app.close()
+
+
+def test_scope_setting_stops_worker_processing_and_survives_reload(monkeypatch):
+    from sidpulse.preferences import load_channel_visualizers
+    app=App(audio=False)
+    try:
+        commands=[];monkeypatch.setattr(app.audio,'send',lambda *args:commands.append(args))
+        app.change_page('info');app.sync_audio();before=deepcopy(app.editor.song)
+        app.toggle_channel_visualizers();app.renderer.render(app)
+        assert not any(a=='voice_scope' for _,a,_ in app.renderer.hits)
+        assert [cmd for cmd in commands if cmd[0]=='scopes']==[('scopes',True),('scopes',False)]
+        assert not load_channel_visualizers()
+        app.change_page('pattern');app.sync_audio();app.change_page('info');app.sync_audio()
+        assert [cmd for cmd in commands if cmd[0]=='scopes']==[('scopes',True),('scopes',False)]
+        assert app.editor.song==before and not app.editor.dirty
+        app.close();app=App(audio=False);assert not app.channel_visualizers
+    finally:app.close()

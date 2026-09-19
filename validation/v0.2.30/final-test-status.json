@@ -1,0 +1,8 @@
+{
+  "tests": 1472,
+  "unresolved_failures": 0,
+  "full_run_passed": 1468,
+  "final_controls_passed": 61,
+  "show_all_followup_passed": 61,
+  "notes": "Full regression and focused icon/control/show-all preference runs; union counts unique passing cases. Final display preference change is covered by the 61-case show-all run."
+}

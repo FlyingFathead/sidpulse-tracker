@@ -21,7 +21,8 @@ def test_shortest_period_is_not_restricted_to_tracker_lengths(period, tail):
 
 
 @pytest.mark.parametrize('seed', range(24))
-def test_byte_segmentation_matches_exhaustive_cost_for_fixed_bank(seed):
+@pytest.mark.parametrize('version',[1,2])
+def test_byte_segmentation_matches_exhaustive_cost_for_fixed_bank(seed,version):
     rng = random.Random(seed)
     bank = bytes(rng.randrange(5) for _ in range(24))
     source = bank[3:14] + bytes(rng.randrange(6) for _ in range(9)) + bank[:15]
@@ -39,7 +40,11 @@ def test_byte_segmentation_matches_exhaustive_cost_for_fixed_bank(seed):
                 costs.append(3 + optimal(pos + n))
         return min(costs)
 
-    plan = _parse(source, bank, index)
+    if version==1:plan = _parse(source, bank, index)
+    else:
+        from sidpulse.export.squeeze_v2 import _parse as parse_v2
+        entries=sorted((bank[i:i+127],i) for i in range(len(bank)-3))
+        plan=parse_v2(source,bank,([key for key,_ in entries],[i for _,i in entries]))
     assert sum(3 if target >= 0 else n+1 for _, n, target in plan) == optimal(0)
     assert b''.join(bank[target:target+n] if target >= 0 else source[pos:pos+n]
                     for pos, n, target in plan) == source

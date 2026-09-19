@@ -2,7 +2,9 @@
 BASE = {'BG': '#b09277', 'PANEL': '#b09277', 'EDGE': '#715240', 'TEXT': '#0c0a08',
         'DIM': '#493728', 'ACCENT': '#69b96a', 'YELLOW': '#f5f450', 'CYAN': '#14100c',
         'PURPLE': '#c390dc', 'CURSOR': '#eaeac6', 'SELECT': '#56403a', 'WELL': '#000000',
-        'CREAM': '#e9e8c8', 'SLIDER': '#a92e42', 'SCOPE': '#cb4557'}
+        'CREAM': '#e9e8c8', 'SLIDER': '#a92e42', 'SCOPE': '#cb4557',
+        'AUTOMATION': '#65dbc5', 'AUTOMATION_DIM': '#52766e', 'REC_ARM': '#b53242',
+        'REC_SLIDER': '#348bdb'}
 VARIANTS = {'Classic crimson': {}, 'Charcoal crimson': {
     'BG':'#303236','PANEL':'#303236','TEXT':'#f2efdc','DIM':'#c2bcb0','CYAN':'#f2efdc',
     'EDGE':'#111318','CREAM':'#e9e8d8','SELECT':'#63313e','WELL':'#101113'},

@@ -73,7 +73,8 @@ def test_v3_roundtrip_all_instrument_controls_notes_and_future_editor_data(tmp_p
         for key in ('arpeggio','arp_speed','wave_sequence','pitch_sequence','pulse_depth','pulse_rate','vibrato_speed','vibrato_depth','vibrato_delay','gate_ticks','retrigger'):inst.pop(key)
     old,_=decode(raw);assert old.instruments[1].arpeggio==[] and old.patterns[0].controls=={}
     raw['song']['patterns'][0]['surprise_notes']='must not vanish'
-    with pytest.raises(ProjectError,match='Unknown pattern'):decode(raw)
+    restored, _ = decode(raw)
+    assert encode(restored)['song']['patterns'][0]['surprise_notes'] == 'must not vanish'
 
 
 def test_f4_program_edit_filter_shortcut_notes_and_native_save_export_workflow(tmp_path):

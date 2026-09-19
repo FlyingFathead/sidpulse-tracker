@@ -56,6 +56,12 @@ def main():
     for streams, mode in ((1, 'single'), (5, 'lanes'), (26, 'registers')):
         for address, suffix in ((0x1000, ''), (0x09B4, '-prg')):
             jobs.append((f'squeeze-{mode}{suffix}', 'squeeze_player.asm', address, streams, False))
+    for streams, mode in ((1, 'single'), (5, 'lanes'), (26, 'registers')):
+        for address, suffix in ((0x1000, ''), (0x09B4, '-prg')):
+            jobs.append((f'squeeze-phrases-{mode}{suffix}', 'squeeze_phrases.asm', address, streams, False))
+    for streams, mode in ((1, 'single'), (5, 'lanes'), (26, 'registers')):
+        for address, suffix in ((0x1000, ''), (0x09B4, '-prg')):
+            jobs.append((f'squeeze-indexed-{mode}{suffix}', 'squeeze_indexed.asm', address, streams, False))
     for templates, mode in ((False, 'raw'), (True, 'templates')):
         for address, suffix in ((0x1000, ''), (0x09B4, '-prg')):
             jobs.append((f'channel-{mode}{suffix}', 'player_channels.asm', address, None, templates))
@@ -70,6 +76,9 @@ def main():
                             *defines, '-o', str(binary), str(root/'sidpulse'/'export'/source)], check=True)
             data = binary.read_bytes()
             info = player_metadata(name, data, read_labels(labels), address, streams, templates)
+            if source in ('squeeze_phrases.asm', 'squeeze_indexed.asm'):
+                info['phrase_calls'] = True
+            if source == 'squeeze_indexed.asm': info['indexed_packets'] = True
             outputs[name + '.bin'] = data
             if streams is None:
                 outputs[name + '.json'] = (json.dumps(info, indent=2) + '\n').encode()

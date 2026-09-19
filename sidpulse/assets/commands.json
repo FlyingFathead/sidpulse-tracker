@@ -3,6 +3,71 @@
   "source_reference": "schismtracker 84d2c46c1d3b5660edbc3eca259bf1219e59623e",
   "commands": [
     {
+      "id": "ui.automation_display",
+      "command": "automation_display_toggle",
+      "description": "Switch between inline automation display 2 (default) and legacy window 1",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "UI Settings. The inline panel keeps the instrument bank accessible during recording."
+    },
+    {
+      "id": "instrument.disarm_automation",
+      "command": "pulse_record_disarm",
+      "description": "Disarm automation from the instrument list, keeping the current take",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.disarm_pulse_recording",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "Visible in the instrument bank while armed, including empty slots and every instrument tab."
+    },
+    {
+      "id": "instrument.record_pw",
+      "command": "pulse_record_arm",
+      "description": "Open inline channel automation recording (A/D/S/R/PW); one armed channel",
+      "contexts": [
+        "pattern",
+        "instrument"
+      ],
+      "shortcuts": [
+        "Ctrl+Shift+R"
+      ],
+      "key_rules": [
+        {
+          "key": "K_r",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "target": "App.open_automation_recording",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Choose a parameter and CH 1/2/3, arm, then drag the blue slider or hold its arrow keys while playing. Row-quantized, one undo; independent of instrument selection."
+    },
+    {
       "id": "audio.reset_stats",
       "command": "audio_reset_stats",
       "description": "Reset audio diagnostics",
@@ -1391,7 +1456,7 @@
         "Arrows",
         "Shift+Arrows"
       ],
-      "description": "Arrows",
+      "description": "Move cursor; Shift+arrows select fields",
       "command": "step_move",
       "target": "Editor.move",
       "key_rules": [],
@@ -1534,7 +1599,8 @@
       ],
       "shortcuts": [
         "Keypad / and *",
-        "Alt+Home/End"
+        "Alt+Home/End",
+        "F3/F4: + / - (Modern)"
       ],
       "description": "Octave",
       "command": "octave",
@@ -1647,9 +1713,9 @@
       "shortcuts": [
         "Ctrl+C"
       ],
-      "description": "Center",
+      "description": "Center the selected pattern row; instrument and sample lists always center and clamp at both ends",
       "command": "center",
-      "target": "Editor.centered",
+      "target": "App.execute(center)",
       "key_rules": [
         {
           "key": "K_c",
@@ -1782,7 +1848,7 @@
       "shortcuts": [
         "Alt+B"
       ],
-      "description": "Block start",
+      "description": "Mark whole-voice block start",
       "command": "mark",
       "target": "Editor.mark",
       "key_rules": [
@@ -1810,7 +1876,7 @@
       "shortcuts": [
         "Alt+E"
       ],
-      "description": "Block end",
+      "description": "Mark whole-voice block end",
       "command": "mark",
       "target": "Editor.mark",
       "key_rules": [
@@ -1892,9 +1958,10 @@
         "pattern"
       ],
       "shortcuts": [
-        "Alt+C"
+        "Alt+C",
+        "Ctrl+Insert (Modern)"
       ],
-      "description": "Copy block",
+      "description": "Copy selected fields or whole marked block",
       "command": "copy",
       "target": "Editor.copy",
       "key_rules": [
@@ -1922,7 +1989,7 @@
       "shortcuts": [
         "Alt+Z"
       ],
-      "description": "Cut block",
+      "description": "Cut selected fields or whole marked block",
       "command": "copy",
       "target": "Editor.copy",
       "key_rules": [
@@ -1950,7 +2017,7 @@
       "shortcuts": [
         "Alt+P"
       ],
-      "description": "Insert paste",
+      "description": "Insert copied fields; shift only those lanes",
       "command": "paste",
       "target": "Editor.paste",
       "key_rules": [
@@ -1976,9 +2043,10 @@
         "pattern"
       ],
       "shortcuts": [
-        "Alt+O"
+        "Alt+O",
+        "Shift+Insert (Modern)"
       ],
-      "description": "Overwrite paste",
+      "description": "Overwrite copied fields only",
       "command": "paste",
       "target": "Editor.paste",
       "key_rules": [
@@ -2006,7 +2074,7 @@
       "shortcuts": [
         "Alt+M"
       ],
-      "description": "Mix into empty cells",
+      "description": "Mix into empty selected fields (whole blocks: empty cells)",
       "command": "paste",
       "target": "Editor.paste",
       "key_rules": [
@@ -2123,9 +2191,10 @@
         "pattern"
       ],
       "shortcuts": [
-        "Ctrl+Insert/Delete"
+        "Ctrl+Insert/Delete (Classic)",
+        "Ctrl+Shift+Insert/Delete (Modern)"
       ],
-      "description": "Roll selected block",
+      "description": "Roll selected fields down/up; Ctrl+Delete also retains roll-up in Modern",
       "command": "roll",
       "target": "Editor.roll",
       "key_rules": [],
@@ -6687,6 +6756,237 @@
       "description": "About SIDpulse Tracker / vector logo",
       "command": "about",
       "target": "App about dialog",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "pattern.paste_special",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "Ctrl+Shift+V"
+      ],
+      "description": "Paste notes, automation or both from the copied fields",
+      "command": "paste_special",
+      "target": "App.open_paste_special",
+      "key_rules": [
+        {
+          "key": "K_v",
+          "modifiers": [
+            "ctrl",
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "display.clipboard_buttons",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Show/hide pattern clipboard buttons; saved in preferences",
+      "command": "pattern_clipboard_buttons",
+      "target": "App.toggle_pattern_clipboard_buttons",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "display.control_panel",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Expand/collapse shared filter column; saved across views",
+      "command": "control_panel_toggle",
+      "target": "App.toggle_control_panel",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "display.channel_visualizers",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Show/hide channel visualizers and enable/disable display-only scope processing",
+      "command": "channel_visualizers_toggle",
+      "target": "App.toggle_channel_visualizers",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "settings.reset_defaults",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Reset user preferences after confirmation; Cancel selected by default",
+      "command": "reset_settings",
+      "target": "settings_reset.open_dialog",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "settings.keyboard_mapping",
+      "command": "keyboard_mapping",
+      "description": "Choose Modern (default) or Classic keyboard mapping",
+      "target": "App.open_keyboard_mapping",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "audition.octave_reset",
+      "command": "octave_reset",
+      "description": "Reset audition/note-entry octave to 4",
+      "target": "Editor.DEFAULT_OCTAVE",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [
+        "F3/F4: 0 (Modern)"
+      ],
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": ""
+    },
+    {
+      "id": "instrument.monitor_mute",
+      "command": "instrument_mute",
+      "description": "Mute the instrument across all three voices (preview only)",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "M/S buttons beside bank activity dots. Session only; no song or export changes. Sample playback is unavailable."
+    },
+    {
+      "id": "instrument.monitor_solo",
+      "command": "instrument_solo",
+      "description": "Solo the instrument across all three voices (preview only)",
+      "contexts": [
+        "instrument"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "M/S buttons beside bank activity dots. Session only; no song or export changes. Sample playback is unavailable."
+    },
+    {
+      "id": "pattern.reset_automation",
+      "command": "reset_automation",
+      "description": "Reset all A D S R PW to instrument defaults; preserve notes, instruments and FX",
+      "contexts": [
+        "pattern"
+      ],
+      "shortcuts": [
+        "PW: type RAL (current cell)",
+        "Reset all automation button (selection)"
+      ],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": "Contextual PW command entry. R/RA stay transient until L; Esc cancels. R then Enter resets PW only. The button resets selected rows/channels in one undo."
+    },
+    {
+      "id": "display.instrument_monitor_buttons",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Enable instrument/sample M/S buttons and instrument monitoring; on by default",
+      "command": "instrument_monitor_buttons",
+      "target": "App.toggle_instrument_monitor_buttons",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "settings.confirm_cut",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Confirm before Cut; on by default; available in UI Settings",
+      "command": "confirm_cut_toggle",
+      "target": "App.toggle_confirm_cut",
       "key_rules": [],
       "applicable": true,
       "implemented": true,

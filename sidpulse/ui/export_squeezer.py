@@ -5,11 +5,17 @@ from time import monotonic
 
 import pygame as pg
 
-from sidpulse.export.analysis_job import AnalysisJob
-from sidpulse.preferences import load_squeeze_options, save_squeeze_options
+from sidpulse.export.analysis_job import AnalysisJob, comparison_worker
+from sidpulse.export.comparison import Comparison
+from sidpulse.export.squeeze import SQUEEZER_VERSIONS, squeezer_version_label
+from sidpulse.preferences import (load_squeeze_options, save_squeeze_options,
+                                  load_squeeze_comparison, load_squeeze_show_all_versions,
+                                  save_preferences)
 from sidpulse.ui.fonts import default_font_path
 from sidpulse.ui.instrument_graphs import button_frame
 from sidpulse.ui.themes import palette
+from sidpulse.ui.squeezer_comparison import visible_entries, comparison_columns
+from sidpulse.ui.scrollbar import handle_scrollbar, draw_scrollbar
 
 OPTIONS = (
     ('enabled', 'Squeeze song'),
@@ -33,7 +39,9 @@ def open_dialog(app, kind='sid'):
     pg.key.stop_text_input()
     app.dialog = {'kind': 'export_squeezer', 'title': f'Export {kind.upper()} / SIDpulse Tracker File Squeezer',
                   'target': kind, 'options': load_squeeze_options(), 'focus': 8,
-                  'result': None, 'source': None, 'scroll': 0, 'ensure_focus': False}
+                  'result': None, 'source': None, 'scroll': 0, 'ensure_focus': False,
+                  'compare': load_squeeze_comparison(), 'comparison': None,
+                  'show_all_versions': load_squeeze_show_all_versions()}
     analyze(app)
 
 
@@ -42,9 +50,11 @@ def analyze(app, *, continue_action=None):
     dialog = app.dialog
     if dialog.get('busy'):
         return
+    dialog['version_open']=False
     dialog.pop('error', None)
     dialog['result'] = None
     dialog['source'] = None
+    dialog['comparison'] = None
     dialog['busy'] = True
     dialog['pending_action'] = continue_action
     dialog['analysis_started'] = monotonic()
@@ -52,7 +62,9 @@ def analyze(app, *, continue_action=None):
     dialog['phase'] = 'Pre-analyzing...'
     dialog['detail'] = 'Preparing an isolated song snapshot.'
     dialog['focus'] = 8  # Cancel remains the safe, immediately usable action.
-    job = AnalysisJob(app.editor.song, dialog['options'], dialog['target'])
+    compare = dialog.get('compare', True) and dialog['options'].enabled
+    job = AnalysisJob(app.editor.song, dialog['options'], dialog['target'],
+                      **({'worker': comparison_worker} if compare else {}))
     dialog['job'] = job
     app.export_jobs.append(job)
 
@@ -91,8 +103,18 @@ def poll_analysis(app):
                 elif update.source != app.editor.song:
                     dialog['error'] = 'The song changed during analysis. Analyze again before exporting.'
                 else:
-                    dialog['result'], dialog['source'] = update.result, update.source
-                    if action:
+                    dialog['source'] = update.source
+                    if isinstance(update.result, Comparison):
+                        dialog['comparison'] = update.result
+                        best = update.result.preferred(dialog['options'].version)
+                        if best is not None:
+                            dialog['options'] = replace(dialog['options'], version=best.version)
+                            dialog['result'] = best.result
+                        else:
+                            dialog['error'] = 'No version fits the export memory budget. The project is unchanged.'
+                    else:
+                        dialog['result'] = update.result
+                    if action and dialog['result'] is not None:
                         activate(app, action)
     # Jobs belonging to a dismissed modal are never allowed to deliver into a
     # newer one. Their coordinator owns termination/joins off the UI thread.
@@ -120,8 +142,51 @@ def toggle(app, index):
     field = OPTIONS[index][0]
     dialog['options'] = replace(options, **{field: not getattr(options, field)})
     dialog['result'] = None
+    dialog['comparison'] = None
     dialog.pop('error', None)
     dialog['focus'] = index
+    if not dialog['options'].enabled:dialog['version_open']=False
+
+
+def select_version(app,version):
+    dialog=app.dialog
+    if dialog.get('busy') or not dialog['options'].enabled:return
+    dialog['options']=replace(dialog['options'],version=version)
+    comparison = dialog.get('comparison')
+    entry = next((e for e in comparison.entries if e.version==version), None) if comparison else None
+    if entry is not None and dialog.get('source') == app.editor.song:
+        dialog['result'] = entry.result
+    else:
+        dialog['result']=dialog['source']=None
+        dialog['comparison'] = None
+    dialog.pop('error',None)
+    if entry is not None and entry.error: dialog['error'] = entry.error
+    dialog['version_open']=False
+    dialog['focus']=9
+
+
+def toggle_comparison(app):
+    dialog = app.dialog
+    if dialog.get('busy') or not dialog['options'].enabled: return
+    dialog['compare'] = not dialog.get('compare', True)
+    dialog['comparison'] = dialog['result'] = dialog['source'] = None
+    dialog.pop('error', None)
+    dialog['focus'] = 10
+
+
+def toggle_all_versions(app):
+    dialog = app.dialog
+    if dialog.get('busy') or dialog.get('comparison') is None: return
+    show_all = not dialog.get('show_all_versions', True)
+    try:
+        save_preferences({'export_show_all_versions': show_all})
+    except OSError as exc:
+        dialog['error'] = 'Could not save export display preference: ' + str(exc)
+        return
+    dialog['show_all_versions'] = show_all
+    dialog['focus'] = 20
+    dialog['ensure_focus'] = True
+
 
 
 def activate(app, action):
@@ -148,6 +213,7 @@ def activate(app, action):
         return
     try:
         save_squeeze_options(dialog['options'])
+        save_preferences({'export_compare_squeezers': dialog.get('compare', True)})
     except OSError as exc:
         dialog['error'] = 'Could not save export preferences: ' + str(exc)
         return
@@ -170,6 +236,9 @@ def activate(app, action):
 
 def handle_event(app, event):
     dialog = app.dialog
+    if handle_scrollbar(dialog,event):
+        dialog['version_open'] = False
+        return
     if event.type == pg.MOUSEWHEEL:
         dialog['scroll'] -= event.y * dialog.get('line_height', 20) * 3
     elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
@@ -179,25 +248,59 @@ def handle_event(app, event):
                     toggle(app, value)
                 elif action == 'squeeze_button':
                     activate(app, value)
+                elif action == 'squeeze_version':
+                    dialog['version_open']=not dialog.get('version_open',False)
+                    dialog['version_choice']=dialog['options'].version
+                    dialog['focus']=9
+                elif action == 'squeeze_version_pick':select_version(app,value)
+                elif action == 'squeeze_compare':toggle_comparison(app)
+                elif action == 'squeeze_show_all':toggle_all_versions(app)
+                elif action == 'squeeze_use_version':
+                    select_version(app,value)
+                    dialog['focus']=11+next(i for i,e in enumerate(visible_entries(dialog)) if e.version==value)
                 return
+        dialog['version_open']=False
     elif event.type == pg.KEYDOWN:
         key = event.key
+        if dialog.get('version_open'):
+            if key==pg.K_ESCAPE:dialog['version_open']=False
+            elif key in (pg.K_UP,pg.K_DOWN,pg.K_LEFT,pg.K_RIGHT):
+                position=SQUEEZER_VERSIONS.index(dialog.get('version_choice',dialog['options'].version))
+                direction=-1 if key in (pg.K_UP,pg.K_LEFT) else 1
+                dialog['version_choice']=SQUEEZER_VERSIONS[(position+direction)%len(SQUEEZER_VERSIONS)]
+            elif key in (pg.K_RETURN,pg.K_KP_ENTER,pg.K_SPACE):
+                select_version(app,dialog.get('version_choice',dialog['options'].version))
+            elif key==pg.K_TAB:dialog['version_open']=False
+            return
         if key == pg.K_ESCAPE:
             activate(app, 'cancel')
         elif key in (pg.K_a, pg.K_s, pg.K_e):
             activate(app, {pg.K_a: 'analyze', pg.K_s: 'save', pg.K_e: 'export'}[key])
         elif key in (pg.K_TAB, pg.K_DOWN, pg.K_UP, pg.K_LEFT, pg.K_RIGHT):
-            available = [8] if dialog.get('busy') else (list(range(9)) if dialog['options'].enabled else [0, 5, 6, 7, 8])
+            choices = ([20]+[11+i for i,e in enumerate(visible_entries(dialog)) if e.result is not None]
+                       if dialog.get('comparison') else [])
+            available = [8] if dialog.get('busy') else ([0,9,10,*range(1,5),*choices,*range(5,9)] if dialog['options'].enabled else [0, 5, 6, 7, 8])
             step = -1 if key in (pg.K_UP, pg.K_LEFT) or (key == pg.K_TAB and getattr(event, 'mod', 0) & pg.KMOD_SHIFT) else 1
             position = available.index(dialog['focus']) if dialog['focus'] in available else 0
             dialog['focus'] = available[(position + step) % len(available)]
             dialog['ensure_focus'] = True
         elif key in (pg.K_RETURN, pg.K_KP_ENTER, pg.K_SPACE):
             index = dialog['focus']
-            if index < 5:
+            if index==9:
+                dialog['version_open']=True;dialog['version_choice']=dialog['options'].version
+            elif index==10:toggle_comparison(app)
+            elif index==20:toggle_all_versions(app)
+            elif index>=11 and dialog.get('comparison'):
+                version=visible_entries(dialog)[index-11].version
+                select_version(app,version)
+                dialog['focus']=11+next(i for i,e in enumerate(visible_entries(dialog)) if e.version==version)
+            elif index < 5:
                 toggle(app, index)
             else:
                 activate(app, BUTTONS[index - 5][1])
+        elif key in (pg.K_HOME, pg.K_END):
+            dialog['scroll'] = 0 if key==pg.K_HOME else dialog.get('scroll_max',0)
+            dialog['ensure_focus'] = False
         elif key in (pg.K_PAGEUP, pg.K_PAGEDOWN):
             dialog['scroll'] += (-1 if key == pg.K_PAGEUP else 1) * dialog.get('line_height', 20) * 5
 
@@ -239,12 +342,13 @@ def draw(r, app):
     columns = 4 if width >= 620 else 2
     button_rows = 4 // columns
     footer = (button_rows + 2) * line_height
-    frame = pg.Rect(0, 0, width, min(screen.get_height() - 16, 23 * line_height + footer))
+    body_lines = 33 if dialog.get('compare', True) and dialog.get('comparison') else 23
+    frame = pg.Rect(0, 0, width, min(screen.get_height() - 16, body_lines * line_height + footer))
     frame.center = screen.get_rect().center
     pg.draw.rect(screen, colors['PANEL'], frame)
     pg.draw.rect(screen, colors['TEXT'], frame, 1)
     inner = frame.inflate(-24, -12)
-    title = face.render('SIDpulse Tracker File Squeezer', True, colors['TEXT'])
+    title = face.render(f'SIDpulse Tracker / SQUEEZER v{squeezer_version_label(dialog["options"].version)}', True, colors['TEXT'])
     header_clip = screen.get_clip()
     screen.set_clip(inner)
     screen.blit(title, (inner.x, inner.y))
@@ -275,6 +379,8 @@ def draw(r, app):
         dialog.pop('progress_rect', None)
     body = pg.Rect(inner.x, inner.y + 2 * line_height + progress_height + 6, inner.width,
                    max(line_height, inner.height - footer - 2 * line_height - progress_height - 6))
+    scrollbar_track = pg.Rect(body.right-14,body.y,14,body.height)
+    body.width -= 22
     capacity = max(20, body.width // max(1, face.size('M')[0]))
     rows, option_bounds = [], {}
     position = 0
@@ -294,7 +400,35 @@ def draw(r, app):
         enabled = not busy and (index == 0 or dialog['options'].enabled)
         add(('' if index == 0 else '  ') + ('[x] ' if checked else '[ ] ') + label,
             colors['TEXT'] if enabled else colors['DIM'], index)
+        if index==0 and dialog['options'].enabled:
+            add(f'  Squeezer version: [ v{squeezer_version_label(dialog["options"].version)}  ▾ ]',
+                colors['DIM'] if busy else colors['TEXT'],9)
+            add('  '+('[x] ' if dialog.get('compare', True) else '[ ] ')+'Compare available versions',
+                colors['DIM'] if busy else colors['TEXT'],10)
     position += line_height // 2
+    comparison_top = None
+    if dialog.get('compare', True) and dialog.get('comparison') is not None:
+        entries = visible_entries(dialog)
+        add('All versions: ranked by file size, RAM, then cycles' if dialog.get('show_all_versions', True) else
+            'Top 3: ranked by file size, RAM, then cycles')
+        add(('[x] ' if dialog.get('show_all_versions', True) else '[ ] ')+'Show all versions', option=20)
+        if dialog.get('result') is not None and not any(e.version==dialog['options'].version for e in entries):
+            add(f'Selected v{squeezer_version_label(dialog["options"].version)} is outside Top 3. Show all to compare it.')
+        leaders = dialog['comparison'].leaders
+        if len(leaders)>1:
+            measured = all(e.result.squeeze_report.verified_max_cycles for e in leaders)
+            add('Joint best: '+('same size, RAM and measured cycles.' if measured else 'tied on available measurements; CPU unmeasured.'))
+            add('Current version kept if tied; otherwise the newest tied version is selected.')
+        comparison_top = position
+        card_columns = comparison_columns(dialog, body.width)
+        comparison_rows = (len(entries)+card_columns-1)//card_columns
+        position += 9*line_height*comparison_rows
+        for index,entry in enumerate(entries):
+            if entry.result is not None:
+                option_bounds[11+index] = (comparison_top+(index//card_columns*9+6)*line_height,
+                                         comparison_top+(index//card_columns*9+8)*line_height)
+        add('File/RAM: bytes. CPU: measured maximum C64 cycles/call; lower is better.')
+        add('CPU excludes VIC/IRQ overhead. A dash means no measured result.')
     result = dialog['result']
     if result is not None:
         report = result.squeeze_report
@@ -304,7 +438,7 @@ def draw(r, app):
         add(f'Resident RAM: {report.original_resident_bytes:,} -> {report.resident_bytes:,} bytes')
         add(f'Player/state: {report.player_bytes:,} | Song: {report.song_data_bytes:,} | Wrapper: {report.wrapper_bytes:,}')
         add(f'Zero page: {report.zero_page_bytes} | Stack: <= {report.stack_bytes} | {report.algorithm}')
-        add(('Packed tick/write verification passed. ' if report.zero_page_bytes == 2 else 'Legacy replay selected. ') +
+        add(('Packed tick/write verification passed. ' if report.verified_calls else 'Legacy replay selected. ') +
             f'Conservative maximum: {result.max_cycles_bound:,} cycles/call.')
         if report.fallback_reason:
             add(report.fallback_reason)
@@ -334,12 +468,18 @@ def draw(r, app):
         screen.blit(face.render(line, True, color), (body.x, body.y + offset - dialog['scroll']))
     for index, (begin, end) in option_bounds.items():
         rect = pg.Rect(body.x, body.y + begin - dialog['scroll'], body.width, end - begin)
-        if dialog['focus'] == index:
+        if dialog['focus'] == index and (index<11 or index==20):
             pg.draw.rect(screen, colors['TEXT'], rect, 1)
         hit = rect.clip(body)
-        if hit.height and not busy:
-            r.hits.append((hit, 'squeeze_option', index))
+        if hit.height and not busy and (index<11 or index==20):
+            action = 'squeeze_show_all' if index==20 else 'squeeze_version' if index==9 else 'squeeze_compare' if index==10 else 'squeeze_option'
+            r.hits.append((hit, action, index))
+    if comparison_top is not None:
+        from sidpulse.ui.squeezer_comparison import draw_comparison
+        draw_comparison(r, app, pg.Rect(body.x, body.y+comparison_top-dialog['scroll'], body.width, 8*line_height),
+                        small, line_height, colors, body)
     screen.set_clip(old_clip)
+    draw_scrollbar(r,dialog,scrollbar_track,position,body.height,colors, prefix="squeeze_scroll")
     top = inner.bottom - footer + line_height
     bw = (inner.width - (columns - 1) * 8) / columns
     for index, (label, action) in enumerate(BUTTONS):
@@ -358,3 +498,17 @@ def draw(r, app):
     screen.set_clip(inner)
     screen.blit(hint, (inner.x, inner.bottom - small.get_linesize()))
     screen.set_clip(old_clip)
+    if dialog.get('version_open') and not busy and 9 in option_bounds:
+        start,end=option_bounds[9]
+        width=min(body.width,face.size('v2.0.1  (new)')[0]+32)
+        left=body.x+min(body.width-width,face.size('  Squeezer version: ')[0])
+        top=min(body.bottom-len(SQUEEZER_VERSIONS)*line_height,body.y+end-dialog['scroll'])
+        top=max(body.top,top)
+        for index,version in enumerate(SQUEEZER_VERSIONS):
+            rect=pg.Rect(left,top+index*line_height,width,line_height)
+            selected=version==dialog.get('version_choice',dialog['options'].version)
+            button_frame(r,rect,selected)
+            label=small.render('v'+squeezer_version_label(version)+('  (new)' if version==SQUEEZER_VERSIONS[0] else '  (original)' if version==1 else ''),True,
+                               colors['CREAM'] if selected else colors['TEXT'])
+            screen.blit(label,label.get_rect(center=rect.center))
+            r.hits.append((rect,'squeeze_version_pick',version))
