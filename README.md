@@ -870,7 +870,7 @@ SIDpulse Tracker's squeezer. The implementation is independent; no GoatTracker
 code was incorporated. See the
 [optimization study](docs/SQUEEZER-v2.0.1.md#goattracker-reference-compressing-the-instruction-not-just-its-results).
 
-# My other Commodore 64-related projects
+## My other Commodore 64-related projects
 
 - [audio-bitsqueezer](https://github.com/FlyingFathead/audio-bitsqueezer) — Convert audio into compact 4-bit SID samples and playable C64 programs or EasyFlash cartridges, with a command-line interface and local browser UI.
 - [c64-3d-toolkit](https://github.com/FlyingFathead/c64-3d-toolkit) — Compile low-poly wireframe models and Blender scenes, animations and physics into C64 demos, with OBJ/MTL and SVG import support.
