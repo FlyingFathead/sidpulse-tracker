@@ -203,11 +203,11 @@ def draw_roll(r,app,left,top,bottom):
 
 
 def draw_fields(r,app,left,top,bottom,motion,full_wave=False,right=None):
-    from sidpulse.ui.instruments import FIELDS,LABELS,LIMITS,SEQUENCES,PROGRAM_ROWS,PROGRAM_LABELS,display
+    from sidpulse.ui.instruments import FIELDS,LABELS,LIMITS,SEQUENCES,PROGRAM_ROWS,PROGRAM_LABELS,display,field_indexes
     inst=app.editor.song.instruments[app.editor.instrument]
     first,last=(9,len(FIELDS)) if motion else (0,9)
     count=max(1,int((bottom-top)/1.4))
-    indexes=[i for i in range(first,last) if not (full_wave and i==1)]
+    indexes=field_indexes(inst,motion,full_wave)
     selected=indexes.index(app.property_index) if app.property_index in indexes else 0
     start=max(0,min(len(indexes)-count,selected-count+1))
     key = 'instrument-fields'

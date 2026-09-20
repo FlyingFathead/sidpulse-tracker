@@ -3,7 +3,9 @@ import pygame as pg
 import pytest
 
 from sidpulse.app import App
-from sidpulse.commands.pattern_fields import AUTOMATION_FIELDS
+from sidpulse.song.model import ENVELOPE_FIELDS
+
+AUTOMATION_FIELDS = (*ENVELOPE_FIELDS, 'pulse_width')
 from sidpulse.project.format import decode, encode
 from sidpulse.song.model import Cell
 from sidpulse.ui.keyboard import Command
@@ -18,7 +20,7 @@ def app():
     app = App(audio=False)
     app.editor.pattern.rows[0][0] = Cell(48, 1, 'H', 0x23, attack=2, decay=3, sustain=4, release=5,
                                        pulse_width=0x456, _extra_fields={'future': 7})
-    app.editor.column = 13
+    app.editor.column = 14
     yield app
     app.close()
 
@@ -37,7 +39,7 @@ def test_r_ra_are_transient_and_ral_commits_one_undoable_reset(app):
     cell = app.editor.pattern.rows[0][0]
     assert all(getattr(cell, f) == -1 for f in AUTOMATION_FIELDS)
     assert (cell.note, cell.instrument, cell.effect, cell.parameter, cell._extra_fields) == (48, 1, 'H', 0x23, {'future': 7})
-    assert app.editor.row == 1 and app.editor.column == 13
+    assert app.editor.row == 1 and app.editor.column == 14
     assert app.editor.history.revision == revision + 1 and app.pattern_reset_entry is None
     loaded, _ = decode(encode(app.editor.song))
     assert loaded == app.editor.song
@@ -72,10 +74,10 @@ def test_partial_reset_backspace_invalid_letter_and_explicit_pw_only(app):
 
 
 def test_adsr_r_is_immediate_and_caps_lock_still_auditions(app, monkeypatch):
-    app.editor.column = 9
+    app.editor.column = 10
     key(app, pg.K_r, 'r', scan=21)
     assert app.editor.pattern.rows[0][0].attack == -1
-    app.editor.row = 0; app.editor.column = 13
+    app.editor.row = 0; app.editor.column = 14
     before = deepcopy(app.editor.song)
     sent = []; monkeypatch.setattr(app.audio, 'send', lambda *args: sent.append(args))
     key(app, pg.K_r, 'R', mod=pg.KMOD_CAPS, scan=21)

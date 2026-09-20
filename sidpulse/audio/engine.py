@@ -12,6 +12,7 @@ from sidpulse.preferences import DEFAULT_BUFFER
 from sidpulse.audio.activity import InstrumentActivity, ActivitySnapshot
 
 from sidpulse.playback.voices import Audition
+from sidpulse.audio.samples import audition as make_audition, enabled as samples_enabled, SampleAudition
 from sidpulse.sid.backend_residfp import ReSIDfpBackend, note_on, note_off, set_filter
 
 
@@ -124,7 +125,8 @@ class AudioEngine:
             from sidpulse.audio.monitor import InstrumentMonitor
             monitor = InstrumentMonitor(sid)
             sequencer = Sequencer(sid, activity, monitor.note_on)
-            audition = Audition(sid, self.startup.tempo, activity, monitor.note_on)
+            current_song = self.startup
+            audition = make_audition(sid, current_song, activity, monitor.note_on)
             conditioner = OutputConditioner()
             output = AudioOutput(self.buffer_frames, self.output_device)
             channel = output.channel
@@ -200,6 +202,17 @@ class AudioEngine:
                         audition.trigger(voice, note, instrument, number)
                         audition_sources[voice] = number
                         conditioner.target = 1.0
+                    elif name == "sample_on" and sequencer.status == "stopped":
+                        from sidpulse.song.model import Instrument
+                        token, note, sample = values
+                        if not allocator.held:set_filter(sid,audition_filter)
+                        if not isinstance(audition, SampleAudition):
+                            audition = SampleAudition(sid, current_song.tempo, activity, monitor.note_on, samples=current_song.samples)
+                        audition.samples = dict(audition.samples)
+                        audition.samples[0] = sample
+                        voice = allocator.acquire(token)
+                        audition.trigger(voice, note, Instrument(sample_override=True, sample_slot=0), None)
+                        conditioner.target = 1.0
                     elif name == "scopes":
                         sid.enable_scopes(bool(values[0]))
                         if not values[0]:
@@ -220,6 +233,7 @@ class AudioEngine:
                         activity.reset()
                         audition_sources.clear()
                         song, mode, order, row, pattern = values
+                        current_song = song
                         audition_filter = deepcopy(song.filter)
                         channel.stop()
                         allocator.held.clear()
@@ -231,7 +245,7 @@ class AudioEngine:
                         sid.render(48000)
                         conditioner = OutputConditioner()
                         conditioner.target = 1.0
-                        audition = Audition(sid, audition.tempo, activity, monitor.note_on)
+                        audition = make_audition(sid, current_song, activity, monitor.note_on)
                         audition.tempo = song.tempo
                         sequencer.start(song, mode, order, row, pattern)
                         last_wake = time.perf_counter()
@@ -248,7 +262,14 @@ class AudioEngine:
                         else:
                             channel.unpause()
                     elif name == "update_song":
-                        sequencer.update_song(values[0])
+                        current_song = values[0]
+                        sequencer.update_song(current_song)
+                        if samples_enabled(current_song) != isinstance(audition, SampleAudition):
+                            for voice in range(3):audition.release(voice, cut=True)
+                            audition = make_audition(sid, current_song, activity, monitor.note_on)
+                            allocator.held.clear()
+                        elif isinstance(audition, SampleAudition):
+                            audition.samples = current_song.samples
                         audition_filter = deepcopy(values[0].filter)
                         audition.tempo = values[0].tempo
                         if sequencer.status=="stopped":
@@ -256,6 +277,9 @@ class AudioEngine:
                                 number=audition_sources.get(voice)
                                 inst=values[0].instruments.get(number)
                                 if inst is not None:
+                                    if inst.sample_override:
+                                        from dataclasses import replace
+                                        inst=replace(inst,waveform=0,wave_sequence_enabled=False,sync=False,ring=False)
                                     audition.voices[voice].instrument=deepcopy(inst)
                                     audition.write(voice*7+5,inst.attack<<4|inst.decay)
                                     audition.write(voice*7+6,inst.sustain<<4|inst.release)
@@ -263,7 +287,7 @@ class AudioEngine:
                         activity.reset()
                         audition_sources.clear()
                         sequencer.stop()
-                        audition = Audition(sid, audition.tempo, activity, monitor.note_on)
+                        audition = make_audition(sid, current_song, activity, monitor.note_on)
                         monitor.reset()
                         allocator.held.clear()
                         channel.unpause()
@@ -297,7 +321,7 @@ class AudioEngine:
                             channel.stop()
                             sid.set_model(model)
                             sid.set_clock(clock)
-                            audition = Audition(sid, audition.tempo, activity, monitor.note_on)
+                            audition = make_audition(sid, current_song, activity, monitor.note_on)
                             monitor.reset()
                             set_filter(sid, filter_state)
                             sid.render(48000)

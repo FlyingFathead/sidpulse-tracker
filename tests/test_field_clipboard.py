@@ -27,9 +27,31 @@ def select(ed, first, last):
     ed.row,ed.voice,ed.column = last
 
 
+@pytest.mark.parametrize('size',[(640,480),(960,1080),(1280,900)])
+@pytest.mark.parametrize('buttons',[True,False])
+def test_select_all_button_selects_entire_pattern_without_editing(size,buttons):
+    app=App(audio=False,size=size)
+    try:
+        app.pattern_clipboard_buttons=buttons
+        app.control_panel_visible=True
+        before=deepcopy(app.editor.song)
+        app.editor.row=5;app.editor.voice=1
+        app.renderer.render(app)
+        rect=next(r for r,a,v in app.renderer.hits if a=='pattern_select_all')
+        assert app.screen.get_rect().contains(rect)
+        app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=rect.center))
+        assert app.editor.anchor is None
+        app.handle(pg.event.Event(pg.MOUSEBUTTONUP,button=1,pos=rect.center))
+        assert app.editor.bounds()==(0,len(app.editor.pattern.rows)-1,0,2)
+        assert all(app.editor.selected_fields(v) is None for v in range(3))
+        assert app.editor.row==5 and app.editor.voice==1
+        assert app.editor.song==before and not app.editor.history.undo_stack
+    finally:app.close()
+
+
 def test_copy_pw_to_other_channel_at_note_cursor_preserves_every_other_field_and_undo():
     ed=source_editor();before=deepcopy(ed.song)
-    select(ed,(0,0,14),(3,0,14));ed.copy()
+    select(ed,(0,0,15),(3,0,15));ed.copy()
     assert ed.clipboard_fields == (frozenset(('pulse_width',)),)
     assert ed.clipboard[0][0].note is None
     ed.row,ed.voice,ed.column=0,1,0;ed.paste()
@@ -50,7 +72,7 @@ def test_paste_special_filters_whole_channel_copy(scope,fields):
 
 
 def test_paste_special_cannot_restore_data_outside_copied_selection():
-    ed=source_editor();select(ed,(0,0,13),(3,0,15));ed.copy()
+    ed=source_editor();select(ed,(0,0,14),(3,0,16));ed.copy()
     before=deepcopy(ed.song);ed.row,ed.voice=0,1
     ed.paste(scope='notes');assert ed.song==before and 'no fields matching' in ed.status
     ed.paste(scope='both');assert ed.pattern.rows[0][1].note==60
@@ -64,7 +86,7 @@ def test_note_name_and_octave_are_one_copy_unit_in_reverse_selection():
 
 
 def test_multi_voice_selection_keeps_distinct_edge_fields():
-    ed=source_editor();select(ed,(1,1,0),(0,0,14));ed.copy()
+    ed=source_editor();select(ed,(1,1,0),(0,0,15));ed.copy()
     assert ed.clipboard_fields==(frozenset(('pulse_width',)),frozenset(('note',)))
     ed.row,ed.voice=4,1;before=deepcopy(ed.song);ed.paste()
     for r in range(2):
@@ -73,27 +95,27 @@ def test_multi_voice_selection_keeps_distinct_edge_fields():
 
 
 def test_insert_paste_shifts_only_selected_automation_lanes():
-    ed=source_editor();select(ed,(0,0,9),(1,0,15));ed.copy()
+    ed=source_editor();select(ed,(0,0,10),(1,0,16));ed.copy()
     before=deepcopy(ed.song);ed.row,ed.voice=2,1;ed.paste('insert')
     for r in range(len(ed.pattern.rows)):
         old=before.patterns[0].rows[r][1]
         src=(before.patterns[0].rows[r-2][0] if 2<=r<4 else before.patterns[0].rows[r-2][1] if r>=4 else old)
-        assert ed.pattern.rows[r][1]==replace(old,**{f:getattr(src,f) for f in AUTOMATION_FIELDS})
+        assert ed.pattern.rows[r][1]==replace(old,**{f:getattr(src,f) for f in AUTOMATION_FIELDS - {'waveform'}})
     ed.history.undo(ed.song);assert ed.song==before
 
 
 def test_cut_and_roll_automation_never_touch_notes_effects_or_extension_data():
-    ed=source_editor();select(ed,(0,1,9),(3,1,15));before=deepcopy(ed.song)
+    ed=source_editor();select(ed,(0,1,10),(3,1,16));before=deepcopy(ed.song)
     ed.copy(cut=True)
-    for r in range(4):assert ed.pattern.rows[r][1]==replace(before.patterns[0].rows[r][1],**dict.fromkeys(AUTOMATION_FIELDS))
+    for r in range(4):assert ed.pattern.rows[r][1]==replace(before.patterns[0].rows[r][1],**dict.fromkeys(AUTOMATION_FIELDS - {'waveform'}))
     ed.history.undo(ed.song);assert ed.song==before
     ed.roll(1)
-    for r in range(4):assert ed.pattern.rows[r][1]==replace(before.patterns[0].rows[r][1],**{f:getattr(before.patterns[0].rows[(r-1)%4][1],f) for f in AUTOMATION_FIELDS})
+    for r in range(4):assert ed.pattern.rows[r][1]==replace(before.patterns[0].rows[r][1],**{f:getattr(before.patterns[0].rows[(r-1)%4][1],f) for f in AUTOMATION_FIELDS - {'waveform'}})
     ed.history.undo(ed.song);ed.transpose(12);ed.set_block_instrument();assert ed.song==before
 
 
 def test_mix_fills_empty_fields_but_keeps_explicit_zero_reset_and_fx_pair():
-    ed=source_editor();select(ed,(0,0,6),(3,0,15));ed.copy()
+    ed=source_editor();select(ed,(0,0,7),(3,0,16));ed.copy()
     ed.pattern.rows[0][1]=Cell(60,2,'',None,pulse_width=None)
     ed.pattern.rows[1][1].pulse_width=0
     ed.pattern.rows[2][1].pulse_width=-1
@@ -105,7 +127,7 @@ def test_mix_fills_empty_fields_but_keeps_explicit_zero_reset_and_fx_pair():
 
 
 def test_field_copy_survives_pattern_change_and_clips_at_destination_end():
-    ed=source_editor();select(ed,(0,0,13),(3,0,15));ed.copy();ed.select_pattern(1)
+    ed=source_editor();select(ed,(0,0,14),(3,0,16));ed.copy();ed.select_pattern(1)
     ed.row,ed.voice=63,2;ed.paste();assert ed.pattern.rows[63][2].pulse_width is None
     ed.row=62;ed.paste();assert ed.pattern.rows[63][2].pulse_width==0
 
@@ -130,8 +152,8 @@ def key(app,sym,mod=0):
 
 
 def test_mouse_drag_copy_button_and_paste_button_only_transfer_pw(app):
-    first=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(0,0,14))
-    last=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(3,0,14))
+    first=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(0,0,15))
+    last=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(3,0,15))
     app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=first.center))
     app.handle(pg.event.Event(pg.MOUSEMOTION,pos=last.center,buttons=(1,0,0),rel=(0,0)))
     app.handle(pg.event.Event(pg.MOUSEBUTTONUP,button=1,pos=last.center))
@@ -142,19 +164,19 @@ def test_mouse_drag_copy_button_and_paste_button_only_transfer_pw(app):
 
 
 def test_header_and_keyboard_selection_then_paste_special_mouse_and_escape(app):
-    click(app,'select_field',(0,13));assert app.editor.bounds()==(0,63,0,0)
+    click(app,'select_field',(0,14));assert app.editor.bounds()==(0,63,0,0)
     key(app,pg.K_c,pg.KMOD_ALT);click(app,'cell',(0,1,0))
     key(app,pg.K_v,pg.KMOD_CTRL|pg.KMOD_SHIFT);assert app.dialog['kind']=='paste_special'
     before=deepcopy(app.editor.song);key(app,pg.K_ESCAPE);assert app.editor.song==before
     key(app,pg.K_v,pg.KMOD_CTRL|pg.KMOD_SHIFT);click(app,'dialog_button',pg.K_a)
     assert app.editor.pattern.rows[3][1].pulse_width==0xFFF and app.editor.pattern.rows[3][1].note==63
-    click(app,'cell',(0,0,9));key(app,pg.K_DOWN,pg.KMOD_SHIFT);key(app,pg.K_RIGHT,pg.KMOD_SHIFT)
+    click(app,'cell',(0,0,10));key(app,pg.K_DOWN,pg.KMOD_SHIFT);key(app,pg.K_RIGHT,pg.KMOD_SHIFT)
     assert app.editor.bounds()==(0,1,0,0) and app.editor.selected_fields(0)=={'attack','decay'}
     assert dispatch(pg.event.Event(pg.KEYDOWN,key=pg.K_c,mod=pg.KMOD_CTRL,scancode=0,unicode='')).name=='center'
 
 
 def test_drag_scrolls_beyond_visible_rows_and_releases_on_focus_loss(app):
-    rect=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(0,0,13))
+    rect=next(r for r,a,v in app.renderer.hits if a=='cell' and v==(0,0,14))
     app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=rect.center))
     initial=app.renderer.pattern_geometry['last_row']
     for _ in range(4):

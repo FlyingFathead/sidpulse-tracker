@@ -1,0 +1,269 @@
+{
+  "emulator": "VICE x64sc 3.7.1, PAL, reSID 8580 and 6581",
+  "test": "Actual BASIC-autostarted PRGs, timer IRQ/NMI, 16,000,000 C64 cycles per run",
+  "first_sample_seconds": 4.101979166666666,
+  "hits": [
+    {
+      "row": 0,
+      "kind": "kick",
+      "time_seconds": 4.101979,
+      "rms": 282.703,
+      "pcm_difference_rms": 174.562
+    },
+    {
+      "row": 2,
+      "kind": "SID hi-hat",
+      "time_seconds": 4.341979,
+      "rms": 449.25,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 4,
+      "kind": "snare",
+      "time_seconds": 4.581979,
+      "rms": 166.385,
+      "pcm_difference_rms": 106.142
+    },
+    {
+      "row": 6,
+      "kind": "SID hi-hat",
+      "time_seconds": 4.821979,
+      "rms": 351.271,
+      "pcm_difference_rms": 11.847
+    },
+    {
+      "row": 8,
+      "kind": "kick",
+      "time_seconds": 5.061979,
+      "rms": 216.09,
+      "pcm_difference_rms": 174.522
+    },
+    {
+      "row": 10,
+      "kind": "SID hi-hat",
+      "time_seconds": 5.301979,
+      "rms": 431.651,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 12,
+      "kind": "snare",
+      "time_seconds": 5.541979,
+      "rms": 166.172,
+      "pcm_difference_rms": 106.008
+    },
+    {
+      "row": 14,
+      "kind": "SID hi-hat",
+      "time_seconds": 5.781979,
+      "rms": 355.618,
+      "pcm_difference_rms": 12.302
+    },
+    {
+      "row": 16,
+      "kind": "kick",
+      "time_seconds": 6.021979,
+      "rms": 216.269,
+      "pcm_difference_rms": 174.844
+    },
+    {
+      "row": 18,
+      "kind": "SID hi-hat",
+      "time_seconds": 6.261979,
+      "rms": 425.31,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 20,
+      "kind": "snare",
+      "time_seconds": 6.501979,
+      "rms": 166.451,
+      "pcm_difference_rms": 106.323
+    },
+    {
+      "row": 22,
+      "kind": "SID hi-hat",
+      "time_seconds": 6.741979,
+      "rms": 351.034,
+      "pcm_difference_rms": 12.275
+    },
+    {
+      "row": 24,
+      "kind": "kick",
+      "time_seconds": 6.981979,
+      "rms": 216.049,
+      "pcm_difference_rms": 175.024
+    },
+    {
+      "row": 26,
+      "kind": "SID hi-hat",
+      "time_seconds": 7.221979,
+      "rms": 436.744,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 28,
+      "kind": "snare",
+      "time_seconds": 7.461979,
+      "rms": 166.141,
+      "pcm_difference_rms": 106.084
+    },
+    {
+      "row": 30,
+      "kind": "SID hi-hat",
+      "time_seconds": 7.701979,
+      "rms": 359.401,
+      "pcm_difference_rms": 12.004
+    },
+    {
+      "row": 32,
+      "kind": "kick",
+      "time_seconds": 7.941979,
+      "rms": 215.82,
+      "pcm_difference_rms": 174.705
+    },
+    {
+      "row": 34,
+      "kind": "SID hi-hat",
+      "time_seconds": 8.181979,
+      "rms": 432.222,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 36,
+      "kind": "snare",
+      "time_seconds": 8.421979,
+      "rms": 166.004,
+      "pcm_difference_rms": 106.199
+    },
+    {
+      "row": 38,
+      "kind": "SID hi-hat",
+      "time_seconds": 8.661979,
+      "rms": 344.971,
+      "pcm_difference_rms": 11.857
+    },
+    {
+      "row": 40,
+      "kind": "kick",
+      "time_seconds": 8.901979,
+      "rms": 215.949,
+      "pcm_difference_rms": 174.789
+    },
+    {
+      "row": 42,
+      "kind": "SID hi-hat",
+      "time_seconds": 9.141979,
+      "rms": 438.752,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 44,
+      "kind": "snare",
+      "time_seconds": 9.381979,
+      "rms": 166.395,
+      "pcm_difference_rms": 106.327
+    },
+    {
+      "row": 46,
+      "kind": "SID hi-hat",
+      "time_seconds": 9.621979,
+      "rms": 353.478,
+      "pcm_difference_rms": 11.825
+    },
+    {
+      "row": 48,
+      "kind": "kick",
+      "time_seconds": 9.861979,
+      "rms": 216.031,
+      "pcm_difference_rms": 174.572
+    },
+    {
+      "row": 50,
+      "kind": "SID hi-hat",
+      "time_seconds": 10.101979,
+      "rms": 453.032,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 52,
+      "kind": "snare",
+      "time_seconds": 10.341979,
+      "rms": 166.268,
+      "pcm_difference_rms": 105.943
+    },
+    {
+      "row": 54,
+      "kind": "SID hi-hat",
+      "time_seconds": 10.581979,
+      "rms": 369.133,
+      "pcm_difference_rms": 12.404
+    },
+    {
+      "row": 56,
+      "kind": "kick",
+      "time_seconds": 10.821979,
+      "rms": 216.266,
+      "pcm_difference_rms": 174.716
+    },
+    {
+      "row": 58,
+      "kind": "SID hi-hat",
+      "time_seconds": 11.061979,
+      "rms": 431.082,
+      "pcm_difference_rms": 0.0
+    },
+    {
+      "row": 60,
+      "kind": "snare",
+      "time_seconds": 11.301979,
+      "rms": 166.292,
+      "pcm_difference_rms": 106.123
+    },
+    {
+      "row": 62,
+      "kind": "SID hi-hat",
+      "time_seconds": 11.541979,
+      "rms": 362.107,
+      "pcm_difference_rms": 12.261
+    }
+  ],
+  "comparisons": [
+    {
+      "recording": "mixed-ch2-v202-257",
+      "common_frames": 779392,
+      "correlation": 0.9999998132808481,
+      "identical": false
+    },
+    {
+      "recording": "mixed-ch3-v202-257",
+      "common_frames": 552938,
+      "correlation": 1.0,
+      "identical": true
+    },
+    {
+      "recording": "kick-hihat-and-snare-v201-257",
+      "common_frames": 779392,
+      "correlation": 1.0,
+      "identical": true
+    },
+    {
+      "recording": "kick-hihat-and-snare-v1-257",
+      "common_frames": 610282,
+      "correlation": 1.0,
+      "identical": true
+    }
+  ],
+  "pcm_ablation": "Reference has identical player/music and sample byte addresses; only packed sample values replaced with 0x88.",
+  "caveats": [
+    "RMS is in signed 16-bit units, not dB SPL.",
+    "Boot click excluded from all hit checks.",
+    "VICE WAV headers vary in declared end length; comparisons use the common complete prefix.",
+    "These are emulator checks, not physical C64 validation."
+  ],
+  "isolated_sample_waveform_correlations": {
+    "kick": -0.9808633902904891,
+    "snare": -0.9682995347801988
+  },
+  "correlation_method": "First 100 ms of isolated output vs rate-matched packed sample codes; short lag search compensates playback/filter delay. Volume digi output polarity is inverted."
+}

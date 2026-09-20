@@ -157,7 +157,7 @@ def test_classic_zero_still_auditions_and_numeric_dialogs_keep_zero(app):
     app.text_dialog('Number','',lambda value:None)
     key(app,pg.K_0,text='0',scan=39);app.handle(pg.event.Event(pg.TEXTINPUT,text='0'))
     assert app.dialog['text']=='0' and app.editor.octave==6
-    app.dialog=None;app.change_page('pattern');app.editor.column=13
+    app.dialog=None;app.change_page('pattern');app.editor.column=14
     key(app,pg.K_0,text='0',scan=39)
     assert app.editor.octave==6  # pattern numbers retain their existing meaning
 

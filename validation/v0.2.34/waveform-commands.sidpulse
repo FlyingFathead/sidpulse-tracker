@@ -1,0 +1,343 @@
+{
+  "format": "SIDPULSE",
+  "format_version": 10,
+  "song": {
+    "title": "Waveform / SID modulation check",
+    "author": "",
+    "comments": "",
+    "sid_model": "8580",
+    "clock": "PAL",
+    "speed": 3,
+    "tempo": 125,
+    "patterns": {
+      "0": {
+        "name": "Untitled pattern",
+        "rows": [
+          [
+            {
+              "note": 48,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 52,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            },
+            {
+              "note": 55,
+              "instrument": 1,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 17,
+              "waveform": 16
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null,
+              "waveform": 128
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 33
+            },
+            {
+              "note": 50,
+              "instrument": 2,
+              "effect": "",
+              "parameter": null,
+              "waveform": 32
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "H",
+              "parameter": 35
+            }
+          ],
+          [
+            {
+              "note": 50,
+              "instrument": 1,
+              "effect": "S",
+              "parameter": 210,
+              "waveform": 64
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null,
+              "waveform": -1
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 16
+            }
+          ]
+        ],
+        "controls": {}
+      },
+      "1": {
+        "name": "Untitled pattern",
+        "rows": [
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 31,
+              "waveform": -1
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 32
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Q",
+              "parameter": 2
+            },
+            {
+              "note": 48,
+              "instrument": 2,
+              "effect": "G",
+              "parameter": 4
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 33,
+              "waveform": 16
+            }
+          ],
+          [
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 47
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "Z",
+              "parameter": 31
+            },
+            {
+              "note": null,
+              "instrument": null,
+              "effect": "",
+              "parameter": null,
+              "waveform": -1
+            }
+          ]
+        ],
+        "controls": {}
+      }
+    },
+    "orders": [
+      0,
+      1
+    ],
+    "instruments": {
+      "1": {
+        "name": "Pulse lead",
+        "waveform": 16,
+        "attack": 0,
+        "decay": 8,
+        "sustain": 12,
+        "release": 5,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [
+          0,
+          12
+        ],
+        "arp_speed": 1,
+        "wave_sequence": [
+          16,
+          128,
+          64,
+          32,
+          16
+        ],
+        "pitch_sequence": [
+          0,
+          7,
+          2
+        ],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 0,
+        "retrigger": 0,
+        "macros": {},
+        "arpeggio_enabled": true,
+        "wave_sequence_enabled": true,
+        "pitch_sequence_enabled": true,
+        "pulse_enabled": true,
+        "vibrato_enabled": true,
+        "gate_enabled": true,
+        "retrigger_enabled": true
+      },
+      "2": {
+        "name": "Pulse lead",
+        "waveform": 16,
+        "attack": 0,
+        "decay": 8,
+        "sustain": 12,
+        "release": 5,
+        "pulse_width": 2048,
+        "sync": true,
+        "ring": true,
+        "arpeggio": [
+          0,
+          12
+        ],
+        "arp_speed": 1,
+        "wave_sequence": [
+          16,
+          128,
+          64,
+          32,
+          16
+        ],
+        "pitch_sequence": [
+          0,
+          7,
+          2
+        ],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 0,
+        "retrigger": 0,
+        "macros": {},
+        "arpeggio_enabled": true,
+        "wave_sequence_enabled": false,
+        "pitch_sequence_enabled": true,
+        "pulse_enabled": true,
+        "vibrato_enabled": true,
+        "gate_enabled": true,
+        "retrigger_enabled": true
+      },
+      "3": {
+        "name": "Triangle bell",
+        "waveform": 16,
+        "attack": 0,
+        "decay": 10,
+        "sustain": 0,
+        "release": 8,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 0,
+        "retrigger": 0,
+        "macros": {},
+        "arpeggio_enabled": true,
+        "wave_sequence_enabled": true,
+        "pitch_sequence_enabled": true,
+        "pulse_enabled": true,
+        "vibrato_enabled": true,
+        "gate_enabled": true,
+        "retrigger_enabled": true
+      },
+      "4": {
+        "name": "Noise percussion",
+        "waveform": 128,
+        "attack": 0,
+        "decay": 6,
+        "sustain": 0,
+        "release": 2,
+        "pulse_width": 2048,
+        "sync": false,
+        "ring": false,
+        "arpeggio": [],
+        "arp_speed": 1,
+        "wave_sequence": [],
+        "pitch_sequence": [],
+        "pulse_depth": 0,
+        "pulse_rate": 16,
+        "vibrato_speed": 0,
+        "vibrato_depth": 0,
+        "vibrato_delay": 0,
+        "gate_ticks": 0,
+        "retrigger": 0,
+        "macros": {},
+        "arpeggio_enabled": true,
+        "wave_sequence_enabled": true,
+        "pitch_sequence_enabled": true,
+        "pulse_enabled": true,
+        "vibrato_enabled": true,
+        "gate_enabled": true,
+        "retrigger_enabled": true
+      }
+    },
+    "samples": {},
+    "macros": {},
+    "filter_programs": {},
+    "filter": {
+      "cutoff": 1024,
+      "resonance": 0,
+      "routing": 0,
+      "mode": 16,
+      "volume": 15
+    },
+    "export_config": {
+      "loop": false
+    }
+  },
+  "editor": {
+    "saved_with_version": "0.2.34"
+  }
+}

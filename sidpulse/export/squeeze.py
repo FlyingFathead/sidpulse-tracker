@@ -28,12 +28,16 @@ class SqueezeOptions:
     unused: bool = True
     streams: bool = True
     version: int = 202
+    pcm_auto_remap: bool = True
+    digi_method: int = 1
 
     def __post_init__(self):
-        if any(type(getattr(self, field.name)) is not bool for field in fields(self) if field.name!='version'):
+        if any(type(getattr(self, field.name)) is not bool for field in fields(self) if field.name not in ('version', 'digi_method')):
             raise ValueError('Squeeze options must be true or false')
         if type(self.version) is not int or self.version not in SQUEEZER_VERSIONS:
             raise ValueError('Squeezer version must be 1, 2, 201 or 202')
+        if type(self.digi_method) is not int or self.digi_method not in (1, 2):
+            raise ValueError('DIGI method must be 1 (volume, display on) or 2 (waveform DAC, display off)')
 
 
 @dataclass(frozen=True)
@@ -64,6 +68,8 @@ class SqueezeReport:
     phrase_blocks: int = 0
     repeated_blocks: int = 0
     squeezer_version: int = 1
+    pcm_source_channel: int = 0
+    digi_method: int = 0
 
     @property
     def saved_bytes(self) -> int:
@@ -79,7 +85,7 @@ class SqueezeReport:
         return self.original_payload_bytes + self.original_wrapper_bytes + 4 + (7 if self.original_wrapper_bytes else 2)
 
     def summary(self) -> str:
-        state = self.algorithm if self.enabled else 'Squeeze off / legacy player'
+        state = self.algorithm if self.enabled or self.algorithm.startswith('PCM-enhanced') else 'Squeeze off / legacy player'
         return (f'{state}: {self.resident_bytes:,} bytes resident RAM '
                 f'({self.player_bytes:,} player/state, {self.song_data_bytes:,} song, '
                 f'{self.wrapper_bytes:,} wrapper, {self.zero_page_bytes} zero page, '
@@ -112,7 +118,8 @@ def prepare_song(source, options: SqueezeOptions):
     Order *positions* are never renumbered: Bxx/Cxx still address the same
     playlist. The initial implicit instrument is retained even when there is
     no explicit cell reference. This matters for instrument-memory semantics.
-    The current model has no PCM trigger, so the complete PCM bank is unused.
+    This cleanup is called only for SID-only compilation. PCM-enhanced exports
+    bypass it, preserving every sample referenced by an override instrument.
     """
     song = deepcopy(source)
     counts = dict.fromkeys(CleanupStats.__dataclass_fields__, 0)

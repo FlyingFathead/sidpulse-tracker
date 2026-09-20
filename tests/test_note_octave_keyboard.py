@@ -65,7 +65,7 @@ def test_note_name_special_keys_are_unchanged(digit, expected):
     assert dispatch(key(digit), "pattern", 0).name == expected
 
 
-@pytest.mark.parametrize("column", [2, 3, 7, 8])
+@pytest.mark.parametrize("column", [2, 3, 8, 9])
 def test_instrument_and_parameter_fields_keep_numeric_entry(column):
     cmd = dispatch(key("3"), "pattern", column)
     assert cmd.name == "digit" and cmd.value == "3"

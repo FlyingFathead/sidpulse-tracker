@@ -42,6 +42,8 @@ def _dispatch_unchecked(event, page="pattern", column=0):
         return Command("paste_special")
     if ctrl and shift and key==pg.K_e:
         return Command("export")
+    if ctrl and not (shift or alt) and key==pg.K_F3:
+        return Command('page', 'samples')
     if ctrl and shift and not alt and key == pg.K_r and page in ('pattern', 'instrument'):
         return Command('pulse_record_arm')
     if ctrl and shift and key==pg.K_F2:
@@ -172,8 +174,8 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command("audition_row")
     elif alt or ctrl:
         return None
-    if page in ("pattern", "instrument") and not shift and scan in NOTE_SCANCODES:
-        return Command("piano", (scan, NOTE_SCANCODES[scan], bool(mod & pg.KMOD_CAPS) or page == "instrument"))
+    if page in ("pattern", "instrument", "samples") and not shift and scan in NOTE_SCANCODES:
+        return Command("piano", (scan, NOTE_SCANCODES[scan], bool(mod & pg.KMOD_CAPS) or page != "pattern"))
     if page != "pattern":
         return Command("page_key", event)
     return None

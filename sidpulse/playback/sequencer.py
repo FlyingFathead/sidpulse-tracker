@@ -36,6 +36,7 @@ class Sequencer:
         self.activity = activity
         self.monitor = monitor
         self.programs = VoicePrograms(sid, self.activity, self.monitor)
+        self.render_pcm = sid.render if hasattr(sid, 'render') else None
         self.filter = None
         self.filter_slide = 0
         self.song = None
@@ -87,6 +88,10 @@ class Sequencer:
         for voice in range(3):
             note_off(self.sid, voice, cut=True)
         self.programs = VoicePrograms(self.sid, self.activity, self.monitor)
+        if not self._predicting and any(inst.sample_override for inst in song.instruments.values()):
+            from sidpulse.audio.samples import programs
+            self.programs = programs(self.sid, song, self.activity, self.monitor)
+        self.render_pcm = getattr(self.programs, 'render', getattr(self.sid, 'render', None))
         self.filter = deepcopy(song.filter)
         self.filter_slide = 0
         set_filter(self.sid,self.filter)
@@ -111,6 +116,8 @@ class Sequencer:
         self.status = 'stopped'
         for voice in range(3):
             note_off(self.sid, voice, cut=True)
+        if hasattr(self.programs, 'pcm'):
+            self.programs.pcm = [None] * 3
         self.notes = [None] * 3
 
     def pause(self):
@@ -135,6 +142,15 @@ class Sequencer:
             self.filter=deepcopy(new.filter)
             set_filter(self.sid,self.filter)
         self.song = new
+        from sidpulse.audio.samples import enabled, SamplePrograms, programs
+        if not self._predicting and enabled(new) != isinstance(self.programs, SamplePrograms):
+            previous = self.programs
+            self.programs = programs(self.sid, new, self.activity, self.monitor)
+            self.programs.voices = previous.voices
+            # Changed source types take effect on the next note trigger.
+        elif isinstance(self.programs, SamplePrograms):
+            self.programs.samples = new.samples
+        self.render_pcm = getattr(self.programs, 'render', getattr(self.sid, 'render', None))
         self.order = min(self.order, len(new.orders) - 1)
         if self.mode == 'song' or self.pattern not in new.patterns:
             self.pattern = new.orders[self.order]
@@ -253,14 +269,14 @@ class Sequencer:
         out = bytearray()
         while frames:
             if self.status != 'playing':
-                out.extend(self.sid.render(frames))
+                out.extend(self.render_pcm(frames))
                 break
             if self.frames >= int(self.next_tick):
                 self._boundary()
                 if self.status != 'playing':
                     continue
             count = min(frames, int(self.next_tick) - self.frames)
-            out.extend(self.sid.render(count))
+            out.extend(self.render_pcm(count))
             self.frames += count
             frames -= count
         # Publish state at an exact boundary without depending on next UI/chunk.

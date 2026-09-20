@@ -76,7 +76,7 @@ def test_resize_zoom_preserve_song_and_cursor_visibility(app, size, zoom):
     app.handle(pg.event.Event(pg.VIDEORESIZE, w=size[0], h=size[1]))
     app.zoom = zoom
     last_row=len(app.editor.pattern.rows)-1
-    app.editor.voice, app.editor.column, app.editor.row = 2, 15, last_row
+    app.editor.voice, app.editor.column, app.editor.row = 2, 16, last_row
     app.renderer.render(app)
     hits = [rect for rect, action, data in app.renderer.hits if action == "cell" and data == (last_row, 2, 15)]
     assert len(hits) == 1

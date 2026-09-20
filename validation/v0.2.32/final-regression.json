@@ -1,0 +1,33 @@
+{
+  "full_regression_cases": 1553,
+  "initial_full_run": {
+    "passed": 1552,
+    "failed": 1,
+    "failure": "tests/test_checkpoint_025.py::test_empty_bank_roundtrip_all_pages_audition_and_restoration"
+  },
+  "resolution": "Guard the mapped-instrument helper and new navigation/property access when the bank is empty.",
+  "after_fix": {
+    "passed": 126,
+    "failed": 0,
+    "seconds": 6.21,
+    "modules": [
+      "test_checkpoint_025",
+      "test_header_instrument_clipboard",
+      "test_pcm_instrument_view",
+      "test_graphical_instruments",
+      "test_pattern_arpeggio",
+      "test_field_clipboard",
+      "test_program_switches",
+      "test_scrollbars"
+    ]
+  },
+  "earlier_full_regression": {
+    "passed": 1524,
+    "failed": 0,
+    "seconds": 378.27
+  },
+  "native_pcm": "Exact raw/conditioned PCM, SID writes/cycles and final state across 7 songs; includes 200 seconds of CH1 percussion.",
+  "source_projects_unchanged": true,
+  "latest_user_prgs": "All three reproduced byte-for-byte from the final playback code and match the emulated artifacts.",
+  "hermo_rom": "All three channels occupied, 32 PCM hits, two patterns and loop restart checked; actual PAL VICE 8580/6581 PRG recordings. See hermo-rom-export.json and hermo-rom-emulation.json."
+}

@@ -126,6 +126,24 @@ def load_audio_underrun_detection():
         return True
 
 
+def load_sample_auto_squeeze():
+    try:
+        value = json.loads(config_path().read_text()).get('sample_auto_squeeze_on_import', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
+def load_sample_normalization():
+    try:
+        document = json.loads(config_path().read_text())
+        return tuple(value if type(value) is bool else default for key, default in
+                     (('before', True), ('after', False))
+                     for value in (document.get('sample_normalize_' + key, default),))
+    except (OSError, ValueError, AttributeError):
+        return True, False
+
+
 def load_squeeze_options():
     from dataclasses import fields
     from sidpulse.export.squeeze import SqueezeOptions
@@ -146,8 +164,10 @@ def load_squeeze_options():
     except (OSError, ValueError, AttributeError):
         data = {}
     values={field.name:data[field.name] for field in fields(SqueezeOptions)
-            if field.name!='version' and type(data.get(field.name)) is bool}
+            if field.name not in ('version', 'digi_method') and type(data.get(field.name)) is bool}
     if type(data.get('version')) is int and data['version'] in (1,2,201,202):values['version']=data['version']
+    if type(data.get('digi_method')) is int and data['digi_method'] in (1, 2):
+        values['digi_method'] = data['digi_method']
     return SqueezeOptions(**values)
 
 

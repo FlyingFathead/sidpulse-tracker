@@ -1,5 +1,79 @@
 # Changelog
 
+## v0.2.35
+
+- Restore packed volume DIGI as method #1 and the default, preserving display enables.
+- Keep waveform-DAC DIGI as method #2 with its explicit display-blanking warning.
+- Add an export method selector, persistent preference and --digi-method CLI option.
+- Preserve current trigger/remapping/squeezer behavior and close the bias voice on stop.
+- Keep sample-to-SID synthesis preferred and the three-choice export popup.
+- Move the changelog into docs/ and include incremental-update cleanup.
+
+## v0.2.34
+
+- Move arpeggio/checkpoint guides into docs/, fix links, and remove obsolete root notes.
+  Include cleanup for obsolete files left by incremental ZIP extraction.
+- Add the PCM export warning with Continue as DIGI / Synthesize all samples / Cancel.
+  Recommend synthesis, audition all replacements, preserve slots and source samples,
+  and apply the complete batch as one undoable edit before reviewing ordinary SID export.
+- Add W waveform automation with numeric/letter aliases and instrument/table reset.
+- Add persistent sync and ring modulation FX in the previously unassigned SID macro range.
+- Preserve envelope gate, waveform-table age, instrument settings and PCM isolation.
+- Integrate column selection, edit masks, clipboard, undo, help, native format 10 and export.
+- Preserve saved cursor fields across the layout change and fit the additional column.
+- Include the supplied synthwave kick and snare reference WAVs unchanged.
+
+## v0.2.33
+
+- Repair experimental C64 PCM with a stabilized waveform DAC, neutral-state
+  retention, mixer startup ramp and explicit PCM/SID ownership handoff.
+  Blank the display and sprites during playback; expose the tradeoff in export.
+- Add selected-range normalization and a 0–200% relative volume dialog.
+  Preserve originals, trim markers, storage format, undo and embedded saves.
+- Add saved normalization before/after squeezing options and the F3 experimental notice.
+- Add cancellable sample-to-SID waveform/pitch table fitting, source/result
+  audition, a 99-slot instrument browser, overwrite confirmation and undo.
+- Add instrument Freeze/Unfreeze and persistent sample-synthesis provenance.
+  Generated instruments start frozen; pattern automation and playback remain active.
+- Keep the existing WAV/MP3 export, loop count, PCM mappings, best-of-version
+  music squeezing and SID-only player. No new dependency is required.
+
+
+## v0.2.32
+
+- Make header song/instrument fields open F12/F4; highlight Song title.
+- Add F4 instrument copy/paste, including assigned samples, occupied-slot
+  confirmation, and a single undo step. Preserve conflicting sample slots.
+- Add F2 Select all and persistent per-channel arpeggio OFF/ON/default in
+  the previously unused EX column, now AR. Preserve existing effect meanings.
+  Save format 9 only when arpeggio row commands are present.
+- Restore real squeezer version comparison and Top 3 for PCM-enhanced PRG/RSID
+  exports; include phrase and indexed C64 music decoders with timing checks.
+- Auto-remap one tracker PCM channel to hardware CH3 during export; rotate
+  SID voices/filter routing, warn with a triangle, and preserve the project.
+- Support alternating PCM drums and ordinary SID instruments on that channel.
+- Add default-on F3 **Auto-squeeze on import** with a saved preference,
+  background 4 kHz / 4-bit conversion, and a restorable embedded original.
+- Show sample mappings in F4, hide inapplicable SID controls, and add explicit
+  unmapping. Keep PCM pitch/gate programs editable and SID settings saved.
+- Validate actual PRG playback in VICE with CH1 kick/snare and mixed SID
+  hi-hat arrangements plus CH2 bass; check channel/decoder equivalence and PCM isolation.
+
+
+## v0.2.31
+
+- WAV/MP3 output browser with format selection, 0–99 extra loops (default 0),
+  background rendering, cancellation and atomic replacement with backup.
+- Embedded PCM sample bank, instrument overrides, F3 waveform start/end
+  markers and numeric edits, root note, gain, squeeze/restore and undo.
+- Separate experimental C64 PCM-enhanced RSID/PRG routine: two SID voices plus
+  channel 3 packed volume digis, verified memory and instruction budgets.
+- Preserve ordinary SID player selection; add supplied synthwave PCM drum
+  demo and format-8 persistence without upgrading ordinary SID-only projects.
+- Correct the optional C64 render utility's default subsong selection for RSID.
+- Regression, independent 6502 interruption, emulation and matched performance
+  checks documented with raw results.
+
 ## v0.2.30
 
 - Show all squeezer versions by default, save the display choice in config,
@@ -453,6 +527,15 @@
   metadata and whole-song loop options, explicit unsupported-feature diagnostics.
 
 # Changelog
+
+## v0.2.34
+
+- Add W waveform automation with numeric/letter aliases and instrument/table reset.
+- Add persistent sync and ring modulation FX in the previously unassigned SID macro range.
+- Preserve envelope gate, waveform-table age, instrument settings and PCM isolation.
+- Integrate column selection, edit masks, clipboard, undo, help, native format 10 and export.
+- Preserve saved cursor fields across the layout change and fit the additional column.
+- Include the supplied synthwave kick and snare reference WAVs unchanged.
 
 ## 0.1.1 — 2026-09-10
 

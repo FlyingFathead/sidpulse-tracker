@@ -1,0 +1,67 @@
+[
+  {
+    "clock": "PAL",
+    "model": "8580",
+    "method": 1,
+    "emulator": "VICE 3.7.1 classic reSID",
+    "autostart": true,
+    "no_jam": true,
+    "seconds": 27.402666666666665,
+    "end_rms": 634.6148343954168,
+    "sample_start_count": 49,
+    "vic_read_count": 49,
+    "all_observed_display_enables_correct": true
+  },
+  {
+    "clock": "PAL",
+    "model": "6581",
+    "method": 1,
+    "emulator": "VICE 3.7.1 classic reSID",
+    "autostart": true,
+    "no_jam": true,
+    "seconds": 27.402666666666665,
+    "end_rms": 1465.9825463731938,
+    "sample_start_count": 49,
+    "vic_read_count": 49,
+    "all_observed_display_enables_correct": true
+  },
+  {
+    "clock": "NTSC",
+    "model": "8580",
+    "method": 1,
+    "emulator": "VICE 3.7.1 classic reSID",
+    "autostart": true,
+    "no_jam": true,
+    "seconds": 26.397333333333332,
+    "end_rms": 619.261150591529,
+    "sample_start_count": 47,
+    "vic_read_count": 47,
+    "all_observed_display_enables_correct": true
+  },
+  {
+    "clock": "NTSC",
+    "model": "6581",
+    "method": 1,
+    "emulator": "VICE 3.7.1 classic reSID",
+    "autostart": true,
+    "no_jam": true,
+    "seconds": 26.397333333333332,
+    "end_rms": 1453.6848293001822,
+    "sample_start_count": 47,
+    "vic_read_count": 47,
+    "all_observed_display_enables_correct": true
+  },
+  {
+    "clock": "PAL",
+    "model": "8580",
+    "method": 2,
+    "emulator": "VICE 3.7.1 classic reSID",
+    "autostart": true,
+    "no_jam": true,
+    "seconds": 27.402666666666665,
+    "end_rms": 738.7127752606782,
+    "sample_start_count": 49,
+    "vic_read_count": 49,
+    "all_observed_display_enables_correct": true
+  }
+]

@@ -1,4 +1,4 @@
-# .sidpulse formats 6 and 7
+# .sidpulse formats 6–10
 
 `.sidpulse` is the editable, lossless source document. `.sid` is the compiled
 PSID export. They are separate files; export does not consume or change the source.
@@ -14,7 +14,7 @@ newer versions load with warnings. Invalid core structures still fail visibly. N
 Patterns contain 1..256 rows of exactly three cells. Each cell stores note,
 instrument, effect and parameter, plus optional row automation. Notes: null empty, -1 off, -2 cut, 0=C-0 through
 95=B-7. Pattern IDs 0..255; orders reference existing patterns. Instruments 1..99
-have a separate namespace from samples. EX remains an unimplemented UI reserve.
+have a separate namespace from samples. AR occupies the former EX UI reserve.
 
 Each pattern also has a sparse `controls` object, keyed by decimal row number.
 A ControlCell has optional cutoff (0..2047), resonance (0..15), routing (0..7),
@@ -50,7 +50,7 @@ format 7 when an automation value or reset is present.
 
 Saves serialize and validate first, write a same-directory temporary file,
 flush/fsync, back up the existing target as `.sidpulse.bak`, and atomically replace.
-Files are capped at 8 MiB. Failed replacement leaves the old target intact.
+Files are capped at 40 MiB. Failed replacement leaves the old target intact.
 
 Audio buffers, device diagnostics, mute/solo and playback marks are host/session
 state. Unknown editor metadata is retained; cursor, zoom and helper visibility
@@ -109,3 +109,36 @@ by this update and is the contract for subsequent readers.
 An unfamiliar field that a future release introduces should be added to the
 known model and migrated explicitly. Do not discard extension dictionaries or
 reduce the schema marker merely because the current reader cannot execute them.
+
+## Formats 8 and 9 (applications 0.2.31 / 0.2.32)
+
+Format 8 adds embedded PCM sample data and instrument `sample_override`,
+`sample_slot` (0–99) and `sample_gain` (0–100). Sample trims, root notes and
+optional original data are saved with the sample. See [PCM](PCM_AND_AUDIO.md).
+
+Format 9 adds optional Cell `arp_mode`: omitted/null means hold, integer 0
+means arpeggio OFF, 1 means ON, and -1 restores the instrument's default.
+Boolean/string/other numeric values are rejected. This per-channel override
+persists through notes and patterns; it is reset by a transport/whole-song
+loop restart. It leaves the instrument definition and FX command untouched.
+OFF also suppresses Jxy. See [arpeggio automation](PATTERN_ARPEGGIO.md).
+
+Only projects containing an AR command are upgraded to format 9. Otherwise
+PCM saves use format 8; earlier SID projects retain format 6/7 as appropriate.
+No empty AR fields are added to older cells. Future schema markers and
+unfamiliar fields continue to be preserved.
+
+## Format 10 (application 0.2.34)
+
+Cell `waveform` is omitted/null for hold, -1 for instrument/table reset, or
+16/32/64/128 for triangle/saw/pulse/noise. Boolean, string and other numbers
+are rejected. The W override persists on its channel without modifying the
+instrument or retriggering its gate. Reset resumes the instrument table at
+the note's current age.
+
+The existing FX representation also gains Z10/Z11/Z1F for sync off/on/default
+and Z20/Z21/Z2F for ring modulation off/on/default. These values previously
+had no executable meaning. Either W or one of these commands selects format
+10; other projects retain their applicable 6/7/8/9 marker. Source provenance
+and instrument freeze metadata remain preserved instrument fields. See
+[waveform and modulation automation](PATTERN_WAVEFORM.md).

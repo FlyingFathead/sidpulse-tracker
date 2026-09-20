@@ -6,30 +6,143 @@ from sidpulse.ui.instrument_graphs import ADSR,clamp,grid_value,envelope_value
 
 
 class InstrumentActions:
+    def synthesis_info(self, number=None):
+        inst=self.editor.song.instruments.get(self.editor.instrument if number is None else number)
+        info=inst._extra_fields.get('sample_synthesis') if inst else None
+        return info if isinstance(info,dict) else {}
+
+    def instrument_frozen(self, number=None):
+        inst=self.editor.song.instruments.get(self.editor.instrument if number is None else number)
+        return bool(inst and inst._extra_fields.get('editor_frozen') is True)
+
+    def allow_instrument_edit(self, number=None):
+        if not self.instrument_frozen(number):return True
+        self.editor.status='Instrument is frozen. Use Unfreeze in F4 to edit its settings and tables.'
+        return False
+
+    def toggle_instrument_freeze(self):
+        if self.instrument_slot not in self.editor.song.instruments:return
+        self.finish_instrument_drag()
+        inst=self.editor.song.instruments[self.editor.instrument]
+        extra=deepcopy(inst._extra_fields);frozen=not self.instrument_frozen()
+        extra['editor_frozen']=frozen
+        self.editor.edit('Freeze instrument' if frozen else 'Unfreeze instrument',
+                         [(('instruments',self.editor.instrument,'_extra_fields'),extra)])
+        self.instrument_tab='general';self.instrument_focus='buttons'
+        self.instrument_button=self.instrument_buttons().index(('instrument_freeze',None))
+        self.editor.status='Instrument frozen against accidental edits.' if frozen else 'Instrument unfrozen. Experiment with its settings and tables; undo remains available.'
+
+    def instrument_tabs(self):
+        inst=self.editor.song.instruments.get(self.instrument_slot)
+        return ('sample','motion','roll') if inst and inst.sample_override else ('general','motion','roll','adsr','sample')
+
+    def normalize_instrument_tab(self):
+        if self.instrument_tab not in self.instrument_tabs() and self.instrument_tab!='automation':
+            self.choose_instrument_tab(self.instrument_tabs()[0])
+
+    def move_instrument_field(self, delta):
+        from sidpulse.ui.instruments import field_indexes
+        inst=self.editor.song.instruments.get(self.editor.instrument)
+        if inst is None:return
+        indexes=(list(range(2,6)) if self.instrument_tab=='adsr' else
+                 field_indexes(inst,self.instrument_tab=='motion'))
+        if self.instrument_tab not in ('general','motion','adsr') or not indexes:return
+        current=indexes.index(self.property_index) if self.property_index in indexes else 0
+        self.property_index=indexes[clamp(current+delta,0,len(indexes)-1)]
+
     def instrument_buttons(self):
-        from sidpulse.ui.instruments import PROGRAM_ROWS
+        from sidpulse.ui.instruments import PROGRAM_ROWS, field_indexes
+        if self.instrument_frozen(self.instrument_slot) and not self.inline_recording_visible:
+            return [('add_instrument',None),('delete_instrument',None),('choose_presets',None),
+                    ('copy_instrument',None),('paste_instrument',None),('save_user_preset',None),
+                    ('instrument_freeze',None),('pulse_record_arm',None)]
         if self.inline_recording_visible and self.renderer.cols<84:
             return ([('pulse_record_arm',None),('instrument_tab','general')]
-                    + ([('pulse_record_disarm',None)] if self.pulse_record_armed else []))
+                    + ([('pulse_record_disarm',None)] if self.pulse_record_armed else [])
+                    + [('copy_instrument',None),('paste_instrument',None)])
         targets=[('add_instrument',None),('delete_instrument',None),('choose_presets',None)]
         if self.pulse_record_armed:
             targets.append(('pulse_record_disarm', None))
-        targets += [('instrument_tab',tab) for tab in ('general','motion','roll','adsr')]
+        targets += [('instrument_tab',tab) for tab in self.instrument_tabs()]
         targets.append(('save_user_preset',None))
         if self.instrument_slot in self.editor.song.instruments:
             if self.instrument_tab in ('general','automation'):
                 targets.append(('pulse_record_arm', None))
+            if self.instrument_tab=='sample':
+                targets += [('pcm_setting', field) for field in ('sample_override','sample_slot','sample_gain')]
+                targets.append(('import_instrument_sample', None))
+                targets.append(('open_instrument_sample', None))
             if self.instrument_tab=='motion':
-                targets += [('toggle_program',program) for program in PROGRAM_ROWS.values()]
+                inst=self.editor.song.instruments[self.editor.instrument]
+                targets += [('toggle_program',program) for index,program in PROGRAM_ROWS.items()
+                            if index in field_indexes(inst,True)]
             elif self.instrument_tab=='roll':
                 targets.append(('toggle_program',self.graph_field))
-        return targets
+        return targets + [('copy_instrument',None),('paste_instrument',None)] + ([('instrument_freeze',None)] if self.instrument_slot in self.editor.song.instruments else [])
+
+    def copy_instrument(self):
+        self.finish_instrument_drag()
+        inst=self.editor.song.instruments.get(self.instrument_slot)
+        if inst is None:
+            self.clipboard_feedback('Empty instrument slot; nothing copied',True)
+            return
+        sample=self.editor.song.samples.get(str(inst.sample_slot),self.editor.song.samples.get(inst.sample_slot))
+        self.instrument_clipboard=(deepcopy(inst),deepcopy(sample))
+        self.clipboard_feedback(f'Copied instrument {self.instrument_slot:02d}: {inst.name}')
+
+    def paste_instrument(self):
+        self.finish_instrument_drag()
+        if self.instrument_clipboard is None:
+            self.clipboard_feedback('Instrument clipboard is empty',True)
+            return
+        self.release_audition()
+        inst,sample=deepcopy(self.instrument_clipboard)
+        ed=self.editor;number=self.instrument_slot
+        def paste():
+            samples=ed.song.samples
+            updates=[]
+            if sample is not None:
+                current=samples.get(str(inst.sample_slot),samples.get(inst.sample_slot))
+                if current != sample:
+                    # Reuse identical embedded data, otherwise allocate without
+                    # overwriting another instrument's sample, even across songs.
+                    slot=next((n for n in range(1,100)
+                               if samples.get(str(n),samples.get(n))==sample),None)
+                    if slot is None:
+                        slot=inst.sample_slot if current is None else next((n for n in range(1,100)
+                              if str(n) not in samples and n not in samples),None)
+                        if slot is None:
+                            raise ValueError('Sample bank is full; free a sample slot before pasting this instrument.')
+                        samples=deepcopy(samples);samples[str(slot)]=deepcopy(sample)
+                        updates.append((('samples',),samples))
+                    inst.sample_slot=slot
+            elif inst.sample_override and samples.get(str(inst.sample_slot),samples.get(inst.sample_slot)) is not None:
+                raise ValueError('The copied instrument had an empty sample slot. Unmap or assign its sample before copying.')
+            instruments=deepcopy(ed.song.instruments);instruments[number]=deepcopy(inst)
+            updates.append((('instruments',),instruments))
+            ed.edit(f'Paste instrument {number:02d}',updates)
+            ed.instrument=self.instrument_slot=number
+            self.instrument_tab='general';self.property_index=0
+            self.instrument_focus='list';self.normalize_instrument_tab()
+            self.clipboard_feedback(f'Pasted instrument {number:02d}: {inst.name}')
+        if number not in ed.song.instruments:
+            paste()
+            return
+        count=sum(c.instrument==number for p in ed.song.patterns.values() for row in p.rows for c in row)
+        self.dialog={'title':'Overwrite instrument?',
+                     'message':f'Slot {number:02d} already contains {ed.song.instruments[number].name}. '
+                               +(f'It is used by {count} pattern references; those notes will use the pasted sound. '
+                                 if count else 'It has no explicit pattern references. ')
+                               +'Replace it with '+inst.name+'? This can be undone.',
+                     'confirm_instrument':paste,'confirm_selected':False}
 
     def toggle_instrument_program(self,program):
+        if not self.allow_instrument_edit():return
         from sidpulse.ui.instruments import PROGRAM_ROWS,PROGRAM_LABELS
         if self.instrument_slot not in self.editor.song.instruments:return
         self.finish_instrument_drag()
         inst=self.editor.song.instruments[self.editor.instrument]
+        if inst.sample_override and program in ('wave_sequence','pulse'):return
         field=program+'_enabled';enabled=not getattr(inst,field)
         self.editor.edit(PROGRAM_LABELS[program]+(' on' if enabled else ' off'),
                          [(('instruments',self.editor.instrument,field),enabled)])
@@ -42,6 +155,7 @@ class InstrumentActions:
         self.release_audition()
         self.instrument_slot=clamp(self.instrument_slot+delta if number is None else number,1,99)
         if self.instrument_slot in self.editor.song.instruments:self.editor.instrument=self.instrument_slot
+        self.normalize_instrument_tab()
 
     def save_instrument_preset(self):
         if self.instrument_slot not in self.editor.song.instruments:
@@ -237,10 +351,14 @@ class InstrumentActions:
             self.close_automation_recording();return
         if self.instrument_slot not in self.editor.song.instruments:self.open_new_instrument();return
         self.finish_instrument_drag()
+        if tab not in self.instrument_tabs():tab=self.instrument_tabs()[0]
         self.instrument_tab=tab;self.instrument_focus='properties'
         if tab=='motion':self.property_index=9
         elif tab=='general':self.property_index=0
         elif tab=='adsr':self.property_index=2
+        elif tab=='sample':
+            self.instrument_focus='buttons'
+            self.instrument_button=self.instrument_buttons().index(('pcm_setting','sample_override'))
 
     def finish_instrument_drag(self,cancel=False):
         gesture=self.instrument_drag
@@ -262,6 +380,7 @@ class InstrumentActions:
             self.editor.edit(verb+' instrument '+gesture['field'].replace('_', ' '),updates)
 
     def begin_instrument_drag(self,data,pos):
+        if not self.allow_instrument_edit():return
         self.finish_instrument_drag()
         inst=self.editor.song.instruments[self.editor.instrument]
         fields=ADSR if data['kind']=='envelope' else (data['field'],)
@@ -303,6 +422,7 @@ class InstrumentActions:
         if changed:self.editor.history.revision+=1
 
     def graph_edit_sequence(self,values,label):
+        if not self.allow_instrument_edit():return
         self.editor.edit(label,[(('instruments',self.editor.instrument,self.graph_field),values)])
         self.graph_step=min(self.graph_step,max(0,len(values)-1))
 
@@ -329,6 +449,7 @@ class InstrumentActions:
         return True
 
     def graph_length_dialog(self):
+        if not self.allow_instrument_edit():return
         field=self.graph_field;number=self.editor.instrument
         inst=self.editor.song.instruments[number]
         def accept(text):
@@ -341,7 +462,14 @@ class InstrumentActions:
         self.text_dialog('Sequence length',str(len(getattr(inst,field))),accept,'0 disables the program. New steps start at the base note.')
 
     def instrument_action(self,action,value,pos):
-        if action=='toggle_program':self.toggle_instrument_program(value)
+        if action=='instrument_freeze':self.toggle_instrument_freeze();return True
+        if action in ('edit_instrument_field','toggle_instrument_field','edit_program','graph_drag',
+                      'graph_length','graph_clear','graph_rate','toggle_program') and not self.allow_instrument_edit():return True
+        if self.media_action(action,value):return True
+        if action in ('copy_instrument','paste_instrument'):
+            if pos is not None:return False  # mouse activation occurs on release
+            getattr(self,action)()
+        elif action=='toggle_program':self.toggle_instrument_program(value)
         elif action=='edit_instrument_field':
             self.property_index=value;self.instrument_focus='properties'
             self.page_key(pg.event.Event(pg.KEYDOWN,key=pg.K_RETURN,mod=0,value_click=True))

@@ -18,6 +18,8 @@ def supported(effect, value):
         return value < 0x10  # gate retrigger only; no fictional per-voice volume
     if effect == 'S':
         return value >> 4 in (0xC, 0xD)
+    if effect == 'Z':
+        return value in (0x10, 0x11, 0x1F, 0x20, 0x21, 0x2F)
     return False
 
 
@@ -38,6 +40,11 @@ class Voice:
     instrument_id: int | None = None
     pulse_width: int | None = None
     envelope: dict = field(default_factory=dict)
+    arp_override: bool | None = None
+    arp_enabled: bool = True
+    waveform_override: int | None = None
+    sync_override: bool | None = None
+    ring_override: bool | None = None
 
 
 class VoicePrograms:
@@ -68,10 +75,15 @@ class VoicePrograms:
         v.freq = v.target = self.frequency(note)
         v.phase, v.gate = 0, True
         v.restarting = False
-        pitch = (inst.arpeggio[0] if inst.arpeggio_enabled and inst.arpeggio else 0) + (inst.pitch_sequence[0] if inst.pitch_sequence_enabled and inst.pitch_sequence else 0)
+        v.arp_enabled = inst.arpeggio_enabled if v.arp_override is None else v.arp_override
+        pitch = (inst.arpeggio[0] if v.arp_enabled and inst.arpeggio else 0) + (inst.pitch_sequence[0] if inst.pitch_sequence_enabled and inst.pitch_sequence else 0)
         initial = replace(inst, waveform=inst.wave_sequence[0] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform,
                           pulse_width=inst.pulse_width if v.pulse_width is None else v.pulse_width,
                           **v.envelope)
+        if not inst.sample_override:
+            if v.waveform_override is not None:initial.waveform = v.waveform_override
+            if v.sync_override is not None:initial.sync = v.sync_override
+            if v.ring_override is not None:initial.ring = v.ring_override
         note_on(self.sid, voice, note+pitch, initial, hard_restart=prepared)
         if self.activity is not None:
             self.activity.note_on(voice, instrument_id)
@@ -95,6 +107,16 @@ class VoicePrograms:
 
     def row(self, voice, cell, inst, instrument_id=None):
         v = self.voices[voice]
+        if cell.waveform is not None:
+            v.waveform_override = None if cell.waveform == -1 else cell.waveform
+        if cell.effect == 'Z' and cell.parameter in (0x10, 0x11, 0x1F, 0x20, 0x21, 0x2F):
+            field = 'sync_override' if cell.parameter >> 4 == 1 else 'ring_override'
+            mode = cell.parameter & 15
+            setattr(v, field, None if mode == 15 else bool(mode))
+        if cell.arp_mode is not None:
+            v.arp_override = None if cell.arp_mode == -1 else bool(cell.arp_mode)
+            active = v.instrument or inst
+            v.arp_enabled = active.arpeggio_enabled if v.arp_override is None else v.arp_override
         if cell.pulse_width is not None:
             v.pulse_width = None if cell.pulse_width == -1 else cell.pulse_width
         for field in ENVELOPE_FIELDS:
@@ -162,8 +184,8 @@ class VoicePrograms:
             elif effect=='G' and tick>0:
                 amount=value*4
                 v.freq=min(v.target,v.freq+amount) if v.freq<v.target else max(v.target,v.freq-amount)
-            pitch=inst.arpeggio[(v.age//inst.arp_speed)%len(inst.arpeggio)] if inst.arpeggio_enabled and inst.arpeggio else 0
-            if effect=='J' and value:
+            pitch=inst.arpeggio[(v.age//inst.arp_speed)%len(inst.arpeggio)] if v.arp_enabled and inst.arpeggio else 0
+            if effect=='J' and value and v.arp_override is not False:
                 pitch=(0,hi,lo)[tick%3]  # row command replaces instrument arp
             if inst.pitch_sequence_enabled and inst.pitch_sequence:
                 pitch+=inst.pitch_sequence[min(v.age,len(inst.pitch_sequence)-1)]
@@ -175,7 +197,12 @@ class VoicePrograms:
             base=voice*7
             self.write(base,freq&255);self.write(base+1,freq>>8)
             wave=inst.wave_sequence[min(v.age,len(inst.wave_sequence)-1)] if inst.wave_sequence_enabled and inst.wave_sequence else inst.waveform
-            control=wave|(2 if inst.sync else 0)|(4 if inst.ring else 0)|int(v.gate and not v.restarting)
+            sync,ring=inst.sync,inst.ring
+            if not inst.sample_override:
+                if v.waveform_override is not None:wave=v.waveform_override
+                if v.sync_override is not None:sync=v.sync_override
+                if v.ring_override is not None:ring=v.ring_override
+            control=wave|(2 if sync else 0)|(4 if ring else 0)|int(v.gate and not v.restarting)
             self.write(base+4,control)
             phase=v.age%(4*inst.pulse_rate)
             # Triangle starts at centre, then rises/falls smoothly.

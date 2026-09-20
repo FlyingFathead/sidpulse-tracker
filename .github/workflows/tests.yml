@@ -21,8 +21,9 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y 64tass
+          sudo apt-get install -y 64tass ffmpeg
           python scripts/build_squeeze_players.py --check
+          python scripts/build_pcm_player.py --check
       - run: python -m pytest -q
       - run: python -m sidpulse --headless-smoke --example
       - run: python -m sidpulse --headless-smoke --play-welcome-song

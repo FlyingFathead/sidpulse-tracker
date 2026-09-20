@@ -18,6 +18,7 @@ from sidpulse.ui.menus import menu_items
 from sidpulse.ui.registry import help_entries, available, reason
 from sidpulse.ui.effects import STATUS, visible_effects, lookup_effect
 from sidpulse.commands.pattern_fields import COLUMN_OFFSETS, CURSOR_HINTS, FIELDS as PATTERN_FIELDS, FIELD_GROUPS, group_span
+from sidpulse.song.model import WAVEFORM_LABELS
 
 BG = (176, 146, 119)
 PANEL = (176, 146, 119)
@@ -216,6 +217,8 @@ class Renderer:
         if app.page in ('instrument','samples') and (self.cols < 40 or self.lines < 18):
             fit = min(1.0, self.cols / 40, self.lines / 18) * .92
             self.configure(app.screen, app.zoom * fit, app.appearance)
+        if app.page=='samples' and self.lines<38:
+            self.configure(app.screen,self.signature[2]*self.lines/38*.92,app.appearance)
         if app.inline_recording_visible:
             # Fit the complete control pane above the footer at high zoom.
             # A smaller font can cross into the full-header layout, so recalc.
@@ -227,9 +230,14 @@ class Renderer:
         if app.page == 'pattern' and app.control_focus:
             self.control_visible = True
         if app.page in ("pattern", "info"):
-            minimum = 61 if self.control_visible else 96
-            if self.cols < minimum:
-                self.configure(app.screen, app.zoom * self.cols / minimum * .96, app.appearance)
+            # Keep the previous number of complete voice rows with W present.
+            # Fit only this page; preserve the user's zoom and CTRL pane.
+            overhead = 32 if self.control_visible else 12
+            voices = max(1, min(3, (self.cols - overhead) // 28))
+            minimum = max(63 if self.control_visible else 102, overhead + voices * 30)
+            for _ in range(3):
+                if self.cols >= minimum:break
+                self.configure(app.screen, self.signature[2] * self.cols / minimum * .96, app.appearance)
         self.page_layout_cache = (key, self.signature[2], self.control_visible)
 
     def render(self, app):
@@ -257,10 +265,12 @@ class Renderer:
             self.meter(audio, max(1, self.cols - 9), 0, 8, 2)
             top = 4
         elif (self.cols >= 80 and (app.page != "files" or self.lines >= 32)
+              and (app.page != 'samples' or self.lines >= 44)
               and (not app.inline_recording_visible or self.lines >= 28)):
             right = self.cols // 2 + 1
             self.text(2, 2, "Song Name")
             self.header_field(12, 2, right - 14, f"{'*' if display_dirty else ''}{ed.song.title}", YELLOW)
+            self.hit(2, 2, right - 4, 1, 'song_title_settings', None)
             self.text(2, 3, "File Name")
             self.header_field(12, 3, right - 14, app.path.name if app.path else "(not saved)", CREAM)
             self.text(6, 4, "Order")
@@ -274,6 +284,8 @@ class Renderer:
             self.text(right, 2, "Instrument")
             self.header_field(right + 11, 2, self.cols - right - 13,
                               f"{app.instrument_slot:02d} (empty slot)" if app.page=="instrument" and app.instrument_slot not in ed.song.instruments else f"{ed.instrument:02d} {inst.name}" if inst else "(empty instrument bank)", YELLOW)
+            self.hit(right, 2, self.cols - right - 2, 1, 'header_instrument',
+                     app.instrument_slot if app.page == 'instrument' else ed.instrument)
             self.text(right, 3, f"Speed/Tempo {playback.speed if playback.status != 'stopped' else ed.song.speed:03d}/{playback.tempo if playback.status != 'stopped' else ed.song.tempo:03d}   SID {ed.song.sid_model} {ed.song.clock}")
             self.octave_controls(app, right, 4)
             self.text(right + 25, 4, f"Skip {ed.skip}")
@@ -286,7 +298,9 @@ class Renderer:
             top = 12
         else:
             self.text(1, 2, f"{'*' if display_dirty else ''}{ed.song.title}", TEXT, self.cols - 14)
+            self.hit(1, 2, self.cols - 14, 1, 'song_title_settings', None)
             self.text(1, 3, f"P{ed.pattern_id:02X} R{ed.row:03d} I{ed.instrument:02d} O{ed.octave}", TEXT, self.cols - 14)
+            self.hit(10, 3, 3, 1, 'header_instrument', ed.instrument)
             self.octave_controls(app, 1, 4.3)
             self.meter(audio, max(1, self.cols - 13), 2, 12, 2)
             top = 8
@@ -413,11 +427,22 @@ class Renderer:
 
     def pattern(self, app, top, bottom):
         ed = app.editor
+        compact = self.cols < 76
+        controls = []
+        if app.pattern_clipboard_buttons:
+            controls = [(6,'Cut','pattern_cut','copy',True),
+                        (7 if compact else 8,'Copy','pattern_copy','copy',False),
+                        (8,'Paste','pattern_paste','paste','overwrite'),
+                        (10 if compact else 16,'Special' if compact else 'Paste Special','paste_special','paste_special',None)]
+        controls += [(12,'Select all','pattern_select_all','pattern_select_all',None),
+                     (12 if compact else 22,'Reset all' if compact else 'Reset all automation','reset_automation','reset_automation',None)]
+        wrapped = 7 + sum(w+1 for w,_,_,_,_ in controls) > self.cols-2
+        if wrapped:top+=2
         sidebar = 23 if self.control_visible else 3
         grid_end = self.cols - sidebar - 2
         available = max(1, grid_end - 7)
-        count = max(1, min(3, available // 28))
-        channel_w = max(27, available // count)
+        count = max(1, min(3, available // 30))
+        channel_w = max(29, available // count)
         self.first_voice = min(self.first_voice, 3 - count)
         if ed.voice < self.first_voice:
             self.first_voice = ed.voice
@@ -438,19 +463,13 @@ class Renderer:
             'last_row':min(len(ed.pattern.rows)-1,self.top_row+rows_visible-1),
             'voices':[(self.first_voice+view,(7+view*channel_w)*self.cw,channel_w*self.cw) for view in range(count)]}
         reset_x = 7
-        compact = self.cols < 76
-        if app.pattern_clipboard_buttons:
-            for w,label,action,name,value in (
-                    (6,'Cut','pattern_cut','copy',True),
-                    (7 if compact else 8,'Copy','pattern_copy','copy',False),
-                    (8,'Paste','pattern_paste','paste','overwrite'),
-                    (10 if compact else 16,'Special' if compact else 'Paste Special','paste_special','paste_special',None)):
-                button(self,reset_x,top-1.25,w,label,action,selected=pressed(app,name,value))
-                reset_x += w + 1
-        reset_width = 12 if compact else 22
-        button(self,reset_x,top-1.25,reset_width,'Reset all automation' if reset_width==22 else 'Reset all',
-               'reset_automation',selected=pressed(app,'reset_automation'))
-        description_x = reset_x + reset_width + 2
+        toolbar_y=top-1.25-(2 if wrapped else 0)
+        for w,label,action,name,value in controls:
+            if reset_x+w>self.cols-2:
+                reset_x=7;toolbar_y+=2
+            button(self,reset_x,toolbar_y,w,label,action,selected=pressed(app,name,value))
+            reset_x+=w+1
+        description_x = reset_x + 1
         if self.cols >= description_x + 23:
             button(self,description_x,top-1.25,22,'Record automation','pulse_record_arm',
                    selected=app.pulse_record_armed,fill=REC_ARM if app.pulse_record_armed else None)
@@ -467,9 +486,12 @@ class Renderer:
             armed = app.pulse_record_armed and app.pulse_record_voice == voice
             self.text(x, top, f"CH {voice + 1}" + (' (A)' if armed else ''), REC_ARM if armed else CREAM)
             self.monitor_buttons(app, voice, x + 10, top)
+            mode=ed.pattern.rows[ed.row][voice].arp_mode
+            button(self,x+18,top,8,'Arp '+{None:'..',0:'OFF',1:'ON',-1:'IN'}[mode],
+                   'pattern_arpeggio',voice,selected=pressed(app,'pattern_arpeggio',voice),height=1)
             for label, columns, fields in FIELD_GROUPS:
                 offset,width = group_span(columns)
-                self.text(x+offset, top+1, label, AUTOMATION if label in ('A','D','S','R','PW') else ACCENT)
+                self.text(x+offset, top+1, label, AUTOMATION if label in ('A','D','S','R','PW','AR','W') else ACCENT)
                 self.hit(x+offset,top+1,max(width,len(label)),1,'select_field',(voice,columns[0]))
         offsets = COLUMN_OFFSETS
         r0, r1, v0, v1 = ed.bounds()
@@ -510,10 +532,10 @@ class Renderer:
                     from sidpulse.ui.pattern_automation import prefix
                     pending = prefix(app)
                     if pending:
-                        self.rect(x+23,y,3,1,SELECT)
-                        self.text(x+23,y,pending.ljust(3,'.'),YELLOW)
+                        self.rect(x+25,y,3,1,SELECT)
+                        self.text(x+25,y,pending.ljust(3,'.'),YELLOW)
                 if ed.row == rownum and ed.voice == voice and not app.control_focus:
-                    off = 23 + len(pending) if pending else offsets[ed.column]
+                    off = 25 + len(pending) if pending else offsets[ed.column]
                     width = 2 if ed.column == 0 else 1
                     self.rect(x + off, y + .86, width, .12, CURSOR)
                     self.rect(x + off, y, width, 1, CURSOR, True)
@@ -571,9 +593,9 @@ class Renderer:
         pg.draw.polygon(self.screen,CREAM,[(cx+direction*half,cy),(cx-direction*half,cy-half),(cx-direction*half,cy+half)])
         self.hit(bx,top,2.6,1,'control_panel_toggle',None)
 
-    def cached_voice_cell(self, cell, x, y, maxchars=26):
+    def cached_voice_cell(self, cell, x, y, maxchars=28):
         key = (cell.note,cell.instrument,cell.effect,cell.parameter,cell.attack,
-               cell.decay,cell.sustain,cell.release,cell.pulse_width,maxchars)
+               cell.decay,cell.sustain,cell.release,cell.pulse_width,cell.arp_mode,cell.waveform,maxchars)
         surface = self.cell_cache.get(key)
         if surface is None:
             surface = pg.Surface((maxchars*self.cw, self.font.get_height()), pg.SRCALPHA)
@@ -590,19 +612,20 @@ class Renderer:
             self.cell_cache.move_to_end(key)
         self.screen.blit(surface, (round(x*self.cw),round(y*self.rh)))
 
-    def voice_cell(self, cell, x, y, maxchars=26):
+    def voice_cell(self, cell, x, y, maxchars=28):
         columns = [(0, note_name(cell.note), CREAM if cell.note is not None else ACCENT),
                    (5, '..' if cell.instrument is None else f'{cell.instrument:02d}', YELLOW if cell.instrument else ACCENT),
-                   (8, '..', (75, 90, 65)),
-                   (11, cell.effect or '.', PURPLE if cell.effect else ACCENT),
-                   (12, '..' if cell.parameter is None else f'{cell.parameter:02X}', PURPLE if cell.parameter is not None else ACCENT)]
-        for offset, field in zip((15, 17, 19, 21), ENVELOPE_FIELDS):
+                   (8, {None:'..',0:'OF',1:'ON',-1:'IN'}[cell.arp_mode], AUTOMATION_DIM if cell.arp_mode is None else AUTOMATION),
+                   (11, WAVEFORM_LABELS[cell.waveform], AUTOMATION_DIM if cell.waveform is None else AUTOMATION),
+                   (13, cell.effect or '.', PURPLE if cell.effect else ACCENT),
+                   (14, '..' if cell.parameter is None else f'{cell.parameter:02X}', PURPLE if cell.parameter is not None else ACCENT)]
+        for offset, field in zip((17, 19, 21, 23), ENVELOPE_FIELDS):
             value = getattr(cell, field)
             columns.append((offset, '.' if value is None else 'R' if value == -1 else f'{value:X}',
                             AUTOMATION_DIM if value is None else AUTOMATION))
         all_reset = all(getattr(cell, field) == -1 for field in ENVELOPE_FIELDS)
         pw = '...' if cell.pulse_width is None else ('RAL' if all_reset else 'R..') if cell.pulse_width == -1 else f'{cell.pulse_width:03X}'
-        columns.append((23, pw, AUTOMATION_DIM if cell.pulse_width is None else AUTOMATION))
+        columns.append((25, pw, AUTOMATION_DIM if cell.pulse_width is None else AUTOMATION))
         for offset, value, color in columns:
             if offset + len(value) <= maxchars:
                 self.text(x+offset, y, value, color, maxchars-offset)
@@ -659,13 +682,17 @@ class Renderer:
                 self.activity_dot(23.8,y,self.instrument_levels.get(number,0.) if item else 0.,'instrument',number)
                 self.bank_monitor_buttons(app, 'instrument', number, 25, y, item is not None)
             self.scroll_bar('instruments',30.4,list_top,count,99,count)
+            button(self,left,top-1.25,20,'Copy instrument','copy_instrument',selected=pressed(app,'copy_instrument'))
+            button(self,left+21,top-1.25,21,'Paste instrument','paste_instrument',selected=pressed(app,'paste_instrument'))
         if left==1 and app.inline_recording_visible:
             button(self,1,top,27,'Record automation','pulse_record_arm',selected=True)
             button(self,29,top,min(29,self.cols-31),f'Instrument {app.instrument_slot:02d}',
                    'instrument_tab','general')
-            if app.pulse_record_armed:self.disarm_button(app,1,top+1.5,29)
+            button(self,1,top+1.5,20,'Copy instrument','copy_instrument',selected=pressed(app,'copy_instrument'))
+            button(self,22,top+1.5,21,'Paste instrument','paste_instrument',selected=pressed(app,'paste_instrument'))
+            if app.pulse_record_armed:self.disarm_button(app,1,top+3,29)
             from sidpulse.ui.automation_inline import draw
-            draw(self,app,1,top+(3 if app.pulse_record_armed else 2),bottom)
+            draw(self,app,1,top+(4.5 if app.pulse_record_armed else 3.5),bottom)
             return
         if left==1:
             button(self,1,top,18,"Add instrument","add_instrument")
@@ -674,10 +701,12 @@ class Renderer:
             self.activity_dot(28,top+1.5,self.instrument_levels.get(app.instrument_slot,0.),'instrument',app.instrument_slot)
             self.bank_monitor_buttons(app, 'instrument', app.instrument_slot, 30, top+1.5,
                                       app.instrument_slot in app.editor.song.instruments)
+            button(self,1,top+3,20,'Copy instrument','copy_instrument',selected=pressed(app,'copy_instrument'))
+            button(self,22,top+3,21,'Paste instrument','paste_instrument',selected=pressed(app,'paste_instrument'))
             if app.pulse_record_armed:
-                self.disarm_button(app,1,top+3,29)
+                self.disarm_button(app,1,top+4.5,29)
                 top+=2
-            top+=3
+            top+=4.5
         if app.instrument_slot not in app.editor.song.instruments and not app.inline_recording_visible:
             button(self,left,top,min(27,self.cols-left-2),'Record automation','pulse_record_arm')
             top+=1.5
@@ -686,16 +715,31 @@ class Renderer:
             for i,(label,mode) in enumerate((('Choose preset','presets'),('No preset','blank'),('Manual','manual'))):
                 button(self,left+i*17,top+6,16,label,'new_instrument_mode',mode)
             return
+        app.normalize_instrument_tab()
+        from sidpulse.ui.sample_synthesis import draw_protection
+        top, protected = draw_protection(self,app,left,top,bottom)
+        if protected:return
+        mapped=inst.sample_override
+        if mapped:
+            sample=app.editor.song.samples.get(str(inst.sample_slot),app.editor.song.samples.get(inst.sample_slot))
+            name=sample.get('name','Stored sample') if sample else '(empty slot)'
+            self.text(left,top,f'Using sample {inst.sample_slot:02d}: {name}',TEXT,self.cols-left-2)
+            top+=1.5
         motion=app.instrument_tab=="motion"
-        for i,(x,w,label,tab) in enumerate(((0,10,"General","general"),(11,19,"Motion / tables","motion"),(31,14,"Arp / pitch","roll"),(46,8,"ADSR","adsr"))):
-            wrapped=self.cols-left<55 and i>=2
+        tabs=(((0,14,"Sample","sample"),(15,19,"PCM programs","motion"),(35,14,"Arp / pitch","roll")) if mapped else
+              ((0,10,"General","general"),(11,19,"Motion / tables","motion"),(31,14,"Arp / pitch","roll"),(46,8,"ADSR","adsr"),(55,9,"PCM","sample")))
+        for i,(x,w,label,tab) in enumerate(tabs):
+            wrapped=self.cols-left<66 and i>=2
             button(self,left+(x-31 if wrapped else x),top+(1.5 if wrapped else 0),w,label,"instrument_tab",tab,app.instrument_tab==tab)
-        if self.cols-left<55:top+=2
+        if self.cols-left<66:top+=2
         if app.inline_recording_visible:
             button(self,left,top+2,min(27,self.cols-left-2),'Record automation','pulse_record_arm',selected=True)
             from sidpulse.ui.automation_inline import draw
             draw(self,app,left,top+4,bottom)
             return
+        if app.instrument_tab=="sample":
+            from sidpulse.ui.sample_view import instrument
+            instrument(self,app,left,top+2,bottom);return
         if app.instrument_tab=="adsr":
             draw_adsr(self,app,left,top+2,bottom);return
         if app.instrument_tab=="roll":
@@ -705,7 +749,7 @@ class Renderer:
                    'Record automation (A)' if app.pulse_record_armed else 'Record automation',
                    'pulse_record_arm', selected=app.pulse_record_armed,
                    fill=REC_ARM if app.pulse_record_armed else None)
-        self.text(left,top+(2 if motion else 3.5),"Tick programs / decimal values" if motion else "SID synthesis / hex values",TEXT)
+        self.text(left,top+(2 if motion else 3.5),"PCM pitch / gate / retrigger programs" if mapped else "Tick programs / decimal values" if motion else "SID synthesis / hex values",TEXT)
         full_wave=not motion and bottom-top>=23 and self.cols-left>=55
         side_envelope = full_wave and self.cols-left >= 74
         fields_right = left + max(43, int((self.cols-left-2)*.55)) if side_envelope else None
@@ -772,7 +816,8 @@ class Renderer:
         start=self.scroll_start('settings',start,app.property_index,len(entries),count)
         for i,(label,value) in enumerate(entries[start:start+count],start):
             y=top+2+(i-start)*1.35
-            self.text(2,y,label,TEXT,24)
+            if app.property_index==i:self.rect(1.5,y,24.5,1,SELECT)
+            self.text(2,y,label,CREAM if app.property_index==i else TEXT,24)
             button(self,27,y,max(8,self.cols-31),value,'setting_edit',i,app.property_index==i)
         self.scroll_bar('settings',self.cols-2.5,top+2,count*1.35,len(entries),count)
 
@@ -786,6 +831,8 @@ class Renderer:
             button(self,x+offset,y-.05,4,label,action,value,pressed(app,action,value),height=.95)
 
     def samples(self, app, top, bottom):
+        from sidpulse.ui.sample_view import experimental_warning
+        top = experimental_warning(self, top)
         left = 34 if self.cols >= 80 else 2
         if left > 2:
             self.well(4, top, 26, bottom - top)
@@ -804,20 +851,10 @@ class Renderer:
                 self.activity_dot(23.8,top+i,0.,'sample',number)
                 self.bank_monitor_buttons(app, 'sample', number, 25, top+i, False)
             self.scroll_bar('samples',30.4,top,count,99,count)
-        self.text(left, top, "PCM / DIGI SAMPLE BANK", CYAN)
-        if left == 2:
+        else:
             self.bank_monitor_buttons(app, 'sample', app.sample_index, 30, top, False)
-        lines = ["Instrument 01 and Sample 01 may coexist.",
-                 "SID instruments contain synthesis settings.", "Samples contain PCM/digi data.",
-                 "", "This editor prototype preserves sample-bank data in .sidpulse.",
-                 "PCM import, sample editing and digi playback are not implemented yet.",
-                 "Sample activity dots and M/S stay disabled until sample playback is implemented."]
-        y = top + 2
-        for line in lines:
-            for part in textwrap.wrap(line, max(15, self.cols - left - 2)) or [""]:
-                if y < bottom:
-                    self.text(left, y, part, TEXT)
-                y += 1
+        from sidpulse.ui.sample_view import details
+        details(self, app, left, top, bottom)
 
     def files(self, app, top, bottom):
         from sidpulse.ui.file_browser_view import draw
@@ -1066,10 +1103,14 @@ class Renderer:
         elif app.page == "instrument":
             fields = INSTRUMENT_LABELS
             first = f"Instrument {ed.instrument:02d}: {fields[app.property_index]}. This bank defines SID synthesis, separate from PCM samples."
+            inst=ed.song.instruments.get(ed.instrument)
+            if inst and inst.sample_override:
+                first = f"Instrument {ed.instrument:02d}: PCM sample {inst.sample_slot:02d}. Pitch/gate programs apply; SID settings are stored."
             second = "Tab: bank/buttons/properties | Ins: add | Del: delete | F8 then note keys: audition | F1 help"
             if app.keyboard_mapping == 'modern':
                 second = 'Octave: + / - / 0 reset to 4 | Tab: focus | F8 then note keys: audition | F1 help'
             if app.instrument_tab=="roll":first="Piano grid: draw relative semitone steps. Arpeggio repeats; pitch sequence holds its last step."
+            if app.instrument_tab=="sample":first="PCM override: assign a sample slot, preserve SID settings, export host audio."
             if app.instrument_tab=="adsr":first="Drag ADSR handles or sliders. SID rate settings: 00..0F. Sustain is a level, not a duration."
             if app.instrument_slot not in ed.song.instruments:
                 first = f"Empty instrument slot {app.instrument_slot:02d}. Enter: Choose preset / No preset / Manual."
@@ -1083,7 +1124,7 @@ class Renderer:
             first = "Quick help: choose a topic above. Inactive legacy bindings are grey in the shortcut registry."
             second = "1..9 or Left/Right/Tab: topic | Up/Down/PgUp/PgDn: scroll | Escape: return to editor"
         else:
-            first = {"samples": "Separate PCM/digi bank. Sample import and playback are reserved for later work.",
+            first = {"samples": "PCM sample bank: import audio, assign to instrument, preview. WAV/MP3 includes samples.",
                      "orders": "L: loop song at playlist end. Tab: orders/bank. N: new. Shift+N: duplicate. Bank Enter: edit.",
                      "settings": "F12: shared SID filter, speed/tempo, helper and audio buffer. Bigger buffers trade latency for more scheduling headroom.",
                      "info": "Three hardware SID voices. This panel follows playback and audition."}.get(app.page, "SIDpulse Tracker")
@@ -1094,7 +1135,7 @@ class Renderer:
                 if action == "activity_indicator":
                     first = ("Instrument activity: bright on note triggers, lit while gated; short visual decay after attacks."
                              if value[0] == 'instrument' else
-                             "Sample activity is idle: PCM/digi playback is not implemented. Instrument slots are separate.")
+                             "Sample slots map to instruments; instrument activity includes PCM triggers.")
                     second = "Indicators follow playback and audition, not the selected row. They are not loudness meters."
                 if action == "waveform":
                     first = f"{WAVES[value].title()}: select the SID oscillator waveform for this instrument."
@@ -1105,10 +1146,10 @@ class Renderer:
                     first = f"{action.split('_')[1].title()} instrument {value:02d} across all three voices. Preview only."
                     second = 'Repeat S to restore instrument mutes. Channel M/S still applies. Song and exports stay unchanged.'
                 elif action == 'bank_monitor_disabled':
-                    first = ('Sample M/S unavailable: PCM/digi playback is not implemented.' if value[0]=='sample'
+                    first = ('Use the assigned instrument M/S controls to monitor this sample.' if value[0]=='sample'
                              else f'Instrument {value[1]:02d} is empty: nothing to mute or solo.')
                 elif action == 'choose_sample':
-                    first = f'Select sample slot {value:02d}. PCM/digi playback is not implemented.'
+                    first = f'Select sample slot {value:02d}. Import PCM, then assign it to an instrument.'
                 elif action == "help_topic":
                     first = f"Open quick help for {HELP_TOPIC_NAMES[value]}."
                 elif action == "choose_instrument":
@@ -1117,10 +1158,22 @@ class Renderer:
                              f"Empty instrument slot {value:02d}. Enter: Choose preset / No preset / Manual.")
                 elif action == "toggle_program":
                     first = "Click or Enter toggles this instrument program. Off keeps its values and drawn steps."
+                elif action == 'song_title_settings':
+                    first = 'Open F12 Song Variables with Song title selected.'
+                elif action == 'header_instrument':
+                    first = f'Open instrument {value:02d} in the F4 instrument editor.'
+                elif action in ('copy_instrument','paste_instrument'):
+                    first = ('Copy the complete instrument and its assigned sample.' if action=='copy_instrument' else
+                             'Paste into the selected instrument slot. Occupied slots require confirmation; undo is available.')
                 elif action == 'control_panel_toggle':
                     first = ('Collapse' if self.control_visible else 'Expand') + ' CTRL CH / FILTER. Display only; filter automation keeps playing.'
                 elif action == 'select_field':
                     first = 'Select this field across all rows. Drag cells or use Shift+arrows for a smaller block.'
+                elif action == 'pattern_arpeggio':
+                    first = f'Write an arpeggio command at row {ed.row:03d}, CH {value+1}: OFF / ON / instrument / hold.'
+                    second = 'AR column: 0 OFF, 1 ON, R instrument, . hold. OFF also suppresses Jxy; other pitch programs stay active.'
+                elif action == 'pattern_select_all':
+                    first = 'Select every row, channel and field in the current pattern.'
                 elif action == 'reset_automation':
                     first = 'Reset all A D S R PW to instrument defaults at this cell, or across selected rows/channels.'
                     second = 'Writes reset commands; keeps notes, instruments and FX. Ctrl+Backspace undoes the entire action.'
@@ -1211,10 +1264,28 @@ class Renderer:
     def dialog(self, app):
         self.scrollbars.visible.clear()
         dialog = app.dialog
-        minimum_lines = 23 if dialog.get('kind') == 'audio_buffer' else 22 if dialog.get('kind') == 'automation_recording' else 18
+        minimum_lines = 26 if dialog.get('kind') in ('sample_synthesis','sample_synthesis_batch','pcm_export_confirm') else 23 if dialog.get('kind') == 'audio_buffer' else 22 if dialog.get('kind') in ('automation_recording','sample_squeeze') else 18
         if self.cols < 54 or self.lines < minimum_lines:
             fit = min(self.cols / 54, self.lines / minimum_lines) * .9
             self.configure(app.screen, app.zoom * fit, app.appearance)
+        if dialog.get('kind') == 'pcm_export_confirm':
+            from sidpulse.ui.batch_synthesis import draw_confirm
+            draw_confirm(self,app);return
+        if dialog.get('kind') == 'sample_synthesis_batch':
+            from sidpulse.ui.batch_synthesis import draw
+            draw(self,app);return
+        if dialog.get('kind') == 'sample_volume':
+            from sidpulse.ui.sample_volume import draw
+            draw(self, app);return
+        if dialog.get('kind') == 'sample_synthesis':
+            from sidpulse.ui.sample_synthesis import draw
+            draw(self, app);return
+        if dialog.get('kind') == 'sample_squeeze':
+            from sidpulse.ui.sample_view import draw_squeeze
+            draw_squeeze(self,app);return
+        if dialog.get('kind') == 'media_job':
+            from sidpulse.ui.media_actions import draw_job
+            draw_job(self,app);return
         if dialog.get('kind') == 'automation_recording':
             from sidpulse.ui.automation_recording import draw
             draw(self, app)
@@ -1246,7 +1317,7 @@ class Renderer:
         shade.fill((0, 0, 0, 175))
         self.screen.blit(shade, (0, 0))
         w = max(12, min(86, self.cols - 4))
-        height=min(21,self.lines-2) if dialog.get("multiline") else 15 if dialog.get("logo") else 11 if "confirm_instrument" in dialog else 12 if any(k in dialog for k in ("yes","discard")) or dialog.get("kind") in ("paste_special","keyboard_mapping") else 10
+        height=min(21,self.lines-2) if dialog.get("multiline") else 15 if dialog.get("logo") else 11 if "confirm_instrument" in dialog else 12 if any(k in dialog for k in ("yes","discard")) or dialog.get("kind") in ("paste_special","keyboard_mapping","pattern_arpeggio") else 10
         if dialog.get('kind') == 'pattern_edit_confirm':
             height = 14
         x, y = max(0, (self.cols - w) // 2), max(0, (self.lines - height) // 2)

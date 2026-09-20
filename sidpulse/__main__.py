@@ -9,8 +9,12 @@ def main():
     parser = argparse.ArgumentParser(description="SIDpulse Tracker: an homage to Impulse Tracker")
     parser.add_argument("project", nargs="?", help="editable .sidpulse project")
     exports = parser.add_mutually_exclusive_group()
-    exports.add_argument("--export-sid",type=Path,help="compile PSID and save a sibling .sidpulse source; no GUI")
+    exports.add_argument("--export-sid",type=Path,help="compile SID-only PSID or PCM-enhanced RSID and save .sidpulse source; no GUI")
     exports.add_argument("--export-prg",type=Path,help="compile a runnable C64 PRG and save a sibling .sidpulse source; no GUI")
+    exports.add_argument("--export-audio",type=Path,help="render .wav or .mp3; no GUI or audio device")
+    parser.add_argument("--audio-loops",type=int,default=0,help="extra song repeats for audio export: 0 = play once (default)")
+    parser.add_argument("--digi-method", type=int, choices=(1, 2), default=None,
+                        help="C64 PCM export: 1 = volume digis, display enabled (default); 2 = waveform DAC, display blanked")
     for name, help_text in (("song", "enable export-only RAM/file squeezing (default: on)"),
                             ("patterns", "condense duplicate export patterns"),
                             ("instruments", "condense identical export instruments"),
@@ -30,6 +34,10 @@ def main():
     parser.add_argument("--welcome", action="store_true", help="show the intro-song welcome screen again")
     parser.add_argument("--play-welcome-song", action="store_true", help="open Autumn at five and play it immediately, without the welcome screen")
     args = parser.parse_args()
+    if args.digi_method is not None and not (args.export_sid or args.export_prg):
+        parser.error("--digi-method applies only to --export-sid / --export-prg")
+    if not 0 <= args.audio_loops <= 99 or (args.audio_loops and not args.export_audio):
+        parser.error("--audio-loops requires --export-audio and a value from 0 to 99")
     if args.play_welcome_song and (args.project or args.example or args.welcome):
         parser.error("--play-welcome-song cannot accompany a project, --example or --welcome")
     if not (args.export_sid or args.export_prg) and any(
@@ -56,7 +64,7 @@ def main():
             raise ValueError("Use WIDTHxHEIGHT with dimensions at least 360")
         metadata = {}
         welcome = False
-        if not (args.export_sid or args.export_prg):
+        if not (args.export_sid or args.export_prg or args.export_audio):
             from sidpulse.ui.welcome import show_on_startup, open_dialog, play_intro
             welcome = not (args.project or args.example or args.play_welcome_song or args.headless_smoke) and (args.welcome or show_on_startup())
         if args.project:
@@ -66,13 +74,21 @@ def main():
                 print('Compatibility: ' + warning, file=sys.stderr)
         else:
             song = welcome_song() if args.play_welcome_song or welcome else example_song() if args.example else Song()
+        if args.export_audio:
+            from sidpulse.export.audio import save_audio
+            if args.save_project:
+                from sidpulse.project.format import save
+                save(args.save_project,song,metadata)
+            result=save_audio(song,args.export_audio,loops=args.audio_loops)
+            print(f'Saved {result["path"]}: {result["seconds"]:.3f}s, {result["loops"]} extra loops')
+            return 0
         if args.export_sid or args.export_prg:
             from sidpulse.export.psid import compile_song,save_export
             from sidpulse.export.prg import compile_prg,save_prg
             from sidpulse.project.format import save
             target = args.export_prg or args.export_sid
             from sidpulse.export.squeeze import SqueezeOptions
-            options = SqueezeOptions(**{("enabled" if name == "song" else name): getattr(args, "squeeze_" + name)
+            options = SqueezeOptions(digi_method=args.digi_method or 1, **{("enabled" if name == "song" else name): getattr(args, "squeeze_" + name)
                                         for name in ("song", "patterns", "instruments", "unused", "streams")
                                         if getattr(args, "squeeze_" + name) is not None})
             result = compile_prg(song, squeeze=options) if args.export_prg else compile_song(song, squeeze=options)

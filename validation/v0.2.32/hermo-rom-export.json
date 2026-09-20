@@ -1,0 +1,264 @@
+{
+  "project": "hermo-rom.sidpulse",
+  "title": "HERMO.ROM",
+  "clock": "PAL",
+  "sid_model": "8580",
+  "source_sha256": "6b541961113fa88729851d691b9d2db9ba296b1fbf22098daf4c356e798c5faf",
+  "source_unchanged": true,
+  "prg_sha256": "120902ee037d4b29f4f5f76d9458fd239fd7f0fd2f3fbd4ecfe60589c72fd90f",
+  "bytes": 6490,
+  "orders": [
+    0,
+    1
+  ],
+  "seconds": 15.359999999999761,
+  "max_cycles_bound": 18966,
+  "report": {
+    "enabled": true,
+    "algorithm": "PCM-enhanced / v2.0.2 dictionary IDs",
+    "original_payload_bytes": 12692,
+    "payload_bytes": 6488,
+    "player_bytes": 4095,
+    "song_data_bytes": 2393,
+    "zero_page_bytes": 2,
+    "stack_bytes": 10,
+    "cleanup": {
+      "duplicate_patterns": 0,
+      "duplicate_instruments": 0,
+      "unused_patterns": 0,
+      "unused_instruments": 0,
+      "unused_samples": 0
+    },
+    "fallback_reason": "PCM NMI <= 109 CPU cycles; 246 cycles per sample. Music bound includes PCM and VIC reserve.",
+    "wrapper_bytes": 0,
+    "original_wrapper_bytes": 0,
+    "verified_calls": 769,
+    "verified_max_cycles": 8745,
+    "phrase_blocks": 18,
+    "repeated_blocks": 0,
+    "squeezer_version": 202,
+    "pcm_source_channel": 1
+  },
+  "warnings": [
+    "Experimental PCM-enhanced routine: CH1/2 SID + CH3 volume digi, PAL, ~4 kHz / 4-bit. CH3 returns to synthesis for ordinary notes. One tracker channel can contain PCM notes.",
+    "Channel mapping: tracker CH1 -> C64 CH3, tracker CH2 -> C64 CH1, tracker CH3 -> C64 CH2. The editable project is unchanged.",
+    "Volume digis modulate the other SID voices; 6581/8580 levels and distortion differ. Instruction timing is verified; physical C64 listening and VIC/CIA integration need hardware testing.",
+    "3 unique sample renders, 1,242 packed bytes. CIA1 timer A, CIA2 timer A/NMI, CH3, $F8/$F9 and RAM $0801..$CFFF are owned during replay."
+  ],
+  "note_instruments_by_tracker_channel": [
+    {
+      "1": 16,
+      "4": 32,
+      "2": 16
+    },
+    {
+      "5": 64
+    },
+    {
+      "7": 32,
+      "9": 32
+    }
+  ],
+  "physical_sid_register_writes": {
+    "3": 353,
+    "1": 705,
+    "2": 1897
+  },
+  "pcm_triggers": [
+    {
+      "tick": 0,
+      "seconds": 0.0,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 24,
+      "seconds": 0.48000097437396466,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 48,
+      "seconds": 0.9600019487479305,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 72,
+      "seconds": 1.440002923121894,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 96,
+      "seconds": 1.9200038974958573,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 120,
+      "seconds": 2.4000048718698253,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 144,
+      "seconds": 2.880005846243794,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 168,
+      "seconds": 3.3600068206177625,
+      "samples": 962,
+      "clip_sha256": "153803fe64047b5d84aa46e821c610fbd099622c66f5c72d52d2fec2bcc88a13"
+    },
+    {
+      "tick": 192,
+      "seconds": 3.840007794991731,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 216,
+      "seconds": 4.320008769365693,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 240,
+      "seconds": 4.8000097437396505,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 264,
+      "seconds": 5.2800107181136084,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 288,
+      "seconds": 5.760011692487566,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 312,
+      "seconds": 6.240012666861524,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 336,
+      "seconds": 6.720013641235482,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 360,
+      "seconds": 7.20001461560944,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 384,
+      "seconds": 7.680015589983398,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 408,
+      "seconds": 8.160016564357363,
+      "samples": 962,
+      "clip_sha256": "153803fe64047b5d84aa46e821c610fbd099622c66f5c72d52d2fec2bcc88a13"
+    },
+    {
+      "tick": 432,
+      "seconds": 8.640017538731342,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 456,
+      "seconds": 9.120018513105322,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 480,
+      "seconds": 9.600019487479301,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 504,
+      "seconds": 10.08002046185328,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 528,
+      "seconds": 10.56002143622726,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 552,
+      "seconds": 11.040022410601239,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 576,
+      "seconds": 11.520023384975218,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 600,
+      "seconds": 12.000024359349197,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 624,
+      "seconds": 12.480025333723177,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 648,
+      "seconds": 12.960026308097156,
+      "samples": 962,
+      "clip_sha256": "153803fe64047b5d84aa46e821c610fbd099622c66f5c72d52d2fec2bcc88a13"
+    },
+    {
+      "tick": 672,
+      "seconds": 13.440027282471135,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 696,
+      "seconds": 13.920028256845114,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    },
+    {
+      "tick": 720,
+      "seconds": 14.400029231219094,
+      "samples": 560,
+      "clip_sha256": "b7547253e3f07e8e60a0f6efe1cfe03232a3e68caf30c5c8af5d92f6186e5926"
+    },
+    {
+      "tick": 744,
+      "seconds": 14.880030205593073,
+      "samples": 961,
+      "clip_sha256": "a13d5831e86f3fc441d1fb79e1c64d8caaea40b9ccb6b7a58aab05c2453be83a"
+    }
+  ],
+  "pcm_trigger_count": 32,
+  "unique_pcm_renders": 3,
+  "neutral_comparison": "Only the packed sample payload is replaced with midpoint 0x88; addresses, code, descriptors and music bytes remain identical."
+}

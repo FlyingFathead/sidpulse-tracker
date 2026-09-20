@@ -1,0 +1,36 @@
+         1360238 function calls in 0.973 seconds
+
+   Ordered by: cumulative time
+   List reduced from 88 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      300    0.010    0.000    0.975    0.003 renderer.py:235(render)
+      300    0.024    0.000    0.722    0.002 renderer.py:791(samples)
+      300    0.125    0.000    0.408    0.001 sample_view.py:7(details)
+     5700    0.249    0.000    0.249    0.000 {built-in method pygame.draw.rect}
+     2700    0.004    0.000    0.198    0.000 renderer.py:177(well)
+     3900    0.004    0.000    0.187    0.000 renderer.py:126(rect)
+    27600    0.030    0.000    0.099    0.000 renderer.py:108(text)
+    45600    0.097    0.000    0.097    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+   167700    0.090    0.000    0.090    0.000 {built-in method pygame.draw.line}
+    10200    0.033    0.000    0.064    0.000 renderer.py:925(bank_monitor_buttons)
+     1800    0.002    0.000    0.062    0.000 renderer.py:167(header_field)
+    10200    0.027    0.000    0.056    0.000 renderer.py:622(activity_dot)
+      300    0.047    0.000    0.047    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+     4200    0.011    0.000    0.042    0.000 instrument_graphs.py:34(button)
+   237000    0.031    0.000    0.031    0.000 {built-in method builtins.max}
+      300    0.009    0.000    0.031    0.000 renderer.py:1041(helper)
+   261600    0.029    0.000    0.029    0.000 {built-in method builtins.round}
+     1800    0.007    0.000    0.026    0.000 renderer.py:131(control_text)
+      300    0.008    0.000    0.023    0.000 renderer.py:185(meter)
+      300    0.001    0.000    0.016    0.000 renderer.py:202(configure_page)
+   203100    0.016    0.000    0.016    0.000 {built-in method builtins.len}
+      300    0.003    0.000    0.015    0.000 renderer.py:73(configure)
+    69600    0.014    0.000    0.014    0.000 {method 'get' of 'dict' objects}
+    10200    0.009    0.000    0.014    0.000 renderer.py:199(hit)
+     5700    0.013    0.000    0.013    0.000 {method 'size' of 'pygame.font.Font' objects}
+     1200    0.013    0.000    0.013    0.000 {method 'render' of 'pygame.font.Font' objects}
+    40800    0.008    0.000    0.011    0.000 renderer.py:628(<genexpr>)
+      300    0.005    0.000    0.010    0.000 themes.py:15(palette)
+      300    0.001    0.000    0.009    0.000 renderer.py:358(scroll_bar)
+    44400    0.009    0.000    0.009    0.000 {method 'move_to_end' of 'collections.OrderedDict' objects}

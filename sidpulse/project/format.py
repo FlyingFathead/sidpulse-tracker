@@ -12,8 +12,8 @@ from sidpulse.song.model import Cell, ControlCell, Filter, Instrument, Pattern, 
 from sidpulse.song.model import ENVELOPE_FIELDS
 from sidpulse import __version__
 
-MAX_BYTES = 8 * 1024 * 1024
-CURRENT_FORMAT = 7
+MAX_BYTES = 40 * 1024 * 1024
+CURRENT_FORMAT = 10
 AUTOMATION_FIELDS = ('pulse_width', *ENVELOPE_FIELDS)
 
 
@@ -57,6 +57,10 @@ def validate(song):
         for program in INSTRUMENT_PROGRAMS:
             if type(getattr(inst, program + '_enabled')) is not bool:
                 raise ProjectError(f"{program} enabled switch must be true or false")
+        if type(inst.sample_override) is not bool:
+            raise ProjectError('Sample override must be true or false')
+        integer(inst.sample_slot, 0, 99, 'sample slot')
+        integer(inst.sample_gain, 0, 100, 'sample gain')
         for key, lo, hi in (("arp_speed",1,255), ("pulse_depth",0,2047), ("pulse_rate",1,255),
                             ("vibrato_speed",0,15), ("vibrato_depth",0,15), ("vibrato_delay",0,255),
                             ("gate_ticks",0,255), ("retrigger",0,255)):
@@ -99,6 +103,11 @@ def validate(song):
                     integer(cell.parameter, 0, 255, "effect parameter")
                 if cell.pulse_width is not None:
                     integer(cell.pulse_width, -1, 4095, "row pulse width")
+                if cell.arp_mode is not None:
+                    integer(cell.arp_mode, -1, 1, 'row arpeggio mode')
+                if cell.waveform is not None:
+                    if type(cell.waveform) is not int or cell.waveform not in (-1, 0x10, 0x20, 0x40, 0x80):
+                        raise ProjectError('Invalid row waveform: use instrument reset or triangle/saw/pulse/noise')
                 for field in ENVELOPE_FIELDS:
                     value = getattr(cell, field)
                     if value is not None:
@@ -110,6 +119,26 @@ def validate(song):
     for name in ("samples", "macros", "filter_programs", "export_config"):
         if not isinstance(getattr(song, name), dict):
             raise ProjectError(f"{name} must be an object")
+    from sidpulse.audio.media import PLAYABLE_ENCODINGS, MAX_BANK_BYTES, sample_data
+    total = 0
+    slots = set()
+    for number, sample in song.samples.items():
+        if isinstance(sample, dict) and sample.get('encoding') in PLAYABLE_ENCODINGS:
+            try:
+                slot = int(number)
+                integer(slot, 1, 99, 'sample number')
+                if str(slot) in slots:
+                    raise ProjectError('Duplicate sample slot')
+                slots.add(str(slot))
+                total += len(sample_data(sample))
+                if 'original' in sample:
+                    if not isinstance(sample['original'], dict) or 'original' in sample['original']:
+                        raise ProjectError('Invalid nested original sample')
+                    total += len(sample_data(sample['original']))
+            except (ValueError, TypeError) as exc:
+                raise ProjectError(f'Sample {number}: {exc}') from exc
+    if total > MAX_BANK_BYTES:
+        raise ProjectError('Embedded PCM bank exceeds 24 MiB. Shorten or remove samples.')
 
 
 def _serialize(value):
@@ -119,8 +148,11 @@ def _serialize(value):
             if item.name.startswith('_'):
                 continue
             data = getattr(value, item.name)
-            if isinstance(value, Cell) and item.name in AUTOMATION_FIELDS and data is None:
+            if isinstance(value, Cell) and item.name in (*AUTOMATION_FIELDS, 'arp_mode', 'waveform') and data is None:
                 continue  # ordinary saves remain readable by format-6 applications
+            if isinstance(value, Instrument) and item.name in ('sample_override', 'sample_slot', 'sample_gain'):
+                if not value.sample_override and not value.sample_slot and value.sample_gain == 50:
+                    continue
             result[item.name] = _serialize(data)
         return result
     if isinstance(value, dict):
@@ -135,6 +167,14 @@ def encode(song, editor=None):
     automation = any(getattr(cell, field) is not None for pattern in song.patterns.values()
                      for row in pattern.rows for cell in row for field in AUTOMATION_FIELDS)
     version = 7 if automation else 6
+    if any(i.sample_override or i.sample_slot or i.sample_gain != 50 for i in song.instruments.values()) or any(
+            isinstance(s, dict) and s.get('encoding') in ('pcm_s16le_mono', 'pcm_s8_mono', 'pcm_u4le_mono') for s in song.samples.values()):
+        version = 8
+    if any(cell.arp_mode is not None for pattern in song.patterns.values() for row in pattern.rows for cell in row):
+        version = 9
+    if any(cell.waveform is not None or (cell.effect == 'Z' and cell.parameter in (0x10, 0x11, 0x1F, 0x20, 0x21, 0x2F))
+           for pattern in song.patterns.values() for row in pattern.rows for cell in row):
+        version = 10
     if song._source_format > CURRENT_FORMAT:
         version = song._source_format  # do not label preserved future content as an older schema
     metadata = deepcopy(editor or {})
@@ -224,7 +264,7 @@ def load(path):
         with path.open("rb") as stream:
             data = stream.read(MAX_BYTES + 1)
         if len(data) > MAX_BYTES:
-            raise ProjectError("Project exceeds the 8 MiB prototype limit")
+            raise ProjectError("Project exceeds the 40 MiB limit")
         return decode(json.loads(data))
     except (UnicodeError, json.JSONDecodeError, RecursionError) as exc:
         raise ProjectError(f"Invalid JSON project: {exc}") from exc
@@ -236,7 +276,7 @@ def save(path, song, editor=None):
         path = path.with_suffix(".sidpulse")
     payload = (json.dumps(encode(song, editor), ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode("utf-8")
     if len(payload) > MAX_BYTES:
-        raise ProjectError("Project exceeds the 8 MiB prototype limit")
+        raise ProjectError("Project exceeds the 40 MiB limit")
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
     try:

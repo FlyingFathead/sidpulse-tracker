@@ -36,9 +36,9 @@ def draw(r, app, top, bottom):
     draw_field(r, b.location, 12, top, r.cols - 14, b.focus == 'directory', 'file_directory')
     split = max(40, r.cols * 2 // 3) if r.cols >= 100 else r.cols - 1
     y = top + 2
-    height = max(3, bottom - y - 5)
+    height = max(3, bottom - y - (8 if b.audio_export else 5))
     r.well(2, y, split - 4, height)
-    r.text(3, y, 'Name (' + SUFFIXES[b.mode] + ')', c.CREAM, split - 6)
+    r.text(3, y, 'Audio files' if b.mode == 'sample' else 'Name (' + SUFFIXES[b.mode] + ')', c.CREAM, split - 6)
     show_dates = app.file_browser_show_modified and split - 6 >= 38
     date_x = split - 21
     name_width = date_x - 5 if show_dates else split - 8
@@ -72,6 +72,17 @@ def draw(r, app, top, bottom):
                  'Browse folders without', 'losing your filename edits.']
         for n, text in enumerate(lines[:max(0, int(height - 1))]):
             r.text(split + 1, y + n + .1, text, c.YELLOW if n == 0 else c.CREAM, r.cols - split - 4)
+    if b.audio_export:
+        r.text(2, bottom - 7, 'Save as', c.TEXT)
+        button(r, 12, bottom - 7, 9, 'WAV', 'audio_format', 'wav', b.mode == 'wav')
+        button(r, 22, bottom - 7, 9, 'MP3', 'audio_format', 'mp3', b.mode == 'mp3')
+        if b.focus == 'format':
+            r.rect(12, bottom - 7.2, 19, .1, c.YELLOW)
+        r.text(34, bottom - 7, 'Loops', c.TEXT)
+        draw_field(r, b.loops, 41, bottom - 7, 6, b.focus == 'loops', 'audio_loops')
+        from sidpulse.audio.samples import enabled
+        routine = 'SID + PCM' if enabled(app.editor.song) else 'SID-only'
+        r.text(2, bottom - 5.5, '0 = once; 1 = twice | 48 kHz mono | Routine: ' + routine, c.TEXT, r.cols - 4)
     r.text(2, bottom - 4, 'Filename', c.TEXT)
     draw_field(r, b.name, 12, bottom - 4, r.cols - 14, b.focus == 'name', 'filename')
     x = 2

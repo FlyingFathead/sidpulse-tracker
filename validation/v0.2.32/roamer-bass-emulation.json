@@ -1,0 +1,18 @@
+{
+  "common_music_frames": 581632,
+  "correlation": 0.5425100418451358,
+  "remapped_rms": 416.88166122812794,
+  "reference_rms": 412.1439898143837,
+  "test": "VICE PAL/8580 actual PRG; CH1 PCM/SID percussion + CH2 Rubber saw bass vs manually rotated CH3 percussion/CH1 bass.",
+  "bass_band_hz": [
+    32,
+    48
+  ],
+  "bass_band_vs_percussion_only_ratio": 4.715938971210103,
+  "bass_band_vs_ch3_reference_ratio": 0.9962150905253848,
+  "bass_notes": 32,
+  "pcm_kicks": 8,
+  "pcm_snares": 8,
+  "sid_hihats": 16,
+  "comparison_limit": "Manual score rotation changes SID write order and waveform phase. Compare expected registers/sample nibbles, bass-band energy and event presence; whole-waveform equality is not a gate for this mixed track."
+}

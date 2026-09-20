@@ -1,0 +1,16 @@
+Full regression before mapped-instrument UI: 1524 passed in 378.27s.
+After mapped-instrument UI: 350 UI/input/editing checks passed in 13.84s.
+Focused PCM/import/remap/comparison/C64/reset checks: 57 passed in 39.58s.
+Additional mapped-instrument/PCM/instrument checks: 45 passed in 4.36s.
+Three bundled PCM decoder images reproduce exactly with 64tass.
+Native PCM/conditioning/registers/cycles/state: exact match across 7 songs.
+Mixed CH1 percussion: 200 seconds included in native comparison.
+Actual VICE PRGs: CH1 kick/snare; CH1 kick/SID-hi-hat/snare; CH2 and CH3 equivalent arrangements; full-demo phrase/indexed decoders.
+
+Final feature run: 1,553 cases; 1,552 passed and one empty-bank helper failure.
+The failure was fixed; all 126 affected regression cases then passed in 6.21s.
+Header navigation, F4 copy/paste, AR automation, Select all, existing FX, save/undo, PCM and C64 export covered.
+Final native audio repeats all 7 exact fingerprints; final PRGs reproduce all 3 previously emulated artifacts byte-for-byte.
+
+Final performance: 108 matched serial trials + 6 AR toggle trials. All 30 final live trials: zero gaps/missing frames; default buffer: zero late callbacks/over-budget blocks.
+HERMO.ROM: two patterns/all three tracker channels, 32 PCM hits and loop restart; PAL VICE 8580/6581. Original input unchanged.

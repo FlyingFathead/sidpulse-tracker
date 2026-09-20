@@ -23,7 +23,7 @@ capture, and SQUEEZER v2.0 adds export packing with the same replay decoder.
 
 See [matched performance measurements](PERFORMANCE-v0.2.27.md), including the
 v0.2.23 starter, v0.2.26 before optimization, and this version. Future releases
-must include matched measurements; this is recorded in `AGENTS.md`.
+must include matched measurements; see the development workflow in [ROADMAP.md](ROADMAP.md).
 
 ## Cut and reset safeguards
 

@@ -14,7 +14,7 @@ The full ZIP must be built from the verified Git tag and extract under
 artifacts, not public release assets.
 
 `VERSION`, `pyproject.toml` and `sidpulse/__init__.py` must match the release
-version. README filenames, CHANGELOG, CHECKPOINT and release notes should agree
+version. README filenames, CHANGELOG, docs/CHECKPOINT.md and release notes should agree
 with that version. Do not advertise unimplemented WAV/MP3 export, PCM/digi playback or a native
 instrument/table sequencer. Compact trace-derived encoding is documented in
 SQUEEZER.md; its candidate validation gates still apply.

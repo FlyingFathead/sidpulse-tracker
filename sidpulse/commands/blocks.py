@@ -96,8 +96,9 @@ class BlockEditing:
             return False
         if mode not in ('overwrite', 'insert', 'mix'):
             raise ValueError('Unknown paste mode')
-        scopes = {None: None, 'notes': frozenset(('note',)), 'automation': AUTOMATION_FIELDS,
-                  'both': AUTOMATION_FIELDS | {'note'}}
+        automation = AUTOMATION_FIELDS | {'arp_mode'}
+        scopes = {None: None, 'notes': frozenset(('note',)), 'automation': automation,
+                  'both': automation | {'note'}}
         if scope not in scopes:
             raise ValueError('Unknown paste scope')
         masks = self.clipboard_fields or (None,)*len(self.clipboard[0])

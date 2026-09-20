@@ -81,6 +81,11 @@ def _record_song(song, *, progress=None, phase="Recording playback..."):
     Whole-song repetition is available through export_config.loop instead.
     """
     validate(song)
+    sample_instruments = [str(n).zfill(2) for n, inst in song.instruments.items() if inst.sample_override]
+    if sample_instruments:
+        raise ExportError('PCM override is enabled on instrument(s) ' + ', '.join(sample_instruments)
+                          + '. This recorder handles SID-only music. Use the PCM-enhanced compiler '
+                          'or WAV/MP3 export. No samples were silently omitted.')
     if not song.instruments:
         raise ExportError('The instrument bank is empty. Add instruments before PSID export; save the editable .sidpulse project at any time.')
     song=deepcopy(song)
@@ -97,7 +102,7 @@ def _record_song(song, *, progress=None, phase="Recording playback..."):
                 if not supported(cell.effect,cell.parameter or 0):
                     raise ExportError(f'Pattern {pid:02X}, row {r:03d}, CH {v+1}: {cell.effect}{cell.parameter or 0:02X} is not supported by PSID export')
     if song.samples:
-        warnings.append('PCM bank retained in the project; samples are not referenced or played by this SID-only version.')
+        warnings.append('Unused PCM bank retained in the project; sample overrides are off for this SID/PRG export.')
     unknown=set(song.export_config)-{'loop','released','load_address'}
     if unknown:raise ExportError('Unsupported export settings: '+', '.join(sorted(unknown)))
     if song.export_config.get('load_address',LOAD)!=LOAD:
@@ -178,6 +183,11 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
     if progress is not None:
         progress("Pre-analyzing...", "Validating the song and preparing the export copy.")
     validate(song)
+    # Check before squeezer cleanup can remove instruments or the PCM bank.
+    if any(inst.sample_override for inst in song.instruments.values()):
+        from sidpulse.export.pcm import compile_pcm
+        return compile_pcm(song, kind='prg' if _prg else 'sid', progress=progress,
+                           squeeze=squeeze, _comparison_cache=_comparison_cache)
     options = resolve_options(squeeze)
     source = song
     source_had_samples = bool(song.samples)
@@ -193,7 +203,7 @@ def compile_song(song, *, squeeze: SqueezeOptions | bool | None = None, _prg=Fal
     warnings = list(warnings)
     if source_had_samples and not song.samples:
         warnings.append("Unused PCM bank omitted from export; the editable project is intact. "
-                        "PCM/sample playback is not implemented in this SID-only version.")
+                        "PCM overrides are off; SID/PRG contains SID synthesis only.")
     loop = song.export_config.get("loop", True)
     unique_records = dict.fromkeys(records)
     record_bytes = sum(map(len, unique_records))

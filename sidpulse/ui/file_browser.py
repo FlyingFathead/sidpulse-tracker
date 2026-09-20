@@ -8,10 +8,13 @@ from datetime import datetime
 from pathlib import Path
 from .text_edit import TextEdit
 
-SUFFIXES = {'open': '.sidpulse', 'save': '.sidpulse', 'sid': '.sid', 'prg': '.prg'}
-LABELS = {'open': 'Open', 'save': 'Save', 'sid': 'Export SID', 'prg': 'Export PRG'}
+SUFFIXES = {'open': '.sidpulse', 'save': '.sidpulse', 'sid': '.sid', 'prg': '.prg',
+            'wav': '.wav', 'mp3': '.mp3', 'sample': '.wav'}
+LABELS = {'open': 'Open', 'save': 'Save', 'sid': 'Export SID', 'prg': 'Export PRG',
+          'wav': 'Export WAV', 'mp3': 'Export MP3', 'sample': 'Import sample'}
 TITLES = {'open': 'Load Project (F9)', 'save': 'Save Project / Save As (F10)',
-          'sid': 'Export .sid (PSID)', 'prg': 'Export .prg (C64 program)'}
+          'sid': 'Export .sid (PSID / RSID)', 'prg': 'Export .prg (C64 program)',
+          'wav': 'Export audio / WAV', 'mp3': 'Export audio / MP3', 'sample': 'Import PCM sample'}
 FOCI = ('list', 'name', 'directory', 'action', 'cancel')
 
 
@@ -42,6 +45,24 @@ class FileBrowser:
     visible_rows: int = 12
     export_result: object = None
     return_page: str = 'pattern'
+    loops: TextEdit = field(default_factory=lambda: TextEdit('0'))
+
+    @property
+    def audio_export(self):
+        return self.mode in ('wav', 'mp3')
+
+    def set_audio_format(self, kind):
+        if kind not in ('wav', 'mp3'):
+            raise ValueError('Choose WAV or MP3')
+        self.mode = kind
+        self.set_name(str(Path(self.name.text or 'untitled').with_suffix('.' + kind)))
+        self.refresh()
+
+    def loop_count(self):
+        text = self.loops.text.strip()
+        if not text.isascii() or not text.isdigit() or not 0 <= int(text) <= 99:
+            raise ValueError('Loops must be 0..99. 0 = play once, 1 = play twice.')
+        return int(text)
 
     def __post_init__(self):
         self.directory = Path(self.directory).expanduser().absolute()
@@ -55,11 +76,14 @@ class FileBrowser:
         if mode not in SUFFIXES:
             raise ValueError('Unsupported file operation: ' + str(mode))
         self.mode, self.export_result = mode, result
+        self.loops.reset('0')
         if project is not None:
             self.directory = Path(project).expanduser().absolute().parent
         self.set_name(default_name(project, mode))
         self.location.reset(str(self.directory))
-        self.focus = 'list' if mode == 'open' else 'name'
+        self.focus = 'list' if mode in ('open', 'sample') else 'name'
+        if mode == 'sample':
+            self.set_name('')
         self.error = ''
         self.refresh()
         if project and Path(project).absolute() in self.entries:
@@ -74,8 +98,10 @@ class FileBrowser:
     def refresh(self, select: Path | None = None) -> bool:
         try:
             paths = sorted(self.directory.iterdir(), key=lambda p: (not p.is_dir(), p.name.casefold()))
+            from sidpulse.audio.media import AUDIO_SUFFIXES
+            suffixes = AUDIO_SUFFIXES if self.mode == 'sample' else (SUFFIXES[self.mode],)
             self.entries = [self.directory.parent] + [p for p in paths if not p.name.startswith('.')
-                           and (p.is_dir() or p.suffix.lower() == SUFFIXES[self.mode])]
+                           and (p.is_dir() or p.suffix.lower() in suffixes)]
             self.modified = {}
             for path in self.entries[1:]:
                 try:
@@ -120,11 +146,12 @@ class FileBrowser:
         self.index = max(0, min(max(0, len(self.entries) - 1), self.index + delta))
 
     def tab(self, backwards: bool = False) -> None:
-        self.focus = FOCI[(FOCI.index(self.focus) + (-1 if backwards else 1)) % len(FOCI)]
+        choices = ('list', 'name', 'directory', 'format', 'loops', 'action', 'cancel') if self.audio_export else FOCI
+        self.focus = choices[(choices.index(self.focus) + (-1 if backwards else 1)) % len(choices)]
 
     @property
     def field(self) -> TextEdit | None:
-        return self.name if self.focus == 'name' else self.location if self.focus == 'directory' else None
+        return self.name if self.focus == 'name' else self.location if self.focus == 'directory' else self.loops if self.focus == 'loops' else None
 
     @property
     def selected(self) -> Path | None:
@@ -144,7 +171,7 @@ class FileBrowser:
             raise ValueError('That is a directory. Use the directory field or open it in the list.')
         if value.endswith(('/', '\\')) or target.name in ('', '.', '..'):
             raise ValueError('Enter a filename, not a directory.')
-        if self.mode != 'open':
+        if self.mode not in ('open', 'sample'):
             suffix = SUFFIXES[self.mode]
             if target.suffix.lower() != suffix:
                 target = target.with_suffix(suffix)

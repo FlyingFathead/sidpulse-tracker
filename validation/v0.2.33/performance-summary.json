@@ -1,0 +1,11 @@
+{
+  "total_trials": 150,
+  "live_trials": 42,
+  "gaps": 0,
+  "missing_frames": 0,
+  "late_callbacks": {
+    "baseline": 8,
+    "candidate": 0
+  },
+  "fixed_scope_late_callbacks": 1
+}

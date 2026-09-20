@@ -111,19 +111,19 @@ def test_schema7_roundtrip_and_old_cells_get_empty_automation(tmp_path):
 
 def test_editor_keeps_legacy_columns_and_handles_new_fields_and_undo():
     editor = Editor(song())
-    assert FIELDS[:9] == ('note', 'note', 'instrument', 'instrument', 'expression', 'expression', 'effect', 'parameter', 'parameter')
-    editor.column = 13
+    assert FIELDS[:10] == ('note', 'note', 'instrument', 'instrument', 'arp_mode', 'arp_mode', 'waveform', 'effect', 'parameter', 'parameter')
+    editor.column = 14
     for digit in 'A3F': editor.enter_digit(digit)
     assert editor.pattern.rows[0][0].pulse_width == 0xA3F
-    assert (editor.row, editor.column) == (1, 13)
+    assert (editor.row, editor.column) == (1, 14)
     editor.enter_digit('R'); assert editor.pattern.rows[1][0].pulse_width == -1
     editor.row = 1; editor.clear_field(); assert editor.pattern.rows[1][0].pulse_width is None
     editor.history.undo(editor.song); assert editor.pattern.rows[1][0].pulse_width == -1
-    for column, field in enumerate(ENVELOPE_FIELDS, 9):
+    for column, field in enumerate(ENVELOPE_FIELDS, 10):
         editor.row, editor.column = 2, column
         editor.enter_digit('F'); assert getattr(editor.pattern.rows[2][0], field) == 15
         editor.row = 3; editor.enter_digit('R'); assert getattr(editor.pattern.rows[3][0], field) == -1
-    editor.voice, editor.column = 0, 15
+    editor.voice, editor.column = 0, 16
     editor.move(columns=1); assert (editor.voice, editor.column) == (1, 0)
 
 

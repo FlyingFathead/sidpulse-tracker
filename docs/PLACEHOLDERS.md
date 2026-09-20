@@ -1,4 +1,4 @@
-# Remaining placeholders and disabled features in v0.2.12
+# Remaining placeholders and disabled features in v0.2.32
 
 The existing tracker layout is retained. The later reference mockup was withdrawn;
 no mockup inspector, extra voice or new decorative controls were added. Voice
@@ -6,8 +6,8 @@ columns now have visible separators and actual scalable M/S toggle buttons.
 
 | Visible area / feature | Status |
 |---|---|
-| Pattern EX column | Reserved and inactive. It does not store a fictional per-voice SID volume. |
-| F3 sample bank | Displays/preserves existing bank data. PCM import, sample editing, digi conversion and sample playback are disabled. |
+| Pattern AR column (former EX) | Working per-channel arpeggio OFF/ON/default; no existing effect is reassigned. |
+| F3 sample bank | PCM import, waveform trim, squeezing, embedded samples and host playback work; experimental C64 export uses one PCM channel. |
 | Import SID / remap | Disabled. Opening a .sid does not reconstruct a .sidpulse project. |
 | MIDI configuration | Disabled. MIDI input/output and mapping are future work. |
 | General system configuration | Disabled. Working audio buffer controls are separately available in F12 / Settings. |
@@ -26,4 +26,4 @@ COMMANDS.md. Exact effect subsets and export limits are in EFFECTS.md and
 PSID_EXPORT.md. Backward Bxx loops remain a preview feature; finite-order export
 with optional whole-song looping is supported and clearly bounded.
 
-ADSR, numeric sliders, arp/pitch drawing, 39 built-in presets, user preset saving, unused bank slots, PAL/NTSC and looping are implemented. The ADSR curve illustrates rate indices; it is not a measured oscilloscope envelope. Free-Hz pitch drawing and arbitrary envelope nodes are not implemented. The project still requires at least one instrument.
+ADSR, numeric sliders, arp/pitch drawing, 39 built-in presets, user preset saving, unused bank slots, PAL/NTSC and looping are implemented. The ADSR curve illustrates rate indices; it is not a measured oscilloscope envelope. Free-Hz pitch drawing and arbitrary envelope nodes are not implemented. An empty instrument bank is supported.

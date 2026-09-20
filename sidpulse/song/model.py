@@ -6,6 +6,9 @@ OFF, CUT = -1, -2
 NOTE_NAMES = ("C-", "C#", "D-", "D#", "E-", "F-", "F#", "G-", "G#", "A-", "A#", "B-")
 INSTRUMENT_PROGRAMS = ("arpeggio", "wave_sequence", "pitch_sequence", "pulse", "vibrato", "gate", "retrigger")
 ENVELOPE_FIELDS = ('attack', 'decay', 'sustain', 'release')
+WAVEFORM_KEYS = {'1': 0x10, 'T': 0x10, '2': 0x20, 'S': 0x20,
+                 '3': 0x40, 'P': 0x40, '4': 0x80, 'N': 0x80, '0': -1, 'R': -1}
+WAVEFORM_LABELS = {None: '.', -1: 'R', 0x10: 'T', 0x20: 'S', 0x40: 'P', 0x80: 'N'}
 
 
 def note_name(note):
@@ -30,6 +33,8 @@ class Cell:
     decay: int | None = None
     sustain: int | None = None
     release: int | None = None
+    arp_mode: int | None = None  # None: hold, -1: instrument default, 0: off, 1: on
+    waveform: int | None = None  # None: hold, -1: resume instrument/table, otherwise SID waveform bit
 
 
 @dataclass
@@ -88,6 +93,10 @@ class Instrument:
     vibrato_enabled: bool = True
     gate_enabled: bool = True
     retrigger_enabled: bool = True
+    # Sample slots are a separate namespace; patterns still reference instruments.
+    sample_override: bool = False
+    sample_slot: int = 0
+    sample_gain: int = 50
 
     @property
     def control(self):

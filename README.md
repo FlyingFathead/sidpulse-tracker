@@ -4,6 +4,13 @@
 
 > **ATTENTION:** [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker/) is the one and only official, original source for **SIDpulse Tracker**. Steer clear of other sources or repositories claiming to be the official project.
 
+**Current priority: sample-to-SID wavetable synthesis.** Our preferred C64
+workflow is to import a short sound in F3, fit a SID instrument with
+**Synthesize audio (create wavetable)**, audition it, then use that instrument
+in the song. The result uses ordinary SID waveform/pitch tables. Improving
+these fits, with the included kick and snare as reference sounds, is the
+priority. [How it works and current limits](docs/SAMPLE_SYNTHESIS.md).
+
 ![F5 playback: Autumn at Five with all three SID voice scopes](docs/media/sidpulse-f5-playback.gif)
 
 [Watch Autumn at Five with audio (full song, 1:36)](docs/media/sidpulse-f5-playback-full.mp4)
@@ -11,24 +18,55 @@
 ## Features at a glance
 
 - **Three SID voices:** compose for 6581 or 8580, PAL or NTSC, with native reSIDfp playback.
+- **Sample-to-SID wavetable synthesis:** fit a self-contained SID instrument from a sample, compare source/result, then freeze or edit its tables. Preferred C64 workflow.
 - **Tracker workflow:** patterns, orders and instrument editing, with Modern and Classic keyboard layouts.
-- **Channel automation:** edit or record A/D/S/R and pulse width; override instruments without changing their original settings.
+- **Channel automation:** W waveform and AR arpeggio controls, sync/ring FX, plus editable/recordable A/D/S/R and pulse width; preserve the instrument settings.
 - **Flexible editing:** select individual columns, copy notes or automation, paste special and undo changes.
 - **Live feedback:** three voice scopes, channel and instrument mute/solo, and audio performance counters.
 - **C64 exports:** SID and runnable PRG files, with four SQUEEZER versions, all-version comparison (optional Top 3) and measured size, RAM and playback cycles.
+- **PCM samples:** F3 import, waveform trim markers, squeezing, and instrument sample overrides.
+- **WAV/MP3 export:** output browser, format choice, and extra loop count (default 0).
 - **Editable projects:** `.sidpulse` saves include version information and compatibility warnings when applicable.
+
+Click the song name in the header to open F12 with **Song title** highlighted.
+Click the active instrument to open it in F4. **Copy instrument / Paste
+instrument** copy the complete instrument and assigned sample; occupied slots
+ask before overwriting, and paste is undoable.
+
+F2 now has **Select all** for the whole current pattern and an **Arp** button
+on each channel. The previously unused EX column is now **AR**: type **0** for
+OFF, **1** for ON, **R** for the instrument setting, or **.** to hold. Commands
+persist on that channel; existing FX commands keep their meanings. See
+[pattern arpeggio automation](docs/PATTERN_ARPEGGIO.md).
+
+## v0.2.35: two DIGI playback methods
+
+**DIGI method #1 is the default again:** the original packed four-bit volume
+player keeps the C64 display enabled. **Method #2** retains the waveform-DAC
+player with display/sprite blanking. Choose the method in SID/PRG export;
+the popup describes the selected method's tradeoffs.
+
+**Sample-to-SID wavetable synthesis remains the preferred workflow.**
+The export popup keeps **Continue as DIGI / Synthesize all samples / Cancel**,
+with synthesis selected first and audition before one-step replacement.
+See [DIGI methods and limits](docs/PCM_AND_AUDIO.md#experimental-c64-pcm-enhanced-routine)
+and [v0.2.35 release notes](docs/RELEASE_NOTES-v0.2.35.md).
+
+The W waveform selector, sync/ring FX, and reference kick/snare samples remain
+available. See [waveform controls](docs/PATTERN_WAVEFORM.md) and
+[reference samples](examples/samples/README.md).
 
 ## Quick install
 
-Download the **full ZIP** and **SHA256SUMS-v0.2.30-final.txt** for this version. Use
+Download the **full ZIP** and **SHA256SUMS-v0.2.35.txt** for this version. Use
 Python 3.10+; Python 3.12 is tested. The launchers create a local `.venv` and
 install the pinned dependencies on first launch, which needs internet access.
 
 **Linux**, from the download directory:
 
 ```bash
-sha256sum --check --ignore-missing SHA256SUMS-v0.2.30-final.txt &&
-unzip sidpulse-tracker-v0.2.30-final-full.zip &&
+sha256sum --check --ignore-missing SHA256SUMS-v0.2.35.txt &&
+unzip sidpulse-tracker-v0.2.35-full.zip &&
 cd sidpulse-tracker &&
 ./run.sh
 ```
@@ -38,13 +76,43 @@ cd sidpulse-tracker &&
 
 Press **F5** to play, **F2** to edit patterns, **F4** for instruments and **F8**
 to stop. Keep the launcher terminal open while the tracker runs. For an existing
-installation, use the [v0.2.30 overlay instructions](docs/APPLY-v0.2.30.md).
+installation, use the [v0.2.35 overlay instructions](docs/APPLY-v0.2.35.md).
 
 **The official site of SIDpulse Tracker, a homage to Impulse Tracker, reimagined as a modern SID-native tracker.**
 
 Created by [FlyingFathead](https://github.com/FlyingFathead). Runs on native Python + pygame-ce desktop application, with Impulse Tracker and Schism Tracker as the main keyboard keymap and visual reference.
 
 > NOTE: This project is more or less a WIP (work-in-progress) at this stage, although the program is fully functional. Still, don't expect too much at this point, because the software hasn't been through years of extensive testing. I needed a SID tracker for my Commodore 64 projects, none of them had the classic Impulse Tracker interface, so I made this. *This is a hobby project, and that's it.*
+
+Earlier changes: [v0.2.34 waveform automation and batch synthesis](docs/RELEASE_NOTES-v0.2.34.md),
+[v0.2.33 sample tools and wavetable synthesis](docs/RELEASE_NOTES-v0.2.33.md),
+and the [changelog](docs/CHANGELOG.md).
+
+## v0.2.32: PCM remapping, import squeezing and export comparison
+
+**File Menu → Export WAV / MP3** opens the output browser with format and loop
+controls. **Loops 0 means play once**. **F3** imports samples, displays their
+waveforms, edits start/end markers and squeezes to 4/8/16-bit PCM. Assign a
+sample to an instrument; **F4** then shows its **Sample** view and an explicit
+**Unmap sample from this instrument** button. SID settings remain saved;
+working PCM pitch/gate controls stay available.
+
+The supplied synthwave demo has a separate PCM kick/snare version in
+`examples/autumn-at-five-synthwave-pcm-drums.sidpulse`. Its original remains
+unchanged. Host PCM works on all three channels. C64 export has a separate,
+experimental **CH1/2 SID + CH3 4-bit digi** routine. PCM on one tracker channel
+is automatically remapped to C64 CH3 at export; the editable song keeps its
+layout. A warning triangle marks PCM notes outside CH3. The usual squeezer
+comparison, including Top 3, works for digi-enhanced exports. The routine is identified in the
+export screen; its `.sid` output is RSID. It has different sound and hardware
+limits from the host mix. Ordinary SID songs retain the existing player.
+
+Auto-squeeze on import defaults to 4 kHz / 4-bit and keeps a restorable original.
+Use its top-right F3 button to disable it. PCM WAV import needs no FFmpeg when
+auto-squeeze is off; WAV export needs none. MP3, compressed sample import and sample
+rate conversion use an optional FFmpeg installation. See the
+[PCM/audio guide](docs/PCM_AND_AUDIO.md), [release notes](docs/RELEASE_NOTES-v0.2.32.md)
+and [performance results](docs/PERFORMANCE-v0.2.32.md).
 
 ## v0.2.30: smaller exports, version comparison and visible scrollbars
 
@@ -138,7 +206,7 @@ change the audition/note-entry octave; they do not transpose existing music.
 Instrument rows now have **M/S** buttons beside their activity indicators. Mute
 and solo follow that instrument across all three voices during playback and
 audition. They are session monitoring controls; songs and exports stay intact.
-Sample rows show disabled M/S until PCM/digi playback is implemented.
+Sample rows use the assigned instrument mute/solo controls; F3 shows the PCM waveform.
 
 **REC PW: OFF** shows only its arm button. Arming reveals **Record to channel**
 and the recording instructions. The arm color defaults to red and supports the
@@ -346,7 +414,7 @@ by the file-browser update. See [issue/fix report](docs/ISSUES-v0.2.16.md) and
 lit while a voice is gated. Song/pattern playback and keyboard/cell/row audition
 are supported. Selection alone does not light them. Short visual persistence
 keeps drum hits visible; these are activity indicators, not volume meters.
-**F3 sample dots stay idle** because PCM/digi playback is not implemented yet.
+**F3 sample dots stay idle**; use the waveform and assigned instrument controls for PCM.
 
 **General / ADSR:** attack `00` now draws vertically and the handle reaches the
 left edge. This is a schematic fastest-setting marker: SID attack 00 is nominally
@@ -595,7 +663,7 @@ PSID export targets one PAL or NTSC 6581/8580 at $1000. Native projects save as
 **.sidpulse format 6 or 7**, with backward-compatible loading of older formats.
 It preserves empty instrument banks and pattern references to empty slots.
 Format 7 carries row automation; see the compatibility notes below.
-SID import, PCM/digi, MIDI and remaining legacy effects are future work.
+SID import, MIDI and remaining legacy effects are future work. PCM playback and experimental C64 digi export are available.
 
 ### Linux: install or update
 
@@ -856,7 +924,7 @@ the commit, CI, tag, archive and release-review sequence, and
 
 Repository: [FlyingFathead/sidpulse-tracker](https://github.com/FlyingFathead/sidpulse-tracker).
 
-See [PLACEHOLDERS.md](docs/PLACEHOLDERS.md), [CHECKPOINT.md](CHECKPOINT.md), [VALIDATION.md](docs/VALIDATION.md),
+See [PLACEHOLDERS.md](docs/PLACEHOLDERS.md), [CHECKPOINT.md](docs/CHECKPOINT.md), [VALIDATION.md](docs/VALIDATION.md),
 [IT_KEY_COMPAT.md](docs/IT_KEY_COMPAT.md), [COMMANDS.md](docs/COMMANDS.md),
 [EFFECTS.md](docs/EFFECTS.md), [PSID_EXPORT.md](docs/PSID_EXPORT.md), [PLAYBACK.md](docs/PLAYBACK.md), [SIDPULSE_FORMAT.md](docs/SIDPULSE_FORMAT.md),
 [DECISIONS.md](docs/DECISIONS.md), and the unchanged [v4 roadmap](docs/ROADMAP.md).

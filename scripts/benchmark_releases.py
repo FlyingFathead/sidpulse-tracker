@@ -80,6 +80,13 @@ def gui(task):
     app=App(song,audio=False,size=tuple(task['size']))
     try:
         app.change_page(task['page']);app.channel_visualizers=task.get('scopes',True)
+        if 'auto_squeeze' in task and hasattr(app,'sample_auto_squeeze'):
+            app.sample_auto_squeeze=task['auto_squeeze']
+        for key in ('before','after'):
+            if 'normalize_'+key in task:
+                setattr(app,'sample_normalize_'+key,task['normalize_'+key])
+        if task.get('instrument_number'):
+            app.select_instrument_slot(number=task['instrument_number'])
         if not task.get('bank_buttons',True):
             if hasattr(app,'instrument_monitor_buttons'):
                 app.instrument_monitor_buttons=False
@@ -93,6 +100,12 @@ def gui(task):
         app.audio.activity=ActivitySnapshot(1,True,(2,23,24),((2,1),(23,2),(24,3)),(2,23,24))
         app.audio.voice_waveforms=tuple(tuple(math.sin((i+v)*math.pi/16)*.65 for i in range(128)) for v in range(3))
         app.audio.waveform=tuple(math.sin(i*math.pi/8)*.5 for i in range(64))
+        if task.get('export_dialog'):
+            from sidpulse.ui.export_squeezer import open_dialog, close_analysis
+            open_dialog(app, 'prg')
+            close_analysis(app)
+            app.dialog.pop('job', None)
+            app.dialog['busy'] = False
         state=replace(app.audio.playback,status='playing',pattern=app.editor.pattern_id,
                       notes=(50,26,57),instruments=(23,2,24))
         def frame(index):
@@ -139,10 +152,17 @@ def live(task):
             app.open_automation_recording();app.set_recording_channel(1);app.toggle_pulse_recording()
             if task.get('recording_parameter'):app.set_recording_parameter(task['recording_parameter'])
         frame_index=0
+        analysis_frames=0
         clock=pg.time.Clock()
         def frame():
-            nonlocal frame_index
+            nonlocal frame_index,analysis_frames
             for event in pg.event.get():app.handle(event)
+            if task.get('export_analysis'):
+                app.poll_export_analysis()
+                analysis_frames+=int(bool(app.dialog and app.dialog.get('busy')))
+            if task.get('sample_synthesis'):
+                app.poll_media_jobs()
+                analysis_frames+=int(bool(app.dialog and app.dialog.get('kind')=='media_job'))
             app.sync_audio();app.renderer.render(app);pg.display.flip()
             if task.get('recording'):
                 rect,data=next((r,v) for r,a,v in app.renderer.hits if a=='automation_slider')
@@ -158,6 +178,13 @@ def live(task):
         child=next(p for p in mp.active_children() if p.name=='sidpulse-audio')
         a0=proc_cpu(child.pid);u0=time.process_time();start=time.perf_counter()
         times=[];loads=[]
+        if task.get('export_analysis'):
+            from sidpulse.ui.export_squeezer import open_dialog
+            open_dialog(app,'prg')
+        if task.get('sample_synthesis'):
+            from sidpulse.ui.sample_synthesis import begin
+            app.sample_index=1
+            begin(app)
         while time.perf_counter()-start<task['seconds']:
             t=time.perf_counter();frame();times.append((time.perf_counter()-t)*1000)
             loads.append(engine.render_load*100);clock.tick(60)
@@ -169,6 +196,12 @@ def live(task):
             'missing_frames':engine.missing_frames,'late_callbacks':engine.late_callbacks,
             'over_budget_blocks':engine.over_budget,'maximum_callback_ms':engine.max_callback_interval*1000,
             'callback_count':engine.callback_count,'error':engine.error}
+        if task.get('export_analysis'):
+            result['analysis_busy_frames']=analysis_frames
+            result['analysis_error']=app.dialog.get('error') if app.dialog else None
+        if task.get('sample_synthesis'):
+            result['analysis_busy_frames']=analysis_frames
+            result['proposal_ready']=bool(app.dialog and app.dialog.get('kind')=='sample_synthesis')
         if task.get('recording'):
             result['committed_takes']=len(app.editor.history.undo_stack)
             result['in_progress_rows']=len(engine.pulse_capture.rows) if engine.pulse_capture else 0
@@ -181,6 +214,12 @@ def worker(task):
     init(task['repo'],task['cpus'])
     with tempfile.TemporaryDirectory(prefix='sidpulse-benchmark-') as config:
         os.environ['SIDPULSE_CONFIG_HOME']=config
+        if task.get('digi_method'):
+            from sidpulse.preferences import save_squeeze_options
+            from sidpulse.export.squeeze import SqueezeOptions
+            options = SqueezeOptions()
+            if hasattr(options, 'digi_method'):
+                save_squeeze_options(replace(options, digi_method=task['digi_method']))
         result={'audio':audio,'gui':gui,'live':live}[task['kind']](task)
     from sidpulse import __version__
     return {'version':__version__,**result}

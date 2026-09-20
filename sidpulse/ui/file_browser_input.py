@@ -31,8 +31,11 @@ def handle_event(app, event):
                     b.set_name(b.selected.name)
                 if getattr(event, 'clicks', 1) >= 2:
                     app.select_file()
-            elif action in ('filename', 'file_directory'):
-                b.focus = 'name' if action == 'filename' else 'directory'
+            elif action == 'audio_format':
+                b.set_audio_format(value)
+                b.focus = 'format'
+            elif action in ('filename', 'file_directory', 'audio_loops'):
+                b.focus = 'name' if action == 'filename' else 'loops' if action == 'audio_loops' else 'directory'
                 pad = max(2, app.renderer.cw // 3)
                 col = round((event.pos[0] - rect.left - pad) / max(1, app.renderer.cw))
                 b.field.click(col, bool(pg.key.get_mods() & pg.KMOD_SHIFT))
@@ -70,8 +73,12 @@ def handle_event(app, event):
             app.file_status()
         elif b.focus == 'cancel':
             app.cancel_browser()
+        elif b.focus == 'format':
+            b.set_audio_format('mp3' if b.mode == 'wav' else 'wav')
         else:
             app.submit_file()
+    elif b.focus == 'format' and key in (pg.K_LEFT, pg.K_RIGHT, pg.K_SPACE):
+        b.set_audio_format('mp3' if b.mode == 'wav' else 'wav')
     elif not alt and (key == pg.K_F10 or ctrl and key in (pg.K_s, pg.K_w)):
         if b.mode == 'save':
             if shift:

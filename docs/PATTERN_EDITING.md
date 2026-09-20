@@ -14,7 +14,8 @@ destination or moving to another pattern.
 |---|---|---|
 | Select fields and rows | Drag from first to last field/row | Shift+arrows |
 | Extend selection | Shift+click | Shift+arrows |
-| Select one field for all rows | Click NOTE, IN, FX, A, D, S, R or PW header | Shift+arrows across the desired rows |
+| Select one field for all rows | Click NOTE, IN, AR, FX, A, D, S, R or PW header | Shift+arrows across the desired rows |
+| Select the entire current pattern | Select all button | Alt+L twice from no selection |
 | Copy | Copy button / Pattern Edit Menu | Alt+C |
 | Cut | Pattern Edit Menu | Alt+Z |
 | Paste overwrite | Paste button / Pattern Edit Menu | Alt+O |
@@ -34,9 +35,10 @@ Dragging at the top/bottom edge scrolls through longer patterns; hidden voices
 can be reached at the left/right grid edges. Selecting while playback follows
 the cursor turns following off; playback continues.
 
-The atomic units are NOTE (including octave), IN, FX (command and parameter),
+The atomic units are NOTE (including octave), IN, AR, FX (command and parameter),
 each ADSR value, and the complete three-digit PW. Selecting one PW digit copies
-the complete value. EX is reserved and carries no editable data. Selections
+the complete value. AR uses the formerly reserved EX space for persistent
+arpeggio OFF/ON/default commands; existing FX meanings are unchanged. Selections
 crossing voices include fields between their endpoints; middle voices include
 all supported fields. Alt+B/E and Alt+L retain whole-cell behavior, including
 unfamiliar future-format fields.
@@ -67,8 +69,8 @@ a PW-only block cannot change the notes.
 | Choice | Fields affected |
 |---|---|
 | Notes | NOTE only, including octave and note-off |
-| Automation | A D S R PW |
-| Both | NOTE plus A D S R PW |
+| Automation | AR plus A D S R PW |
+| Both | NOTE plus AR and A D S R PW |
 
 Paste Special filters the fields actually copied. It cannot restore fields that
 were excluded from the source selection. These three choices leave destination
@@ -85,7 +87,7 @@ briefly above F8: SILENCE; the same notices accompany keyboard actions.
 
 ## Cut and confirmation (v0.2.27)
 
-The button row is Cut / Copy / Paste / Paste Special / Reset all automation.
+The button row is Cut / Copy / Paste / Paste Special / Select all / Reset all automation.
 Cut (Alt+Z) honors the same field selection as Copy and keeps the removed values
 in the internal pattern clipboard. Ctrl+Backspace restores the cut as one undo
 step. The confirmation starts on Cancel; the unchecked Don't show this again
@@ -93,3 +95,6 @@ option is saved only when Cut is confirmed. Re-enable it under Settings Menu >
 UI Settings > Confirm before Cut. Reset all automation always asks first.
 
 Clipboard visibility and other display controls are now in UI Settings.
+Select all remains visible when clipboard buttons are hidden. The Arp buttons
+above each channel edit that channel's current-row command. See
+[arpeggio automation](PATTERN_ARPEGGIO.md).

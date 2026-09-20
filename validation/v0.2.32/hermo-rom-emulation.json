@@ -1,0 +1,264 @@
+{
+  "emulator": "VICE 3.7.1 x64sc",
+  "clock": "PAL",
+  "sid_models": [
+    "8580",
+    "6581"
+  ],
+  "cycles_per_run": 24000000,
+  "recording_rate": 48000,
+  "recording_frames": 1169152,
+  "basic_autostart_complete": true,
+  "termination": "Requested cycle limit; exit 1 is expected.",
+  "first_pcm_difference_seconds": 4.101958333333333,
+  "full_pass_seconds": 15.359999999999761,
+  "orders_checked": 2,
+  "pcm_hits": [
+    {
+      "index": 0,
+      "instrument": "kick",
+      "recording_seconds": 4.101958333333333,
+      "delta_rms": 206.0797700721656,
+      "delta_peak": 760.0
+    },
+    {
+      "index": 1,
+      "instrument": "snare",
+      "recording_seconds": 4.581959307707298,
+      "delta_rms": 137.19933764110615,
+      "delta_peak": 980.0
+    },
+    {
+      "index": 2,
+      "instrument": "kick",
+      "recording_seconds": 5.061960282081264,
+      "delta_rms": 194.20059691832657,
+      "delta_peak": 805.0
+    },
+    {
+      "index": 3,
+      "instrument": "snare",
+      "recording_seconds": 5.541961256455227,
+      "delta_rms": 123.90410429961375,
+      "delta_peak": 692.0
+    },
+    {
+      "index": 4,
+      "instrument": "kick",
+      "recording_seconds": 6.021962230829191,
+      "delta_rms": 232.66342551141784,
+      "delta_peak": 1039.0
+    },
+    {
+      "index": 5,
+      "instrument": "snare",
+      "recording_seconds": 6.501963205203158,
+      "delta_rms": 128.4968524028549,
+      "delta_peak": 664.0
+    },
+    {
+      "index": 6,
+      "instrument": "kick",
+      "recording_seconds": 6.981964179577127,
+      "delta_rms": 227.85093552923766,
+      "delta_peak": 888.0
+    },
+    {
+      "index": 7,
+      "instrument": "snare",
+      "recording_seconds": 7.461965153951096,
+      "delta_rms": 121.53323162365464,
+      "delta_peak": 598.0
+    },
+    {
+      "index": 8,
+      "instrument": "kick",
+      "recording_seconds": 7.941966128325064,
+      "delta_rms": 202.88145215358185,
+      "delta_peak": 940.0
+    },
+    {
+      "index": 9,
+      "instrument": "snare",
+      "recording_seconds": 8.421967102699025,
+      "delta_rms": 116.4967765554543,
+      "delta_peak": 603.0
+    },
+    {
+      "index": 10,
+      "instrument": "kick",
+      "recording_seconds": 8.901968077072983,
+      "delta_rms": 211.9116453962487,
+      "delta_peak": 1174.0
+    },
+    {
+      "index": 11,
+      "instrument": "snare",
+      "recording_seconds": 9.38196905144694,
+      "delta_rms": 139.8183405357407,
+      "delta_peak": 875.0
+    },
+    {
+      "index": 12,
+      "instrument": "kick",
+      "recording_seconds": 9.861970025820899,
+      "delta_rms": 212.4356349342054,
+      "delta_peak": 850.0
+    },
+    {
+      "index": 13,
+      "instrument": "snare",
+      "recording_seconds": 10.341971000194857,
+      "delta_rms": 136.29684349042918,
+      "delta_peak": 1012.0
+    },
+    {
+      "index": 14,
+      "instrument": "kick",
+      "recording_seconds": 10.821971974568815,
+      "delta_rms": 201.70550955334633,
+      "delta_peak": 848.0
+    },
+    {
+      "index": 15,
+      "instrument": "snare",
+      "recording_seconds": 11.301972948942772,
+      "delta_rms": 116.22236103860223,
+      "delta_peak": 974.0
+    },
+    {
+      "index": 16,
+      "instrument": "kick",
+      "recording_seconds": 11.78197392331673,
+      "delta_rms": 238.4035422300001,
+      "delta_peak": 1020.0
+    },
+    {
+      "index": 17,
+      "instrument": "snare",
+      "recording_seconds": 12.261974897690695,
+      "delta_rms": 126.83207070078592,
+      "delta_peak": 936.0
+    },
+    {
+      "index": 18,
+      "instrument": "kick",
+      "recording_seconds": 12.741975872064675,
+      "delta_rms": 234.15340961430977,
+      "delta_peak": 1006.0
+    },
+    {
+      "index": 19,
+      "instrument": "snare",
+      "recording_seconds": 13.221976846438654,
+      "delta_rms": 119.08757882741773,
+      "delta_peak": 845.0
+    },
+    {
+      "index": 20,
+      "instrument": "kick",
+      "recording_seconds": 13.701977820812633,
+      "delta_rms": 187.3230826394929,
+      "delta_peak": 724.0
+    },
+    {
+      "index": 21,
+      "instrument": "snare",
+      "recording_seconds": 14.181978795186613,
+      "delta_rms": 124.92687086441038,
+      "delta_peak": 746.0
+    },
+    {
+      "index": 22,
+      "instrument": "kick",
+      "recording_seconds": 14.661979769560592,
+      "delta_rms": 214.60436005640437,
+      "delta_peak": 1194.0
+    },
+    {
+      "index": 23,
+      "instrument": "snare",
+      "recording_seconds": 15.141980743934571,
+      "delta_rms": 134.02499107376667,
+      "delta_peak": 684.0
+    },
+    {
+      "index": 24,
+      "instrument": "kick",
+      "recording_seconds": 15.62198171830855,
+      "delta_rms": 212.13574742767975,
+      "delta_peak": 889.0
+    },
+    {
+      "index": 25,
+      "instrument": "snare",
+      "recording_seconds": 16.10198269268253,
+      "delta_rms": 132.95727744754186,
+      "delta_peak": 699.0
+    },
+    {
+      "index": 26,
+      "instrument": "kick",
+      "recording_seconds": 16.58198366705651,
+      "delta_rms": 197.0839312780559,
+      "delta_peak": 737.0
+    },
+    {
+      "index": 27,
+      "instrument": "snare",
+      "recording_seconds": 17.061984641430488,
+      "delta_rms": 113.80460172478692,
+      "delta_peak": 727.0
+    },
+    {
+      "index": 28,
+      "instrument": "kick",
+      "recording_seconds": 17.541985615804467,
+      "delta_rms": 215.52561719356393,
+      "delta_peak": 875.0
+    },
+    {
+      "index": 29,
+      "instrument": "snare",
+      "recording_seconds": 18.021986590178447,
+      "delta_rms": 116.42844546096934,
+      "delta_peak": 606.0
+    },
+    {
+      "index": 30,
+      "instrument": "kick",
+      "recording_seconds": 18.501987564552426,
+      "delta_rms": 235.77365397578015,
+      "delta_peak": 1066.0
+    },
+    {
+      "index": 31,
+      "instrument": "snare",
+      "recording_seconds": 18.981988538926405,
+      "delta_rms": 118.57872195155124,
+      "delta_peak": 775.0
+    }
+  ],
+  "pcm_hits_checked": 32,
+  "loop_restart_delta_rms": 199.8390087525254,
+  "source_note_counts": {
+    "pcm_kicks": 16,
+    "pcm_snares": 16,
+    "sid_hihats": 32,
+    "sid_bass": 64,
+    "sid_leads": 64
+  },
+  "music_rms_8580": 632.6966537256061,
+  "music_rms_6581": 1444.0500818483326,
+  "verification": "The compiler verified all physical SID writes and PCM nibbles over both patterns and loop restart. Actual 8580 audio A/B keeps music/code/addresses identical and neutralizes only packed sample data. Each of 32 PCM onsets has an independently measured nonzero difference. Both chip models complete BASIC autostart and record the whole song plus loop restart.",
+  "limits": "A/B amplitude includes master-volume modulation of the SID voices. It checks sample presence, not equivalence to a host PCM mix. Physical C64 listening remains untested.",
+  "preview": {
+    "file": "hermo-rom-C64-v0.2.32-preview.mp3",
+    "sha256": "2e4dcba9b656bd5ff68c5fdfb12a083500a24ce390f8e8146b8cb06e6717a7cc",
+    "start_seconds": 4.09,
+    "duration_seconds": 15.38,
+    "normalization_gain_db": 17.015271853554108,
+    "note": "Boot silence removed; constant preview gain only. Source project and PRG gain unchanged."
+  },
+  "source_unchanged": true
+}

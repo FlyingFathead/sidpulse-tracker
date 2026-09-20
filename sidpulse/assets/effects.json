@@ -281,8 +281,8 @@
     {
       "code": "Zxx",
       "description": "MIDI macro / SID macro proposal",
-      "status": "mapping",
-      "reason": "v4 proposes shared-filter/global macros here. No command encoding is finalized or executed.",
+      "status": "partial",
+      "reason": "SID macros: Z10/11/1F sync off/on/default; Z20/21/2F ring off/on/default. Other values remain reserved and are not executed.",
       "editable": true,
       "preview_implemented": false,
       "psid_implemented": false,
@@ -638,6 +638,72 @@
       "editable": true,
       "preview_implemented": false,
       "psid_implemented": false,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z10",
+      "description": "Sync off",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z11",
+      "description": "Sync on",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z1F",
+      "description": "Sync from instrument",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z20",
+      "description": "Ring modulation off",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z21",
+      "description": "Ring modulation on",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
+      "visible": true,
+      "visible_in_help": true
+    },
+    {
+      "code": "Z2F",
+      "description": "Ring modulation from instrument",
+      "status": "implemented",
+      "reason": "Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator.",
+      "editable": true,
+      "preview_implemented": true,
+      "psid_implemented": true,
       "visible": true,
       "visible_in_help": true
     }

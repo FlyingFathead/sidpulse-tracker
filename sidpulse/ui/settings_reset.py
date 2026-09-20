@@ -99,6 +99,9 @@ def commit(app):
     app.pattern_clipboard_buttons = True
     app.confirm_cut = True
     app.instrument_monitor_buttons = True
+    app.sample_auto_squeeze = True
+    app.sample_normalize_before = True
+    app.sample_normalize_after = False
     app.editor.centered = True
     app.automation_display = 2
     app.send_instrument_monitor()

@@ -8,7 +8,7 @@ import pytest
 from sidpulse import __version__
 from sidpulse.app import App
 from sidpulse.commands.editor import Editor
-from sidpulse.project.format import encode, decode, save, load, compatibility_warnings
+from sidpulse.project.format import encode, decode, save, load, compatibility_warnings, CURRENT_FORMAT
 from sidpulse.song.model import Song, Cell, ControlCell
 from sidpulse.playback.sequencer import Sequencer
 from test_playback import TraceSID
@@ -16,7 +16,7 @@ from test_playback import TraceSID
 
 def future_document():
     raw = encode(Song())
-    raw['format_version'] = 8
+    raw['format_version'] = CURRENT_FORMAT + 1
     raw['editor']['saved_with_version'] = '0.9.1'
     raw['future_root'] = {'keep': [1, 2, 3]}
     raw['song']['new_song_feature'] = {'amount': 12}
@@ -33,13 +33,13 @@ def test_future_data_survives_load_note_edit_copy_paste_and_native_save(tmp_path
     raw = future_document()
     song, metadata = decode(raw)
     warnings = '\n'.join(compatibility_warnings(song))
-    assert 'newer SIDpulse Tracker 0.9.1' in warnings and 'format 8' in warnings
+    assert 'newer SIDpulse Tracker 0.9.1' in warnings and f'format {CURRENT_FORMAT+1}' in warnings
     assert '7 unfamiliar field(s)' in warnings
     ed = Editor(song); ed.enter_note(60)
     ed.row = 0; ed.copy(); ed.row = 1; ed.paste()
     saved = save(tmp_path/'future.sidpulse', song, metadata)
     output = json.loads(saved.read_text())
-    assert output['format_version'] == 8
+    assert output['format_version'] == CURRENT_FORMAT + 1
     assert output['editor']['saved_with_version'] == __version__
     assert output['future_root'] == raw['future_root']
     assert output['song']['new_song_feature'] == raw['song']['new_song_feature']

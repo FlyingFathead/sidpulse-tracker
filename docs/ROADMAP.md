@@ -1,3 +1,40 @@
+# Current priority: sample-to-SID wavetable synthesis
+
+The preferred C64 workflow is **sample-to-SID wavetable synthesis**: fit short
+SID waveform/pitch sequences and an envelope to imported audio, then play the
+result as an ordinary instrument. The F3 pipeline is implemented; improving
+the fit and its audition workflow is the current development priority.
+See [findings and considerations](SAMPLE_SYNTHESIS.md).
+
+The included synthwave kick and snare in `examples/samples/` are reference
+points for repeatable source/result comparisons. Next synthesis work should
+prioritize transient shape, pitch decay, noise texture and envelope timing,
+then verify the result in a three-channel arrangement and in C64 exports.
+Keep analysis in the background worker and preserve normal playback cost.
+The W column is a general triangle/saw/pulse/noise override for any SID
+instrument. Its reset restores normal instrument behavior, including tables.
+DIGI #1 restores display-preserving volume playback by default; DIGI #2 keeps
+the waveform-DAC option with display blanking. Neither replaces the synthesis
+priority. PCM playback remains available and experimental; it does not replace this
+synthesis priority. The original roadmap and historical updates follow.
+
+## Development and delivery workflow
+
+- Keep guides, checkpoint notes, the changelog and development guidance under
+  `docs/`; do not add working notes or extra root documents to release packages.
+- Run repeated, serial performance comparisons against the immutable previous
+  release with identical songs, settings and features enabled. Measure audio
+  and UI CPU separately, plus real-time gaps and late callbacks. Measure new
+  toggles enabled and disabled; keep scopes enabled. Run no other heavy work
+  alongside timed trials, and profile a material regression before optimizing.
+- Record environment, inputs, raw measurements and limits. Preserve the input
+  projects. Verify rendering, input, undo, save and playback semantics.
+- Deliver full and incremental ZIPs with SHA-256 checksums under the common
+  `sidpulse-tracker/` root. If files move or are removed, provide explicit update
+  cleanup and verify that the applied incremental package matches the full ZIP.
+- Keep private project notes, user-only songs and machine paths out of tracked
+  files and packages. Do not push, tag or publish without a request.
+
 > Implementation update (v0.2.18 candidate, 2026-09-17): export-only resident
 > stream squeezing is implemented and export-core tested. The native instrument/
 > table replay engine, full desktop/audio validation and hardware release gates

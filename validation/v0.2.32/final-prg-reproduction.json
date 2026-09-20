@@ -1,0 +1,23 @@
+[
+  {
+    "project": "kick-and-snare",
+    "bytes": 5071,
+    "sha256": "efef137d2e788e87f4649b9e27e39c3874afe8df66cc7fbe05939623bad57c72",
+    "source_sha256": "e304e87e8892f798f6ad087f8b3cf0fcfe7efb6ed68b77fd5cc2c1b343841123",
+    "matches_emulated_prg": true
+  },
+  {
+    "project": "kick-hihat-and-snare",
+    "bytes": 5717,
+    "sha256": "3612fa034cee302aaa348484003195dd6b7a0452078745e843ef4cfb7ec47ef2",
+    "source_sha256": "766684dbd3242b50105eced2efd112150678041e0061a519ab3eb730cd72c8a9",
+    "matches_emulated_prg": true
+  },
+  {
+    "project": "kick-hihat-and-snare-roamer-bass",
+    "bytes": 5654,
+    "sha256": "d23fd1d237631310c055024263f4bf24bb32026bf0554b00e35bf4f3f16a19fd",
+    "source_sha256": "90b21bc0046e7b404490e8e00bd6a73a1cec008d39906d5e229d3cdfb0719835",
+    "matches_emulated_prg": true
+  }
+]

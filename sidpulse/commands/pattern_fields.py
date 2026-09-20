@@ -1,15 +1,16 @@
 """One field map for cursor movement, selection, clipboard and drawing."""
 from sidpulse.song.model import ENVELOPE_FIELDS
 
-FIELDS = ("note", "note", "instrument", "instrument", "expression", "expression", "effect", "parameter", "parameter", *ENVELOPE_FIELDS, "pulse_width", "pulse_width", "pulse_width")
-COLUMN_OFFSETS = (0, 2, 5, 6, 8, 9, 11, 12, 13, 15, 17, 19, 21, 23, 24, 25)
+FIELDS = ("note", "note", "instrument", "instrument", "arp_mode", "arp_mode", "waveform", "effect", "parameter", "parameter", *ENVELOPE_FIELDS, "pulse_width", "pulse_width", "pulse_width")
+COLUMN_OFFSETS = (0, 2, 5, 6, 8, 9, 11, 13, 14, 15, 17, 19, 21, 23, 25, 26, 27)
 CURSOR_HINTS = (
     "Insert note | Piano keys; Caps Lock: audition",
     "Select octave | 0..7 changes this note",
     "Select instrument | Tens digit, decimal 01..99",
     "Select instrument | Units digit, decimal 01..99",
-    "Expression | EX is reserved; no independent PCM voice volume",
-    "Expression | EX is reserved; no independent PCM voice volume",
+    "Arpeggio | 0: OFF, 1: ON, R: instrument setting, .: hold; persists on this channel",
+    "Arpeggio | 0: OFF, 1: ON, R: instrument setting, .: hold; persists on this channel",
+    "Waveform | 1/T: triangle, 2/S: saw, 3/P: pulse, 4/N: noise; 0/R: instrument, .: hold",
     "Insert effect | A..Z; F1: effect reference",
     "Effect parameter | High hex digit, 00..FF",
     "Effect parameter | Low hex digit, 00..FF",
@@ -23,13 +24,14 @@ CURSOR_HINTS = (
 
 )
 
-AUTOMATION_FIELDS = frozenset((*ENVELOPE_FIELDS, "pulse_width"))
+AUTOMATION_FIELDS = frozenset((*ENVELOPE_FIELDS, "pulse_width", "waveform"))
 FIELD_GROUPS = (("NOTE", (0, 1), ("note",)),
                 ("IN", (2, 3), ("instrument",)),
-                ("EX", (4, 5), ()),
-                ("FX", (6, 7, 8), ("effect", "parameter")),
-                *((label, (index,), (name,)) for label, index, name in zip("ADSR", range(9, 13), ENVELOPE_FIELDS)),
-                ("PW", (13, 14, 15), ("pulse_width",)))
+                ("AR", (4, 5), ("arp_mode",)),
+                ("W", (6,), ("waveform",)),
+                ("FX", (7, 8, 9), ("effect", "parameter")),
+                *((label, (index,), (name,)) for label, index, name in zip("ADSR", range(10, 14), ENVELOPE_FIELDS)),
+                ("PW", (14, 15, 16), ("pulse_width",)))
 
 def group_for_column(column):
     return next(group for group in FIELD_GROUPS if column in group[1])

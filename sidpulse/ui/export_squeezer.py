@@ -37,8 +37,10 @@ def open_dialog(app, kind='sid'):
         job.cancel()
     app.release_audition()
     pg.key.stop_text_input()
+    pcm = any(inst.sample_override for inst in app.editor.song.instruments.values())
     app.dialog = {'kind': 'export_squeezer', 'title': f'Export {kind.upper()} / SIDpulse Tracker File Squeezer',
                   'target': kind, 'options': load_squeeze_options(), 'focus': 8,
+                  'pcm': pcm,
                   'result': None, 'source': None, 'scroll': 0, 'ensure_focus': False,
                   'compare': load_squeeze_comparison(), 'comparison': None,
                   'show_all_versions': load_squeeze_show_all_versions()}
@@ -114,6 +116,8 @@ def poll_analysis(app):
                             dialog['error'] = 'No version fits the export memory budget. The project is unchanged.'
                     else:
                         dialog['result'] = update.result
+                    if dialog['result'] is not None:
+                        dialog['pcm_source_channel'] = dialog['result'].squeeze_report.pcm_source_channel
                     if action and dialog['result'] is not None:
                         activate(app, action)
     # Jobs belonging to a dismissed modal are never allowed to deliver into a
@@ -134,7 +138,7 @@ def close_analysis(app):
 
 def toggle(app, index):
     dialog = app.dialog
-    if dialog.get('busy'):
+    if dialog.get('busy') or (dialog.get('pcm') and index not in (0, 4)):
         return
     options = dialog['options']
     if index and not options.enabled:
@@ -188,8 +192,28 @@ def toggle_all_versions(app):
     dialog['ensure_focus'] = True
 
 
+def toggle_pcm_remap(app):
+    dialog = app.dialog
+    if dialog.get('busy') or not dialog.get('pcm'):
+        return
+    dialog['options'] = replace(dialog['options'], pcm_auto_remap=not dialog['options'].pcm_auto_remap)
+    dialog['comparison'] = dialog['result'] = dialog['source'] = None
+    dialog.pop('error', None)
+    dialog['focus'] = 21
 
-def activate(app, action):
+
+def toggle_digi_method(app):
+    dialog = app.dialog
+    if dialog.get('busy') or not dialog.get('pcm'):
+        return
+    dialog['options'] = replace(dialog['options'], digi_method=3-dialog['options'].digi_method)
+    dialog['comparison'] = dialog['result'] = dialog['source'] = None
+    dialog.pop('error', None)
+    dialog['focus'] = 22
+    dialog['ensure_focus'] = True
+
+
+def activate(app, action, *, pcm_confirmed=False):
     dialog = app.dialog
     if action == 'cancel':
         job = dialog.pop('job', None)
@@ -205,12 +229,27 @@ def activate(app, action):
     if action == 'analyze':
         analyze(app)
         return
+    if not pcm_confirmed and any(inst.sample_override for inst in app.editor.song.instruments.values()):
+        def proceed():
+            app.dialog = dialog
+            # Re-check the compiled snapshot before continuing. A changed song
+            # requires fresh analysis and its own confirmation.
+            activate(app, action, pcm_confirmed=True)
+        app.dialog = {
+            'kind': 'pcm_export_confirm', 'title': 'PCM / DIGI export',
+            'digi_method': dialog['options'].digi_method,
+            'message': 'This C64 routine reserves hardware CH3 and timer interrupts. '
+                       'Recommended: synthesize all PCM-mapped instruments into ordinary SID wavetable '
+                       'instruments to avoid DIGI timing and mixer tradeoffs. You can audition the approximations '
+                       'before applying them. Instrument numbers and source samples are preserved; '
+                       'all replacements can be undone together. Continue as DIGI keeps PCM playback.',
+            'yes': proceed, 'return_dialog': dialog, 'button_focus': 1,
+        }
+        return
     if dialog['result'] is None or dialog['source'] != app.editor.song:
         analyze(app, continue_action=action)
         return
     result = dialog['result']
-    if result is None:
-        return
     try:
         save_squeeze_options(dialog['options'])
         save_preferences({'export_compare_squeezers': dialog.get('compare', True)})
@@ -255,6 +294,8 @@ def handle_event(app, event):
                 elif action == 'squeeze_version_pick':select_version(app,value)
                 elif action == 'squeeze_compare':toggle_comparison(app)
                 elif action == 'squeeze_show_all':toggle_all_versions(app)
+                elif action == 'squeeze_pcm_remap':toggle_pcm_remap(app)
+                elif action == 'squeeze_digi_method':toggle_digi_method(app)
                 elif action == 'squeeze_use_version':
                     select_version(app,value)
                     dialog['focus']=11+next(i for i,e in enumerate(visible_entries(dialog)) if e.version==value)
@@ -280,6 +321,8 @@ def handle_event(app, event):
             choices = ([20]+[11+i for i,e in enumerate(visible_entries(dialog)) if e.result is not None]
                        if dialog.get('comparison') else [])
             available = [8] if dialog.get('busy') else ([0,9,10,*range(1,5),*choices,*range(5,9)] if dialog['options'].enabled else [0, 5, 6, 7, 8])
+            if dialog.get('pcm') and not dialog.get('busy'):
+                available = ([22,21,0,9,10,4,*choices,*range(5,9)] if dialog['options'].enabled else [22,21,0,5,6,7,8])
             step = -1 if key in (pg.K_UP, pg.K_LEFT) or (key == pg.K_TAB and getattr(event, 'mod', 0) & pg.KMOD_SHIFT) else 1
             position = available.index(dialog['focus']) if dialog['focus'] in available else 0
             dialog['focus'] = available[(position + step) % len(available)]
@@ -290,6 +333,8 @@ def handle_event(app, event):
                 dialog['version_open']=True;dialog['version_choice']=dialog['options'].version
             elif index==10:toggle_comparison(app)
             elif index==20:toggle_all_versions(app)
+            elif index==21:toggle_pcm_remap(app)
+            elif index==22:toggle_digi_method(app)
             elif index>=11 and dialog.get('comparison'):
                 version=visible_entries(dialog)[index-11].version
                 select_version(app,version)
@@ -348,18 +393,42 @@ def draw(r, app):
     pg.draw.rect(screen, colors['PANEL'], frame)
     pg.draw.rect(screen, colors['TEXT'], frame, 1)
     inner = frame.inflate(-24, -12)
-    title = face.render(f'SIDpulse Tracker / SQUEEZER v{squeezer_version_label(dialog["options"].version)}', True, colors['TEXT'])
+    title = face.render('SIDpulse Tracker / PCM-enhanced export' if dialog.get('pcm') else
+                        f'SIDpulse Tracker / SQUEEZER v{squeezer_version_label(dialog["options"].version)}', True, colors['TEXT'])
     header_clip = screen.get_clip()
     screen.set_clip(inner)
     screen.blit(title, (inner.x, inner.y))
-    sub = small.render(f'{dialog["target"].upper()} export only. Editable .sidpulse and preview are unchanged.', True, colors['TEXT'])
+    method = dialog['options'].digi_method
+    routine = ((f'DIGI #{method}: '+('volume / display on' if method == 1 else 'waveform DAC / display off'))
+               if dialog.get('pcm') else 'SID-only')
+    sub = small.render(f'{dialog["target"].upper()} routine: {routine}', True, colors['TEXT'])
     screen.blit(sub, (inner.x, inner.y + line_height))
+    warning = bool(dialog.get('pcm'))
+    header_height = (4 if warning else 2) * line_height
+    if warning:
+        area = pg.Rect(inner.x, inner.y + 2 * line_height, inner.width, 2 * line_height)
+        icon = pg.Rect(area.x, area.y + 3, line_height - 3, line_height - 3)
+        pg.draw.polygon(screen, colors['YELLOW'], (icon.midtop, icon.bottomleft, icon.bottomright))
+        mark = small.render('!', True, colors['TEXT'])
+        screen.blit(mark, mark.get_rect(midbottom=(icon.centerx, icon.bottom - 1)))
+        channel = dialog.get('pcm_source_channel')
+        state = 'ON' if dialog['options'].pcm_auto_remap else 'OFF'
+        message = ('DIGI #1 keeps display on; affects SID mix volume.' if method == 1 else
+                   'DIGI #2 blanks display/sprites. F3 synthesis avoids this.')
+        screen.blit(small.render(message, True, colors['TEXT']), (icon.right + 8, area.y + 2))
+        mapping = (f'CH{channel} PCM is outside CH3. Auto-remap: {state}; project unchanged.'
+                   if channel in (1, 2) else 'The PCM routine reserves C64 CH3 for sample playback.')
+        screen.blit(small.render(mapping,
+                                 True, colors['TEXT']), (icon.right + 8, area.y + line_height))
+        dialog['pcm_warning_rect'] = area
+    else:
+        dialog.pop('pcm_warning_rect', None)
     screen.set_clip(header_clip)
     busy = dialog.get('busy', False)
     progress_height = 3 * line_height if busy else 0
     if busy:
         elapsed = max(0.0, monotonic() - dialog['analysis_started'])
-        area = pg.Rect(inner.x, inner.y + 2 * line_height, inner.width, progress_height)
+        area = pg.Rect(inner.x, inner.y + header_height, inner.width, progress_height)
         screen.set_clip(area)
         timer = small.render(f'{elapsed:.1f}s elapsed', True, colors['TEXT'])
         phase = face.render(dialog.get('phase', 'Pre-analyzing...'), True, colors['TEXT'])
@@ -377,8 +446,8 @@ def draw(r, app):
         dialog['analysis_drawn'] = True
     else:
         dialog.pop('progress_rect', None)
-    body = pg.Rect(inner.x, inner.y + 2 * line_height + progress_height + 6, inner.width,
-                   max(line_height, inner.height - footer - 2 * line_height - progress_height - 6))
+    body = pg.Rect(inner.x, inner.y + header_height + progress_height + 6, inner.width,
+                   max(line_height, inner.height - footer - header_height - progress_height - 6))
     scrollbar_track = pg.Rect(body.right-14,body.y,14,body.height)
     body.width -= 22
     capacity = max(20, body.width // max(1, face.size('M')[0]))
@@ -395,7 +464,32 @@ def draw(r, app):
             option_bounds[option] = (begin, position)
         position += 3
 
+    if dialog.get('pcm'):
+        add(f'DIGI method: [ #{method} '+('Volume / display enabled' if method == 1 else 'Waveform DAC / display blanked')+' ]',
+            colors['DIM'] if busy else colors['TEXT'], 22)
+        add('Click or press Space to switch method. #1 is the original volume-digi player.')
+        if dialog.get('pcm_source_channel') in (1, 2):
+            add(f'PCM notes play on tracker CH{dialog["pcm_source_channel"]}, outside CH3.', colors['ACCENT'])
+        add(('[x] ' if dialog['options'].pcm_auto_remap else '[ ] ')+'Auto-remap PCM to CH3',
+            colors['DIM'] if busy else colors['TEXT'], 21)
+        add('Sample overrides select the PCM-enhanced routine automatically.')
+        add('One tracker PCM channel is mapped to C64 CH3; two SID voices remain.')
+        add('SID output is RSID, with its own CIA timers. PRG is BASIC-loadable.')
+        add('Display and sprite enable registers stay unchanged during playback.' if method == 1 else
+            'Display and sprites stay off during playback to keep sample timing steady.', colors['YELLOW'])
+        add('Match the project SID chip (6581/8580) and clock (PAL/NTSC) in your emulator.')
+        if method == 1:
+            add('Volume digis affect the whole SID mix; clicks and VIC timing jitter can remain.')
+            add('Export packs two 4-bit frames per byte. Custom graphics need a coordinated player.')
+        else:
+            add('Waveform DAC keeps the SID master volume steady between music commands. Hardware results vary.')
+            add('Export uses one byte per 4-bit sample frame; the project keeps its packed samples.')
+        add('Squeezers compare lossless music packing; all use the same sample audio.')
     for index, (field, label) in enumerate(OPTIONS):
+        if dialog.get('pcm'):
+            if index not in (0, 4):
+                continue
+            label = 'Squeeze PCM music data' if index == 0 else 'Pack repeated music/timing data'
         checked = getattr(dialog['options'], field)
         enabled = not busy and (index == 0 or dialog['options'].enabled)
         add(('' if index == 0 else '  ') + ('[x] ' if checked else '[ ] ') + label,
@@ -428,11 +522,16 @@ def draw(r, app):
                 option_bounds[11+index] = (comparison_top+(index//card_columns*9+6)*line_height,
                                          comparison_top+(index//card_columns*9+8)*line_height)
         add('File/RAM: bytes. CPU: measured maximum C64 cycles/call; lower is better.')
-        add('CPU excludes VIC/IRQ overhead. A dash means no measured result.')
+        add('CPU excludes PCM NMI/VIC overhead; the combined bound is verified separately.' if dialog.get('pcm') else
+            'CPU excludes VIC/IRQ overhead. A dash means no measured result.')
     result = dialog['result']
     if result is not None:
         report = result.squeeze_report
-        original_file = report.original_payload_bytes + report.original_wrapper_bytes + (2 if dialog['target'] == 'prg' else 124)
+        if dialog.get('pcm'):
+            for warning in result.warnings:
+                if warning.startswith('Channel mapping:'):
+                    add(warning)
+        original_file = report.original_payload_bytes + report.original_wrapper_bytes + (2 if dialog['target'] == 'prg' else 126 if dialog.get('pcm') else 124)
         percent = 100 * report.saved_bytes / original_file if original_file else 0
         add(f'File: {original_file:,} -> {len(result.data):,} bytes ({percent:.1f}% saved)')
         add(f'Resident RAM: {report.original_resident_bytes:,} -> {report.resident_bytes:,} bytes')
@@ -453,7 +552,8 @@ def draw(r, app):
     if dialog.get('error'):
         add(dialog['error'], colors['TEXT'])
     else:
-        add('Source banks are not stored in the old export either. The main RAM saving comes from packed playback data.')
+        if not dialog.get('pcm'):
+            add('Source banks are not stored in the old export either. The main RAM saving comes from packed playback data.')
         add('S: save the editable project + export | E: export only | A: analyze')
     if dialog.pop('ensure_focus', False) and dialog['focus'] in option_bounds:
         start, end = option_bounds[dialog['focus']]
@@ -468,11 +568,11 @@ def draw(r, app):
         screen.blit(face.render(line, True, color), (body.x, body.y + offset - dialog['scroll']))
     for index, (begin, end) in option_bounds.items():
         rect = pg.Rect(body.x, body.y + begin - dialog['scroll'], body.width, end - begin)
-        if dialog['focus'] == index and (index<11 or index==20):
+        if dialog['focus'] == index and (index<11 or index in (20,21,22)):
             pg.draw.rect(screen, colors['TEXT'], rect, 1)
         hit = rect.clip(body)
-        if hit.height and not busy and (index<11 or index==20):
-            action = 'squeeze_show_all' if index==20 else 'squeeze_version' if index==9 else 'squeeze_compare' if index==10 else 'squeeze_option'
+        if hit.height and not busy and (index<11 or index in (20,21,22)):
+            action = 'squeeze_digi_method' if index==22 else 'squeeze_pcm_remap' if index==21 else 'squeeze_show_all' if index==20 else 'squeeze_version' if index==9 else 'squeeze_compare' if index==10 else 'squeeze_option'
             r.hits.append((hit, action, index))
     if comparison_top is not None:
         from sidpulse.ui.squeezer_comparison import draw_comparison

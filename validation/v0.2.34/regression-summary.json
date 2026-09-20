@@ -1,0 +1,48 @@
+{
+  "version": "0.2.34",
+  "full_suite": {
+    "passed": 1616,
+    "failed": 2,
+    "seconds": 399.68,
+    "failures": [
+      "800px pattern fit needed another font-size step",
+      "PW clipboard test used old column index"
+    ],
+    "resolution": "Both resolved; final affected tests pass"
+  },
+  "final_affected": {
+    "passed": 150,
+    "failed": 0,
+    "seconds": 8.34
+  },
+  "waveform_checks": 30,
+  "native_audio": {
+    "songs": 7,
+    "exact_match": true,
+    "includes_pcm_seconds": 200
+  },
+  "reference_samples": {
+    "kick": "11e5c6e107ca4bb8f83dec35dd3fb32c66ce28155733a4227ba429b9a30cac32",
+    "snare": "fc08fb87b3489c8be13be3b2ac72b1dfa610eea1d5dd2e9fe6282612b00e266c"
+  },
+  "batch_and_media_followup": {
+    "passed": 81,
+    "failed": 0,
+    "seconds": 57.78,
+    "new_batch_cases": 17,
+    "scope": [
+      "three export choices and default focus",
+      "mouse and keyboard at 480/640/1280 widths",
+      "real background fitting and cancellation",
+      "duplicate sample reuse",
+      "audition and atomic apply/undo",
+      "source persistence and independent SID export",
+      "stale and failed result rejection"
+    ]
+  },
+  "remap_followup": {
+    "passed": 7,
+    "failed": 0,
+    "seconds": 1.84
+  }
+}

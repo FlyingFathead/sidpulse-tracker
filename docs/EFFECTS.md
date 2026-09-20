@@ -2,11 +2,11 @@
 
 Edit `sidpulse/assets/effects.json`; F1 topic 9 and the bottom effect helper read that catalog. Restart the app after changes. Run this script to refresh this document.
 
-**v0.2.0 executes A/B/C/T, E/F/G/H/J, Q0y, SCx and SDx and compiles them to PSID.** See PSID_EXPORT.md for finite order traversal and target limits.
+**Playback and export execute A/B/C/T, E/F/G/H/J, Q0y, SCx, SDx and SID macros Z10/Z11/Z1F/Z20/Z21/Z2F.** See PSID_EXPORT.md for finite order traversal and target limits.
 
 `implemented` = host playback; `partial` = stated subset only; `planned` = relevant future replay effect; `mapping` = SID semantics require a decision; `future_digi` = sample-player work; `not_applicable` = outside the initial single-SID architecture. Live entries are green, pending entries grey and inapplicable entries red in help. The JSON separately records editability, preview implementation, PSID implementation, visibility and help visibility.
 
-The SID has a shared programmable filter. Its cutoff, resonance, routing and mode already work in F12; the blue-grey CTRL CH / FILTER area edits working row automation. The fourth area is not another oscillator. Oscillator waveform is selected in F4, separately from a vibrato modulation shape.
+The SID has a shared programmable filter. Its cutoff, resonance, routing and mode already work in F12; the blue-grey CTRL CH / FILTER area edits working row automation. The fourth area is not another oscillator. Oscillator waveform is selected in F4 or automated using the W pattern column. W is separate from FX Wxx global-volume slides and from vibrato modulation shape.
 
 Schism's reference help marks S0x/S1x/S2x with static `#` prefixes. Its current effect switch has no S0x implementation, includes S1x, and labels S2x as no longer implemented. Therefore a red help label alone is not a reliable test of an individual MOD's capabilities. SIDpulse will use its own capability table. PSID carries replay code/data; it does not itself implement these effect letters.
 
@@ -37,7 +37,7 @@ Schism's reference help marks S0x/S1x/S2x with static `#` prefixes. Its current 
 | Wxx | Global-volume slides | mapping | W0x/Wx0/WFx/WxF use the same shared-volume mapping. |
 | Xxx | Panning position | not_applicable | Single-SID mono target. |
 | Yxy | Panbrello | not_applicable | Single-SID mono target. |
-| Zxx | MIDI macro / SID macro proposal | mapping | v4 proposes shared-filter/global macros here. No command encoding is finalized or executed. |
+| Zxx | MIDI macro / SID macro proposal | partial | SID macros: Z10/11/1F sync off/on/default; Z20/21/2F ring off/on/default. Other values remain reserved and are not executed. |
 | S0x | Legacy set-filter command | mapping | Not automatically the SID filter command. F12 already edits the actual shared SID filter; pattern encoding remains to be specified. |
 | S1x | Glissando | planned | Pitch quantization can be implemented in the replay engine. |
 | S2x | Finetune | mapping | Historical meaning needs an explicit pitch-unit mapping. |
@@ -70,9 +70,15 @@ Schism's reference help marks S0x/S1x/S2x with static `#` prefixes. Its current 
 | SDx | Delayed note start | implemented | Delay note/instrument trigger to tick x. SD0 is immediate; x outside row duration does nothing. |
 | SEx | Row delay | planned | Extend timing by rows. |
 | SFx | Select MIDI macro | mapping | External MIDI is later; any SID macro reinterpretation must be explicitly documented. |
+| Z10 | Sync off | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
+| Z11 | Sync on | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
+| Z1F | Sync from instrument | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
+| Z20 | Ring modulation off | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
+| Z21 | Ring modulation on | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
+| Z2F | Ring modulation from instrument | implemented | Persistent on this tracker channel, including held notes. Does not retrigger gate or edit the instrument. SID oscillators only; ring is audible with triangle and a running source oscillator. |
 
 Qxy reference volume modifiers: 0 keeps volume; 1/2/3/4/5 subtract 1/2/4/8/16; 6 multiplies by 2/3; 7 by 1/2; 8 is unused; 9/A/B/C/D add 1/2/4/8/16; E multiplies by 3/2; F doubles it. These PCM operations are not silently applied to SID sustain. Q0y now retriggers gate and instrument program; other volume modifiers remain unsupported.
 
-The EX column remains reserved. The legacy volume-column shorthand Ax/Bx/Cx/Dx, Ex/Fx, Gx and Hx is not executable or separately stored there in v0.2.0. Their main-effect counterparts remain available for source entry. FT2/XM translations are outside this initial IT/SID vocabulary.
+In v0.2.32 the unused EX column becomes AR: native arpeggio 0 OFF, 1 ON, R instrument, . hold. Existing FX codes are unchanged; AR OFF also suppresses Jxy. The legacy volume-column shorthand Ax/Bx/Cx/Dx, Ex/Fx, Gx and Hx is not executable or separately stored there in v0.2.0. Their main-effect counterparts remain available for source entry. FT2/XM translations are outside this initial IT/SID vocabulary.
 
 References: [Schism help](https://github.com/schismtracker/schismtracker/blob/84d2c46c1d3b5660edbc3eca259bf1219e59623e/helptext/pattern-editor), [Schism effect dispatch](https://github.com/schismtracker/schismtracker/blob/84d2c46c1d3b5660edbc3eca259bf1219e59623e/player/effects.c). SID-specific decisions follow the supplied v4 roadmap and the 2026-09-10 design discussion.

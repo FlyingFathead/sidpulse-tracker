@@ -1,0 +1,90 @@
+[
+  {
+    "size": [
+      640,
+      480
+    ],
+    "page": "pattern",
+    "cw": 7,
+    "cols": 91,
+    "control": false,
+    "voices": 2
+  },
+  {
+    "size": [
+      640,
+      480
+    ],
+    "page": "info",
+    "cw": 7,
+    "cols": 91,
+    "control": false,
+    "voices": 3
+  },
+  {
+    "size": [
+      960,
+      1080
+    ],
+    "page": "pattern",
+    "cw": 9,
+    "cols": 106,
+    "control": false,
+    "voices": 3
+  },
+  {
+    "size": [
+      960,
+      1080
+    ],
+    "page": "info",
+    "cw": 9,
+    "cols": 106,
+    "control": false,
+    "voices": 3
+  },
+  {
+    "size": [
+      1280,
+      900
+    ],
+    "page": "pattern",
+    "cw": 10,
+    "cols": 128,
+    "control": true,
+    "voices": 3
+  },
+  {
+    "size": [
+      1280,
+      900
+    ],
+    "page": "info",
+    "cw": 10,
+    "cols": 128,
+    "control": true,
+    "voices": 3
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "pattern",
+    "cw": 11,
+    "cols": 174,
+    "control": true,
+    "voices": 3
+  },
+  {
+    "size": [
+      1920,
+      1080
+    ],
+    "page": "info",
+    "cw": 11,
+    "cols": 174,
+    "control": true,
+    "voices": 3
+  }
+]

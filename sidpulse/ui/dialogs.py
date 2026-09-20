@@ -3,6 +3,10 @@ import pygame as pg
 
 
 def choices(dialog):
+    if dialog.get('kind')=='pcm_export_confirm':
+        return [('Continue as DIGI',pg.K_y),('Synthesize all samples',pg.K_s),('Cancel',pg.K_ESCAPE)]
+    if dialog.get('kind')=='pattern_arpeggio':
+        return [('OFF',pg.K_0),('ON',pg.K_1),('Inst',pg.K_r),('Hold',pg.K_PERIOD),('Cancel',pg.K_ESCAPE)]
     if dialog.get('kind') == 'pattern_edit_confirm':
         return [('Cut' if dialog['operation'] == 'cut' else 'Reset automation', pg.K_y), ('Cancel', pg.K_ESCAPE)]
     if dialog.get('kind')=='keyboard_mapping':return [('Modern',pg.K_m),('Classic',pg.K_c),('Cancel',pg.K_ESCAPE)]

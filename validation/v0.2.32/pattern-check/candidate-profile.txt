@@ -1,0 +1,53 @@
+Sun Sep 20 11:17:56 2026    candidate-pattern-v032.prof
+
+         5919960 function calls (5706824 primitive calls) in 4.145 seconds
+
+   Ordered by: internal time
+   List reduced from 1513 to 45 due to restriction <45>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    87626    1.179    0.000    1.179    0.000 {built-in method pygame.draw.rect}
+   173731    0.665    0.000    0.665    0.000 {method 'blit' of 'pygame.surface.Surface' objects}
+      932    0.270    0.000    2.609    0.003 renderer.py:414(pattern)
+      932    0.166    0.000    0.166    0.000 {method 'fill' of 'pygame.surface.Surface' objects}
+   110346    0.138    0.000    0.544    0.000 renderer.py:108(text)
+      932    0.135    0.000    0.290    0.000 renderer.py:1050(helper)
+188206/4028    0.125    0.000    0.275    0.000 copy.py:118(deepcopy)
+    75528    0.112    0.000    0.112    0.000 {built-in method pygame.draw.line}
+  1027587    0.104    0.000    0.104    0.000 {built-in method builtins.round}
+  1049432    0.096    0.000    0.096    0.000 {method 'collidepoint' of 'pygame.rect.Rect' objects}
+   589863    0.080    0.000    0.080    0.000 {method 'get' of 'dict' objects}
+    61512    0.069    0.000    0.396    0.000 renderer.py:574(cached_voice_cell)
+    68036    0.064    0.000    1.198    0.000 renderer.py:126(rect)
+    54988    0.048    0.000    0.075    0.000 renderer.py:199(hit)
+   272100    0.045    0.000    0.045    0.000 {built-in method builtins.max}
+      932    0.043    0.000    3.664    0.004 renderer.py:235(render)
+     2964    0.039    0.000    0.039    0.000 {method 'render' of 'pygame.font.Font' objects}
+20254/4028    0.037    0.000    0.267    0.000 copy.py:217(_deepcopy_dict)
+    11193    0.034    0.000    0.094    0.000 renderer.py:131(control_text)
+   170721    0.033    0.000    0.033    0.000 {method 'move_to_end' of 'collections.OrderedDict' objects}
+      932    0.027    0.000    0.082    0.000 renderer.py:185(meter)
+    13058    0.026    0.000    0.026    0.000 {method 'size' of 'pygame.font.Font' objects}
+        1    0.025    0.025    0.025    0.025 {built-in method pygame.image.load}
+     8388    0.024    0.000    0.067    0.000 instrument_graphs.py:34(button)
+258606/258362    0.023    0.000    0.023    0.000 {built-in method builtins.len}
+   132344    0.022    0.000    0.022    0.000 editor.py:62(pattern)
+    51260    0.022    0.000    0.031    0.000 renderer.py:550(<lambda>)
+     8397    0.021    0.000    0.117    0.000 instrument_graphs.py:22(button_frame)
+   190769    0.020    0.000    0.020    0.000 {method 'append' of 'list' objects}
+   258598    0.019    0.000    0.019    0.000 {built-in method builtins.id}
+   146403    0.016    0.000    0.016    0.000 {built-in method builtins.getattr}
+      932    0.016    0.000    0.031    0.000 themes.py:15(palette)
+     8388    0.014    0.000    0.604    0.000 renderer.py:177(well)
+     4023    0.014    0.000    0.040    0.000 format.py:177(_construct)
+   8046/2    0.014    0.000    0.265    0.133 copy.py:247(_reconstruct)
+    70832    0.014    0.000    0.014    0.000 themes.py:23(<genexpr>)
+    297/1    0.012    0.000    4.156    4.156 {built-in method builtins.exec}
+        8    0.012    0.001    0.012    0.001 {built-in method builtins.compile}
+    41008    0.012    0.000    0.016    0.000 pattern_grid.py:20(level)
+      932    0.011    0.000    0.048    0.000 renderer.py:73(configure)
+      145    0.010    0.000    0.010    0.000 {built-in method marshal.loads}
+    30822    0.010    0.000    0.015    0.000 copy.py:231(_keep_alive)
+     2796    0.010    0.000    0.176    0.000 renderer.py:965(monitor_buttons)
+   157384    0.008    0.000    0.008    0.000 copy.py:172(_deepcopy_atomic)
+      932    0.007    0.000    0.007    0.000 {built-in method pygame.draw.lines}

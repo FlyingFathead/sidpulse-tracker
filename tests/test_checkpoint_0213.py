@@ -58,10 +58,10 @@ def test_effect_feedback_uses_actual_playback_capability(code,parameter,executab
 
 
 def test_effect_entry_and_parameter_entry_both_use_feedback():
-    editor=Editor();editor.column=6
+    editor=Editor();editor.column=7
     editor.enter_digit('H')
     assert 'pending' not in editor.status and 'unsupported' not in editor.status
-    editor.row=0;editor.column=7;editor.enter_digit('3');editor.enter_digit('4')
+    editor.row=0;editor.column=8;editor.enter_digit('3');editor.enter_digit('4')
     assert 'H34' in editor.status and 'pending' not in editor.status
 
 

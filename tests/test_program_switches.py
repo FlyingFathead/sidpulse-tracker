@@ -101,7 +101,7 @@ def test_all_program_buttons_work_by_mouse_keyboard_and_undo():
             assert getattr(app.editor.song.instruments[1], program + '_enabled') is True
         assert app.editor.song == before
         app.instrument_focus = 'buttons'
-        app.instrument_button = 7  # Save user preset precedes the program switches.
+        app.instrument_button = app.instrument_buttons().index(('save_user_preset', None))
         for program in INSTRUMENT_PROGRAMS:
             key(app, pg.K_RIGHT)
             app.renderer.render(app)

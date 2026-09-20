@@ -13,6 +13,13 @@ PROGRAM_ROWS = {9:'arpeggio', 11:'wave_sequence', 12:'pitch_sequence',
 PROGRAM_LABELS = {'arpeggio':'Arpeggio', 'wave_sequence':'Wave sequence',
                   'pitch_sequence':'Pitch sequence', 'pulse':'Pulse motion',
                   'vibrato':'Vibrato', 'gate':'Auto gate-off', 'retrigger':'Retrigger'}
+PCM_FIELDS = (0, 9, 10, 12, 15, 16, 17, 18, 19)
+
+
+def field_indexes(inst, motion=False, full_wave=False):
+    first,last=(9,len(FIELDS)) if motion else (0,9)
+    return [i for i in range(first,last) if not (full_wave and i==1)
+            and (not inst.sample_override or i in PCM_FIELDS)]
 
 
 def display(inst,key):

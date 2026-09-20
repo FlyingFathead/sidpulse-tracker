@@ -22,13 +22,14 @@ LOG = logging.getLogger("sidpulse.keys")
 
 
 from sidpulse.ui.instrument_actions import InstrumentActions
+from sidpulse.ui.media_actions import MediaActions
 from sidpulse.ui.file_actions import FileActions
 from sidpulse.ui.file_browser import FileBrowser
 from sidpulse.ui.pulse_recording import PulseRecordingActions
 from sidpulse.ui.pattern_clipboard import PatternClipboardActions
 
 
-class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, FileActions):
+class App(MediaActions, PatternClipboardActions, PulseRecordingActions, InstrumentActions, FileActions):
     def __init__(self, song=None, path=None, audio=True, size=(1280, 900), zoom=1.0, audio_buffer=None):
         from sidpulse.ui.window_identity import prepare, set_icon
         prepare()
@@ -65,6 +66,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         self.instrument_tab = "general"
         self.instrument_button = 3
         self.instrument_drag = None
+        self.instrument_clipboard = None
         self.pulse_record_armed = False
         self.pulse_record_voice = self.editor.voice
         self.pulse_record_value = 0x800
@@ -81,6 +83,10 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         self.graph_low = -12
         self.control_focus = False
         self.sample_index = 1
+        self.sample_drag = None
+        from sidpulse.preferences import load_sample_auto_squeeze, load_sample_normalization
+        self.sample_auto_squeeze = load_sample_auto_squeeze()
+        self.sample_normalize_before, self.sample_normalize_after = load_sample_normalization()
         self.help_scroll = 0
         self.help_topic = 0
         self.helper_strip = True
@@ -110,6 +116,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         self.dialog = None
         self.settings_reset_pending = None
         self.export_jobs = []
+        self.media_jobs = []
         self.intro_pending = False
         self.scopes_visible = False
         self.held = set()
@@ -309,6 +316,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
     def close(self):
         from sidpulse.ui.export_squeezer import close_analysis
         close_analysis(self)
+        self.close_media_jobs()
         self.audio.close()
         pg.quit()
         self.autosave.close(clean=self.runtime_clean)
@@ -320,6 +328,8 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         for key, lo, hi in (("row", 0, 255), ("voice", 0, 2), ("column", 0, len(FIELDS)-1), ("octave", 0, 7), ("skip", 0, 9)):
             value = data.get(key)
             if type(value) is int and lo <= value <= hi:
+                if key == 'column' and data.get('pattern_columns_version', 1) == 1 and value >= 6:
+                    value = min(hi, value + 1)  # W was inserted before FX in v0.2.34
                 setattr(ed, key, value)
         if type(data.get("pattern_id")) is int and data["pattern_id"] in ed.song.patterns:
             ed.pattern_id = data["pattern_id"]
@@ -343,6 +353,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         for key in ("row", "voice", "column", "octave", "skip", "pattern_id", "instrument", "order"):
             result[key] = getattr(self.editor, key)
         result["zoom"] = self.zoom
+        result['pattern_columns_version'] = 2
         result["helper_strip"] = self.helper_strip
         result["pattern_grid"] = self.editor.pattern_grid.metadata(result.get("pattern_grid"))
         return result
@@ -617,7 +628,11 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
 
     def change_property(self, delta=0, direct=None):
         ed = self.editor
+        if self.page=='instrument' and not self.allow_instrument_edit():return
         index = self.property_index
+        if self.page=='instrument' and ed.instrument in ed.song.instruments and ed.song.instruments[ed.instrument].sample_override:
+            from sidpulse.ui.instruments import PCM_FIELDS
+            if index not in PCM_FIELDS:return
         if self.page == 'settings' and index == 29:
             self.open_keyboard_mapping()
             return
@@ -776,9 +791,13 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             from sidpulse.ui.orders import handle_key
             handle_key(self,event)
         elif self.page == "samples":
+            if key == pg.K_RETURN:self.import_sample_browser();return
+            if key == pg.K_SPACE:self.preview_sample();return
+            if key == pg.K_DELETE:self.delete_sample();return
             if key in (pg.K_UP, pg.K_DOWN):
                 self.sample_index = max(1, min(99, self.sample_index + (-1 if key == pg.K_UP else 1)))
         elif self.page in ("instrument", "settings"):
+            if self.page=='instrument':self.normalize_instrument_tab()
             if self.page == 'settings' and self.property_index == 29 and key in (pg.K_RETURN,pg.K_LEFT,pg.K_RIGHT):
                 self.open_keyboard_mapping()
                 return
@@ -842,6 +861,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                 self.property_index=max(2,min(5,self.property_index+(-1 if key==pg.K_UP else 1)));return
             maximum = len(INSTRUMENT_FIELDS)-1 if self.page == "instrument" else 29
             if key in (pg.K_UP, pg.K_DOWN):
+                if self.page=='instrument':self.move_instrument_field(-1 if key==pg.K_UP else 1);return
                 lo,hi=(9,19) if self.page=="instrument" and self.instrument_tab=="motion" else (0,8) if self.page=="instrument" else (0,maximum)
                 self.property_index = max(lo, min(hi, self.property_index + (-1 if key == pg.K_UP else 1)))
             elif key in (pg.K_LEFT, pg.K_RIGHT):
@@ -886,6 +906,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             return
         ed = self.editor
         name, value = command.name, command.value
+        if self.media_action(name, value):return
         if name == "release":
             self.held.discard(value)
             self.audio.send("off", value)
@@ -896,6 +917,11 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                 ed.status="Empty instrument slot. Enter: Choose preset / No preset / Manual.";return
             scan, offset, preview_only = value
             note = min(95, ed.octave * 12 + offset)
+            if self.page == "samples":
+                if scan not in self.held:
+                    self.preview_sample(scan, note)
+                    self.held.add(scan)
+                return
             if self.audio.playback.status != "stopped":
                 if not preview_only:ed.enter_note(note)
                 ed.status="F8 stops playback so the three SID voices are available for keyboard audition."
@@ -903,6 +929,8 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             if scan not in self.held:
                 instrument = ed.song.instruments.get(ed.instrument)
                 if instrument is not None:
+                    if instrument.sample_override and ed.history.revision != self.last_audio_revision:
+                        self.sync_audio()  # publish a newly assigned bank before its first note
                     self.audio.send("on", scan, note, instrument, ed.voice if self.page == "pattern" else None, ed.instrument)
                     self.held.add(scan)
                 else:
@@ -912,6 +940,8 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         elif name == "note":
             ed.enter_note(value)
         elif name in ("audition_cell", "audition_row"):
+            if ed.history.revision != self.last_audio_revision:
+                self.sync_audio()
             scan = event.scancode
             if scan in self.held:
                 return
@@ -975,6 +1005,9 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
         elif name == 'reset_automation':
             from sidpulse.ui.edit_confirmation import open_dialog
             open_dialog(self, 'reset')
+        elif name == 'pattern_arpeggio':
+            from sidpulse.ui.pattern_arpeggio import open_dialog
+            open_dialog(self,value)
         elif name == 'confirm_cut_toggle':
             self.toggle_confirm_cut()
         elif name == 'instrument_monitor_buttons':
@@ -985,6 +1018,14 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             self.toggle_control_panel()
         elif name == "pattern_clipboard_buttons":
             self.toggle_pattern_clipboard_buttons()
+        elif name in ('copy_instrument','paste_instrument'):
+            getattr(self,name)()
+        elif name == 'pattern_select_all':
+            self.follow_playback=False
+            self.control_focus=False
+            ed.anchor=(0,0)
+            ed.selection_end=(len(ed.pattern.rows)-1,2)
+            ed.status='Selected '+ed.selection_description()
         elif name == "transpose":
             ed.transpose(value)
         elif name == "roll":
@@ -1138,6 +1179,22 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
     def dialog_event(self, event):
         from sidpulse.ui.dialogs import choices,focus
         dialog = self.dialog
+        if dialog.get('kind') == 'sample_synthesis_batch':
+            from sidpulse.ui.batch_synthesis import handle_event
+            handle_event(self,event);return
+        if dialog.get('kind') == 'sample_synthesis':
+            from sidpulse.ui.sample_synthesis import handle_event
+            handle_event(self,event);return
+        if dialog.get('kind') == 'sample_volume':
+            from sidpulse.ui.sample_volume import handle_event
+            handle_event(self, event);return
+        if dialog.get("kind") == "sample_squeeze":
+            from sidpulse.ui.sample_view import squeeze_event
+            squeeze_event(self,event);return
+        if dialog.get("kind") == "media_job":
+            from sidpulse.ui.media_actions import handle_job_event
+            handle_job_event(self, event)
+            return
         if dialog.get('kind') == 'automation_recording':
             from sidpulse.ui.automation_recording import handle_event
             handle_event(self, event)
@@ -1179,6 +1236,9 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                 if event.key==pg.K_RETURN and not event.mod&pg.KMOD_SHIFT:
                     key=choices(dialog)[focus(dialog)][1]
                     self.dialog_event(pg.event.Event(pg.KEYDOWN,key=key,mod=0,dialog_button=True));return
+        if dialog.get('kind') == 'pcm_export_confirm' and event.type == pg.KEYDOWN and event.key == pg.K_s:
+            from sidpulse.ui.batch_synthesis import begin
+            begin(self,dialog['return_dialog']);return
         if dialog.get('kind') == 'reset_settings_pending':
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 from sidpulse.ui.settings_reset import cancel
@@ -1201,6 +1261,10 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                 elif event.key in (pg.K_n, pg.K_a, pg.K_b):
                     self.paste_fields(scope={pg.K_n:'notes',pg.K_a:'automation',pg.K_b:'both'}[event.key])
                     self.dialog = None
+            return
+        if dialog.get('kind') == 'pattern_arpeggio':
+            from sidpulse.ui.pattern_arpeggio import handle_event
+            handle_event(self,event)
             return
         if dialog.get('kind') == 'notice':
             if event.type==pg.KEYDOWN and event.key in (pg.K_RETURN,pg.K_ESCAPE):
@@ -1329,6 +1393,8 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             from sidpulse.ui.pattern_automation import handle_event as handle_automation_entry
             if handle_automation_entry(self, event):
                 return
+            if self.sample_drag and self.sample_drag_event(event):
+                return
             if event.type==pg.MOUSEMOTION and self.instrument_drag:
                 self.update_instrument_drag(event.pos);return
             if event.type==pg.MOUSEBUTTONUP and event.button==1 and self.instrument_drag:
@@ -1350,11 +1416,11 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                 self.automation_state.pop('slider_keys',None)
                 self.automation_state.pop('keyboard_touch',None)
                 self.release_audition()
-                if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length'):
+                if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length','sample_volume','sample_synthesis'):
                     self.dialog['drag_rect'] = None
             elif event.type == pg.VIDEORESIZE and not self.fullscreen:
                 self.screen = pg.display.set_mode((max(480, event.w), max(360, event.h)), pg.RESIZABLE)
-                if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length'):
+                if self.dialog and self.dialog.get('kind') in ('audio_buffer','pattern_length','sample_volume','sample_synthesis'):
                     self.dialog['drag_rect'] = None
             elif self.dialog:
                 self.dialog_event(event)
@@ -1398,8 +1464,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                     if x<32:
                         self.select_instrument_slot(-event.y);self.instrument_focus="list"
                     elif self.instrument_tab in ('general','motion','adsr'):
-                        lo,hi=(9,19) if self.instrument_tab=='motion' else (2,5) if self.instrument_tab=='adsr' else (0,8)
-                        self.property_index=max(lo,min(hi,self.property_index-event.y));self.instrument_focus='properties'
+                        self.move_instrument_field(-event.y);self.instrument_focus='properties'
                 elif self.page == 'settings':self.property_index=max(0,min(29,self.property_index-event.y))
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 for rect, action, value in reversed(self.renderer.hits):
@@ -1407,8 +1472,24 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                         continue
                     if action == 'activity_indicator':
                         continue  # hover feedback must not steal the row's click
+                    if action == "sample_marker":
+                        self.begin_sample_drag(value,event.pos);break
+                    if self.media_action(action,value):
+                        break
                     if self.instrument_action(action,value,event.pos):
                         pass
+                    elif action == 'song_title_settings':
+                        self.change_page('settings')
+                        if self.page == 'settings':
+                            self.renderer.scrollbars.states.get('settings',{}).pop('token',None)
+                    elif action == 'header_instrument':
+                        self.change_page('instrument')
+                        if self.page == 'instrument':
+                            self.select_instrument_slot(number=value)
+                            self.renderer.scrollbars.states.get('instruments',{}).pop('token',None)
+                    elif action in ('copy_instrument','paste_instrument'):
+                        from sidpulse.ui.pressable import begin
+                        begin(self, rect, Command(action), event.pos)
                     elif action == "page":
                         self.change_page(value)
                     elif action in ("mute", "solo"):
@@ -1438,11 +1519,11 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                     elif action == "paste_special":
                         from sidpulse.ui.pressable import begin
                         begin(self, rect, Command('paste_special'), event.pos)
-                    elif action in ('octave','octave_reset','instrument_mute','instrument_solo','reset_automation','pulse_record_arm','pulse_record_disarm'):
+                    elif action in ('octave','octave_reset','instrument_mute','instrument_solo','reset_automation','pulse_record_arm','pulse_record_disarm','pattern_arpeggio','pattern_select_all'):
                         from sidpulse.ui.pressable import begin
                         begin(self, rect, Command(action, value), event.pos)
                     elif action == 'bank_monitor_disabled':
-                        self.editor.status = ('Sample M/S unavailable: PCM/digi playback is not implemented.'
+                        self.editor.status = ('Use the assigned instrument M/S controls to monitor this sample.'
                                               if value[0] == 'sample' else 'Empty instrument slot: nothing to mute or solo.')
                     elif action == 'choose_sample':
                         self.sample_index = value
@@ -1457,6 +1538,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
                         self.property_index = value
                         self.instrument_focus = "properties"
                     elif action == "waveform":
+                        if not self.allow_instrument_edit():break
                         self.editor.edit("Set oscillator waveform", [(("instruments", self.editor.instrument, "waveform"), value)])
                         self.property_index = 1
                         self.instrument_focus = "properties"
@@ -1508,6 +1590,7 @@ class App(PatternClipboardActions, PulseRecordingActions, InstrumentActions, Fil
             self.renderer.render(self)
             pg.display.flip()
             self.poll_export_analysis()
+            if self.media_jobs:self.poll_media_jobs()
             if self.audio.error:
                 self.editor.status = self.audio.error
             count += 1

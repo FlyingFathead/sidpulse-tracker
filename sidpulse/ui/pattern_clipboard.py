@@ -110,7 +110,7 @@ class PatternClipboardActions:
             self.clipboard_feedback('Clipboard is empty', True)
             return
         self.dialog = {'kind':'paste_special', 'title':'Paste Special',
-                       'message':'Paste at the current row and channel. Notes changes NOTE only. Automation changes A D S R PW. '
+                       'message':'Paste at the current row and channel. Notes changes NOTE only. Automation changes AR W and A D S R PW. '
                                  'Both combines these; IN and FX stay intact. Only fields actually copied are available. '
                                  'Ordinary Paste uses all copied fields.', 'button_focus':0}
 

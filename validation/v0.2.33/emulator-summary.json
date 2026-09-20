@@ -1,0 +1,111 @@
+{
+  "drums-primed-8580": {
+    "seconds": 12.178666666666667,
+    "rms": 87.74575886130927,
+    "peak": 2430,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 88.0718104234601,
+    "after_autostart_peak": 639
+  },
+  "drums-primed-neutral-8580": {
+    "seconds": 12.178666666666667,
+    "rms": 50.13425607955092,
+    "peak": 2430,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 5.871612119689845,
+    "after_autostart_peak": 50
+  },
+  "drums-primed-6581": {
+    "seconds": 12.178666666666667,
+    "rms": 229.92656546237433,
+    "peak": 8190,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 191.22641363979204,
+    "after_autostart_peak": 1286
+  },
+  "hermo-full-8580": {
+    "seconds": 24.357333333333333,
+    "rms": 672.617545743207,
+    "peak": 4372,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 734.7238810319719,
+    "after_autostart_peak": 4372
+  },
+  "hermo-full-6581": {
+    "seconds": 24.357333333333333,
+    "rms": 1392.857004192149,
+    "peak": 10946,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 1517.9967930567968,
+    "after_autostart_peak": 10946
+  },
+  "hermo-ntsc-8580": {
+    "seconds": 23.464,
+    "rms": 663.8912299332628,
+    "peak": 4825,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 727.8933419776496,
+    "after_autostart_peak": 4825
+  },
+  "hermo-ntsc-6581": {
+    "seconds": 23.464,
+    "rms": 1375.403280333613,
+    "peak": 11346,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 1504.4749866626291,
+    "after_autostart_peak": 11346
+  },
+  "hermo-neutral-final-8580": {
+    "seconds": 24.357333333333333,
+    "rms": 667.6759138348434,
+    "peak": 4581,
+    "autostart": true,
+    "no_jam": true,
+    "after_autostart_rms": 729.3110095505151,
+    "after_autostart_peak": 4581
+  },
+  "pcm_hit_windows": {
+    "first": 4.2833125,
+    "rms": [
+      191.62244268147634,
+      95.02013460520963,
+      189.93642576750077,
+      95.12282952098529,
+      188.50385911689125,
+      95.28232944214561,
+      188.22232239311793,
+      94.94667621106814,
+      189.544281907742,
+      94.8817233273544,
+      189.34155062774164,
+      94.96931909110147,
+      189.31193782728434,
+      94.83996970128774,
+      189.9554088541339,
+      95.25916017916185,
+      189.57085371552074,
+      95.13619365487173,
+      188.52480593009608,
+      95.12732566531709,
+      190.3667931425346,
+      95.1913230824957,
+      189.35124470821157,
+      95.57555270313536,
+      189.1246197979668,
+      95.56885542607999,
+      190.02100438594448,
+      94.81871635172159,
+      189.9910059790757,
+      94.84952091416729,
+      188.5241149343094,
+      95.1412842597168
+    ]
+  }
+}

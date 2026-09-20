@@ -203,7 +203,7 @@ def test_bank_buttons_pressed_active_no_selection_change_and_no_song_edit(size):
             assert 'Empty instrument' in app.editor.status and app.instrument_slot == 2
         app.change_page('samples')
         click(app, 'bank_monitor_disabled', ('sample', 1))
-        assert 'not implemented' in app.editor.status
+        assert 'assigned instrument M/S' in app.editor.status
         assert app.editor.song == before
     finally:
         app.close()

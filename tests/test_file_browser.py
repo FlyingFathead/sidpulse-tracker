@@ -12,7 +12,7 @@ from sidpulse.export.psid import compile_song
 from sidpulse.export.prg import compile_prg
 
 
-@pytest.mark.parametrize('mode', SUFFIXES)
+@pytest.mark.parametrize('mode', [mode for mode in SUFFIXES if mode != 'sample'])
 def test_defaults_current_name_and_mode_filter(tmp_path,mode):
     for name in ['a.sidpulse','b.SIDPULSE','c.sid','d.prg','ignore.txt','.hidden.sidpulse']:
         (tmp_path/name).touch()
@@ -26,7 +26,7 @@ def test_defaults_current_name_and_mode_filter(tmp_path,mode):
     assert b.focus==('list' if mode=='open' else 'name')
 
 
-@pytest.mark.parametrize('mode', SUFFIXES)
+@pytest.mark.parametrize('mode', [mode for mode in SUFFIXES if mode != 'sample'])
 def test_default_name_roundtrip_latest_incremental_save(tmp_path,mode):
     b=FileBrowser(tmp_path);b.remember_project(tmp_path/'work_v21.sidpulse')
     b.start(mode,tmp_path/'work_v22.sidpulse')
@@ -176,6 +176,6 @@ def test_open_error_does_not_replace_song_or_name(tmp_path):
 def test_reopening_after_export_returns_to_current_project_directory(tmp_path):
     export_dir=tmp_path/'exports';export_dir.mkdir();b=FileBrowser(export_dir)
     source=tmp_path/'work_v24.sidpulse'
-    for mode in SUFFIXES:
+    for mode in (mode for mode in SUFFIXES if mode != 'sample'):
         b.directory=export_dir;b.start(mode,source)
         assert b.directory==tmp_path and b.name.text=='work_v24'+SUFFIXES[mode]

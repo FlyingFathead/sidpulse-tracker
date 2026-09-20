@@ -1,0 +1,28 @@
+{
+  "broad_run": {
+    "total": 1592,
+    "passed": 1583,
+    "failed": 9
+  },
+  "corrective_runs": [
+    {
+      "passed": 115,
+      "scope": "All affected layout, input, source provenance, synthesis, freeze, clipboard and PRG menu cases"
+    },
+    {
+      "passed": 17,
+      "scope": "Normalization and sample controls after final compact layout adjustment"
+    },
+    {
+      "passed": 22,
+      "scope": "Final freeze, empty-slot protection, synthesis and clipboard cases"
+    }
+  ],
+  "corrections": [
+    "Preserve F3 sample bank and scrollbar at standard sizes",
+    "Retain F4 general envelope and compact inline recording layout",
+    "PRG menu version comparison passes with parent and worker using the final version"
+  ],
+  "source_projects_unchanged": true,
+  "assembler_reproducible": true
+}

@@ -1,0 +1,21 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "cpus": [
+    0,
+    1
+  ],
+  "dependencies": {
+    "numpy": "2.3.5",
+    "pygame-ce": "2.5.7",
+    "pyresidfp": "0.17.0"
+  },
+  "song_sha256": {
+    "sid": "6e986430e09f6b01121fd68a8530b53d75be2bf76e5331e1c4ace789c9364804",
+    "pcm": "6b541961113fa88729851d691b9d2db9ba296b1fbf22098daf4c356e798c5faf"
+  },
+  "drivers": "SDL dummy audio/video",
+  "scopes": "on",
+  "timing": "serial, alternating version order",
+  "limitation": "Checks CPU/scheduling, not a physical audio device; brief trials cannot guarantee no dropouts."
+}

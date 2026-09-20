@@ -1,0 +1,234 @@
+{
+  "audio-2048": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_block": 6.642379134991119,
+      "core_percent": 15.568076097635434
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_block": 6.605781129662522,
+      "core_percent": 15.482299522646537
+    },
+    "pcm-off": {
+      "trials": 5,
+      "cpu_ms_per_block": 6.415884262877443,
+      "core_percent": 15.037228741119005
+    },
+    "pcm-on": {
+      "trials": 5,
+      "cpu_ms_per_block": 6.517139655417407,
+      "core_percent": 15.274546067384545
+    }
+  },
+  "audio-512": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_block": 1.7003651822222223,
+      "core_percent": 15.940923583333332
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_block": 1.6915193417777776,
+      "core_percent": 15.857993829166666
+    },
+    "pcm-off": {
+      "trials": 5,
+      "cpu_ms_per_block": 1.6993659533333332,
+      "core_percent": 15.9315558125
+    },
+    "pcm-on": {
+      "trials": 5,
+      "cpu_ms_per_block": 1.7237762186666667,
+      "core_percent": 16.16040205
+    }
+  },
+  "info-1280x900": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.12299183
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.1157943366666667
+    }
+  },
+  "info-960x1080": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.01666218
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.0155449400000003
+    }
+  },
+  "instrument-1280x900": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.0679979366666665
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.051079
+    }
+  },
+  "instrument-960x1080": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.7100387533333332
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.7073306466666667
+    }
+  },
+  "live-info-2048": {
+    "baseline": {
+      "trials": 3,
+      "ui_main_core_percent": 17.035741205198974,
+      "audio_process_core_percent": 20.178287940624116,
+      "achieved_ui_fps": 62.09665081418073,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0,
+      "over_budget_blocks": 0
+    },
+    "candidate": {
+      "trials": 3,
+      "ui_main_core_percent": 17.386050333196547,
+      "audio_process_core_percent": 20.119249619184156,
+      "achieved_ui_fps": 61.98228454108907,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0,
+      "over_budget_blocks": 0
+    },
+    "pcm-off": {
+      "trials": 3,
+      "ui_main_core_percent": 17.907924817619623,
+      "audio_process_core_percent": 20.552443441507044,
+      "achieved_ui_fps": 61.844772710230785,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0,
+      "over_budget_blocks": 0
+    },
+    "pcm-on": {
+      "trials": 3,
+      "ui_main_core_percent": 17.912471600471143,
+      "audio_process_core_percent": 21.1865723657881,
+      "achieved_ui_fps": 62.18098018042286,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0,
+      "over_budget_blocks": 0
+    }
+  },
+  "live-info-512": {
+    "baseline": {
+      "trials": 3,
+      "ui_main_core_percent": 17.124853183924948,
+      "audio_process_core_percent": 22.68447048329104,
+      "achieved_ui_fps": 62.053811990983746,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 14,
+      "over_budget_blocks": 6
+    },
+    "candidate": {
+      "trials": 3,
+      "ui_main_core_percent": 16.543169633038442,
+      "audio_process_core_percent": 22.10745955884605,
+      "achieved_ui_fps": 62.07574802681629,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 6,
+      "over_budget_blocks": 2
+    },
+    "pcm-off": {
+      "trials": 3,
+      "ui_main_core_percent": 17.613436725955452,
+      "audio_process_core_percent": 22.812223962104163,
+      "achieved_ui_fps": 62.12424826940146,
+      "gaps": 1,
+      "missing_frames": 512,
+      "late_callbacks": 11,
+      "over_budget_blocks": 5
+    },
+    "pcm-on": {
+      "trials": 3,
+      "ui_main_core_percent": 17.38325798606184,
+      "audio_process_core_percent": 23.24145686025575,
+      "achieved_ui_fps": 62.149688925541895,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 6,
+      "over_budget_blocks": 2
+    }
+  },
+  "pattern-1280x900": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.779594563333333
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.7869463666666663
+    }
+  },
+  "pattern-960x1080": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.8119172066666667
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.819819266666667
+    }
+  },
+  "sample-waveform-1280x900": {
+    "pcm-on": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.9201713166666665
+    }
+  },
+  "sample-waveform-960x1080": {
+    "pcm-on": {
+      "trials": 5,
+      "cpu_ms_per_frame": 2.3143477366666665
+    }
+  },
+  "samples-1280x900": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.2365026266666665
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.2111505733333332
+    }
+  },
+  "samples-960x1080": {
+    "baseline": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.35140264
+    },
+    "candidate": {
+      "trials": 5,
+      "cpu_ms_per_frame": 1.3349587033333334
+    }
+  },
+  "waveform_after_cache": {
+    "samples-1280x900": {
+      "baseline": 1.2274652166666669,
+      "candidate": 1.1986979733333334,
+      "pcm-on": 1.59450637
+    },
+    "samples-960x1080": {
+      "baseline": 1.35811304,
+      "candidate": 1.3188958666666668,
+      "pcm-on": 2.08310633
+    }
+  }
+}

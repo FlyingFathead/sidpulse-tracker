@@ -112,7 +112,7 @@ class Editor(BlockEditing):
             cell.effect, cell.parameter = self.last_cell.effect, self.last_cell.parameter
         if note >= 0 and "pulse_width" in self.edit_mask:
             cell.pulse_width = self.last_cell.pulse_width
-        for field in ENVELOPE_FIELDS:
+        for field in (*ENVELOPE_FIELDS, 'arp_mode', 'waveform'):
             if note >= 0 and field in self.edit_mask:
                 setattr(cell, field, getattr(self.last_cell, field))
         self.edit("Set note", [(self.cell_path(), cell)])
@@ -138,8 +138,21 @@ class Editor(BlockEditing):
     def enter_digit(self, char):
         field = FIELDS[self.column]
         cell = deepcopy(self.cell)
-        if field == "expression":
-            self.status = "EX is reserved: the SID has no independent per-voice volume register"
+        if field == 'waveform':
+            from sidpulse.song.model import WAVEFORM_KEYS, WAVEFORM_LABELS
+            value = WAVEFORM_KEYS.get(char.upper())
+            if value is not None:
+                cell.waveform = value
+                self.edit('Set row waveform ' + WAVEFORM_LABELS[value], [(self.cell_path(), cell)])
+                self.last_cell = deepcopy(cell)
+                self.advance()
+        elif field == 'arp_mode':
+            if len(char)==1 and char.upper() in '01R':
+                cell.arp_mode={'0':0,'1':1,'R':-1}[char.upper()]
+                label={0:'OFF',1:'ON',-1:'instrument setting'}[cell.arp_mode]
+                self.edit('Set row arpeggio '+label,[(self.cell_path(),cell)])
+                self.last_cell=deepcopy(cell)
+                self.advance()
         elif field == "pulse_width" and len(char) == 1 and char.upper() in "0123456789ABCDEFR":
             if char.upper() == 'R':
                 cell.pulse_width = -1

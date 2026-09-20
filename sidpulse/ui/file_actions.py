@@ -87,7 +87,7 @@ class FileActions:
             self.file_navigate(path)
         else:
             self.browser.set_name(path.name)
-            if self.file_mode == 'open':
+            if self.file_mode in ('open', 'sample'):
                 self.submit_file()
             else:
                 self.prompt_filename()
@@ -134,7 +134,11 @@ class FileActions:
             if b.mode == 'open':
                 self.open_project(target)
                 return
+            if b.mode == 'sample':
+                self.start_sample_import(target)
+                return
             mode, result = b.mode, b.export_result
+            loops = b.loop_count() if b.audio_export else 0
             if mode in ('sid', 'prg') and result is None:
                 raise ValueError('No compiled export is ready. Reopen Export from the File menu.')
 
@@ -142,6 +146,8 @@ class FileActions:
                 try:
                     if mode == 'save':
                         self.save_project(target)
+                    elif mode in ('wav', 'mp3'):
+                        self.start_audio_export(target, mode, loops)
                     else:
                         self._write_export(target, result, mode)
                 except (OSError, ValueError) as exc:

@@ -1,0 +1,18 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux x86_64",
+  "cpus": [
+    0,
+    1
+  ],
+  "dependencies": {
+    "pygame-ce": "2.5.7",
+    "numpy": "2.3.5",
+    "pyresidfp": "0.17.0"
+  },
+  "song_sha256": "6b541961113fa88729851d691b9d2db9ba296b1fbf22098daf4c356e798c5faf",
+  "drivers": "SDL dummy audio/video",
+  "scopes": true,
+  "baseline": "v0.2.34 full release ZIP",
+  "repetitions": 3
+}

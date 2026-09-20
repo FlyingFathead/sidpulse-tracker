@@ -39,6 +39,10 @@ def stamp_export(loader,version):
 
 
 def compile_prg(song, *, squeeze=None, progress=None, _comparison_cache=None):
+    if any(inst.sample_override for inst in song.instruments.values()):
+        from sidpulse.export.pcm import compile_pcm
+        return compile_pcm(song, kind='prg', progress=progress,
+                           squeeze=squeeze, _comparison_cache=_comparison_cache)
     result = compile_song(song, squeeze=squeeze, _prg=True, progress=progress, _comparison_cache=_comparison_cache)
     if progress is not None:
         progress("Preparing PRG...", "Adding the standalone C64 loader and title display.")

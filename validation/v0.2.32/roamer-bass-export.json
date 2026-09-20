@@ -1,0 +1,39 @@
+{
+  "input_sha256": "90b21bc0046e7b404490e8e00bd6a73a1cec008d39906d5e229d3cdfb0719835",
+  "prg_sha256": "d23fd1d237631310c055024263f4bf24bb32026bf0554b00e35bf4f3f16a19fd",
+  "bytes": 5654,
+  "seconds": 7.679999999999924,
+  "max_cycles_bound": 14714,
+  "report": {
+    "enabled": true,
+    "algorithm": "PCM-enhanced / v2.0.2 dictionary IDs",
+    "original_payload_bytes": 7062,
+    "payload_bytes": 5652,
+    "player_bytes": 4095,
+    "song_data_bytes": 1557,
+    "zero_page_bytes": 2,
+    "stack_bytes": 10,
+    "cleanup": {
+      "duplicate_patterns": 0,
+      "duplicate_instruments": 0,
+      "unused_patterns": 0,
+      "unused_instruments": 0,
+      "unused_samples": 0
+    },
+    "fallback_reason": "PCM NMI <= 109 CPU cycles; 246 cycles per sample. Music bound includes PCM and VIC reserve.",
+    "wrapper_bytes": 0,
+    "original_wrapper_bytes": 0,
+    "verified_calls": 385,
+    "verified_max_cycles": 6717,
+    "phrase_blocks": 10,
+    "repeated_blocks": 0,
+    "squeezer_version": 202,
+    "pcm_source_channel": 1
+  },
+  "warnings": [
+    "Experimental PCM-enhanced routine: CH1/2 SID + CH3 volume digi, PAL, ~4 kHz / 4-bit. CH3 returns to synthesis for ordinary notes. One tracker channel can contain PCM notes.",
+    "Channel mapping: tracker CH1 -> C64 CH3, tracker CH2 -> C64 CH1, tracker CH3 -> C64 CH2. The editable project is unchanged.",
+    "Volume digis modulate the other SID voices; 6581/8580 levels and distortion differ. Instruction timing is verified; physical C64 listening and VIC/CIA integration need hardware testing.",
+    "3 unique sample renders, 1,242 packed bytes. CIA1 timer A, CIA2 timer A/NMI, CH3, $F8/$F9 and RAM $0801..$CFFF are owned during replay."
+  ]
+}

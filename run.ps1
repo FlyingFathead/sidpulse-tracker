@@ -14,8 +14,10 @@ from pathlib import Path
 import sys
 try:
     requirements = [line.split("#", 1)[0].strip() for line in Path("requirements.txt").read_text().splitlines()]
-    pins = [line.split("==", 1) for line in requirements if line]
-    ready = all(len(pin) == 2 and version(pin[0]) == pin[1] for pin in pins)
+    pins = [line.split("==", 1) for line in requirements if line and not line.startswith("numpy")]
+    import numpy
+    numpy_version = tuple(map(int, version("numpy").split(".")[:2]))
+    ready = all(len(pin) == 2 and version(pin[0]) == pin[1] for pin in pins) and (1, 24) <= numpy_version < (3, 0)
 except (PackageNotFoundError, OSError):
     ready = False
 sys.exit(0 if ready else 1)

@@ -15,6 +15,7 @@ int main(int argc,char**argv) {
   cfg.sidEmulation=&builder;cfg.powerOnDelay=0;
   if(!player.config(cfg)){std::cerr<<player.error();return 1;}
   SidTune tune(argv[1]);if(!tune.getStatus()){std::cerr<<tune.statusString();return 1;}
+  tune.selectSong(0); // select the default subsong before reading RSID timing
   if(!player.load(&tune)){std::cerr<<player.error();return 1;}
   FILE*f=fopen(argv[2],"wb");if(!f){perror(argv[2]);return 1;}
   long remaining=long(atof(argv[3])*48000);short samples[4096];

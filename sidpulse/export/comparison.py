@@ -37,6 +37,7 @@ class Comparison:
 
 def compile_comparison(song, options, kind, *, progress=None):
     from .psid import compile_song, ExportMemoryError
+    from .pcm import PCMExportFitError
     from .prg import compile_prg
     if kind not in ('sid', 'prg'): raise ValueError('Comparison target must be SID or PRG')
     compiler = compile_prg if kind == 'prg' else compile_song
@@ -50,7 +51,7 @@ def compile_comparison(song, options, kind, *, progress=None):
             result = compiler(song, squeeze=replace(options, version=version),
                               progress=progress, _comparison_cache=cache)
             entries.append(VersionResult(version, result))
-        except ExportMemoryError as exc:
+        except (ExportMemoryError, PCMExportFitError) as exc:
             # One version may not fit where another does. Semantic failures
             # remain fatal; they are never presented as a successful comparison.
             entries.append(VersionResult(version, error=str(exc)))

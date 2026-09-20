@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sidpulse-tracker"
-version = "0.2.30"
+version = "0.2.35"
 description = "An homage to Impulse Tracker, reimagined as a modern SID-native tracker"
 requires-python = ">=3.10"
 authors = [{name = "Harry Horsperg (FlyingFathead)"}]
-dependencies = ["pygame-ce==2.5.7", "pyresidfp==0.17.0"]
+dependencies = ["pygame-ce==2.5.7", "pyresidfp==0.17.0", "numpy>=1.24,<3"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "py65==1.2.0"]

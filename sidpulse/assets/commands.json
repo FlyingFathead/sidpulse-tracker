@@ -3,6 +3,117 @@
   "source_reference": "schismtracker 84d2c46c1d3b5660edbc3eca259bf1219e59623e",
   "commands": [
     {
+      "id": "sample.delete_sample",
+      "command": "delete_sample",
+      "description": "Delete selected sample (undoable)",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "DELETE"
+      ],
+      "key_rules": [
+        {
+          "key": "K_DELETE",
+          "modifiers": []
+        }
+      ],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "PCM host playback and WAV/MP3 export."
+    },
+    {
+      "id": "sample.preview_sample",
+      "command": "preview_sample",
+      "description": "Preview the selected sample at its root pitch",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "SPACE"
+      ],
+      "key_rules": [
+        {
+          "key": "K_SPACE",
+          "modifiers": []
+        }
+      ],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "PCM host playback and WAV/MP3 export."
+    },
+    {
+      "id": "sample.import_sample",
+      "command": "import_sample",
+      "description": "Import or replace the selected PCM sample",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [
+        "RETURN"
+      ],
+      "key_rules": [
+        {
+          "key": "K_RETURN",
+          "modifiers": []
+        }
+      ],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "PCM host playback and WAV/MP3 export."
+    },
+    {
+      "id": "samples.assign",
+      "command": "assign_sample",
+      "description": "Assign selected PCM sample to an instrument (existing or new)",
+      "contexts": [
+        "samples"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
+      "id": "file.export_audio",
+      "command": "export_audio",
+      "description": "Export WAV/MP3 with save browser and 0..99 extra loops",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "key_rules": [],
+      "target": "App.execute",
+      "implemented": true,
+      "applicable": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
       "id": "ui.automation_display",
       "command": "automation_display_toggle",
       "description": "Switch between inline automation display 2 (default) and legacy window 1",
@@ -914,9 +1025,9 @@
       "shortcuts": [
         "Ctrl+F3"
       ],
-      "description": "Sample library",
-      "command": "future_samples",
-      "target": "future.samples",
+      "description": "Sample bank: PCM import, waveform trim and squeeze controls",
+      "command": "page",
+      "target": "App.change_page",
       "key_rules": [
         {
           "key": "K_F3",
@@ -926,13 +1037,14 @@
         }
       ],
       "applicable": true,
-      "implemented": false,
-      "keybind_in_use": false,
+      "implemented": true,
+      "keybind_in_use": true,
       "visible": true,
       "visible_in_help": true,
       "visible_in_menu": true,
-      "reason": "",
-      "feature": "Sample library"
+      "reason": "PCM import, waveform markers, sample assignment and squeezing.",
+      "feature": "Sample library",
+      "value": "samples"
     },
     {
       "id": "future.instruments",
@@ -1143,7 +1255,7 @@
       "shortcuts": [
         "Ctrl+Shift+E"
       ],
-      "description": "Export .sid (PSID); offer native project save",
+      "description": "Export SID-only PSID or PCM-enhanced RSID; offer native project save",
       "command": "export",
       "target": "App.begin_export",
       "key_rules": [
@@ -1162,7 +1274,7 @@
       "visible_in_help": true,
       "visible_in_menu": true,
       "reason": "",
-      "feature": "PSID export"
+      "feature": "SID / RSID export"
     },
     {
       "id": "future.prg",
@@ -1247,16 +1359,16 @@
       ],
       "shortcuts": [],
       "description": "PCM sample import",
-      "command": "future_pcm",
-      "target": "future.pcm",
+      "command": "import_sample",
+      "target": "App.import_sample_browser",
       "key_rules": [],
       "applicable": true,
-      "implemented": false,
+      "implemented": true,
       "keybind_in_use": false,
       "visible": true,
       "visible_in_help": true,
       "visible_in_menu": true,
-      "reason": "",
+      "reason": "F3 sample bank and shared audio file browser; PCM preview and WAV/MP3 export.",
       "feature": "PCM sample import"
     },
     {
@@ -1265,24 +1377,25 @@
         "global"
       ],
       "shortcuts": [],
-      "description": "Digi conversion",
-      "command": "future_digi",
-      "target": "future.digi",
+      "description": "Squeeze selected PCM sample",
+      "command": "sample_squeeze",
+      "target": "App.open_sample_squeeze",
       "key_rules": [],
       "applicable": true,
-      "implemented": false,
+      "implemented": true,
       "keybind_in_use": false,
       "visible": true,
       "visible_in_help": true,
       "visible_in_menu": true,
-      "reason": "",
+      "reason": "4/8/16-bit PCM; C64 export uses the experimental PCM-enhanced routine.",
       "feature": "Digi conversion"
     },
     {
       "id": "pattern.piano",
       "contexts": [
         "pattern",
-        "instrument"
+        "instrument",
+        "samples"
       ],
       "shortcuts": [
         "Z S X D C V G B H N J M",

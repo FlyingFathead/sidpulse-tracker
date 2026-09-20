@@ -1,0 +1,11 @@
+{
+  "source": "autumn-at-five-synthwave-mix_v9-pw-sweep.sidpulse",
+  "source_sha256": "6e986430e09f6b01121fd68a8530b53d75be2bf76e5331e1c4ace789c9364804",
+  "modification": "Set arp_mode=0 or 1 on CH1 every eighth row of every pattern; all other values unchanged.",
+  "input_sha256": {
+    "off": "273aeafccfb1212e1511944e9e13ee08874f827e3feff47ca3a081c68f09c758",
+    "on": "1a0bcb91dc12602a0db3aa6eb8d56aa5511dfad911bbcf34f79ae9c88d74a61a"
+  },
+  "version": "0.2.32",
+  "scope": "Toggle cost; ON/OFF intentionally change arpeggio sound. Separate from matched release baseline."
+}

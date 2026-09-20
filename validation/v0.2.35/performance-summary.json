@@ -1,0 +1,79 @@
+{
+  "audio-2048": {
+    "baseline": {
+      "cpu_ms_per_block": 6.47359862260128
+    },
+    "candidate-1": {
+      "cpu_ms_per_block": 6.46652422814499
+    }
+  },
+  "audio-512": {
+    "baseline": {
+      "cpu_ms_per_block": 1.7303857504
+    },
+    "candidate-1": {
+      "cpu_ms_per_block": 1.7178926576
+    }
+  },
+  "export-640": {
+    "baseline": {
+      "cpu_ms_per_frame": 3.7514348233333332
+    },
+    "candidate-1": {
+      "cpu_ms_per_frame": 3.7741530066666664
+    },
+    "candidate-2": {
+      "cpu_ms_per_frame": 3.8329387433333335
+    }
+  },
+  "export-1280": {
+    "baseline": {
+      "cpu_ms_per_frame": 5.41163065
+    },
+    "candidate-1": {
+      "cpu_ms_per_frame": 5.357015813333334
+    },
+    "candidate-2": {
+      "cpu_ms_per_frame": 5.537372293333334
+    }
+  },
+  "live-info-2048": {
+    "baseline": {
+      "ui_main_core_percent": 15.692062261677167,
+      "audio_process_core_percent": 19.8795212602596,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0
+    },
+    "candidate-1": {
+      "ui_main_core_percent": 15.77443023789179,
+      "audio_process_core_percent": 19.888751836856954,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 0
+    }
+  },
+  "live-export-512": {
+    "baseline": {
+      "ui_main_core_percent": 44.60923706837862,
+      "audio_process_core_percent": 22.98956906008055,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 14
+    },
+    "candidate-1": {
+      "ui_main_core_percent": 45.27093530783579,
+      "audio_process_core_percent": 23.09697429635118,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 3
+    },
+    "candidate-2": {
+      "ui_main_core_percent": 44.62489793106927,
+      "audio_process_core_percent": 23.076301512917812,
+      "gaps": 0,
+      "missing_frames": 0,
+      "late_callbacks": 17
+    }
+  }
+}

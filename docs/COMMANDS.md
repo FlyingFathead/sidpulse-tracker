@@ -10,6 +10,11 @@ The table inventories command groups and historical bindings. Some entries such 
 
 | ID | Context | Shortcut | Action / target | Applicable | Implemented | Binding active | Visible | Help | Menu |
 |---|---|---|---|---|---|---|---|---|---|
+| sample.delete_sample | samples | DELETE | Delete selected sample (undoable) → App.execute | true | true | true | true | true | false |
+| sample.preview_sample | samples | SPACE | Preview the selected sample at its root pitch → App.execute | true | true | true | true | true | false |
+| sample.import_sample | samples | RETURN | Import or replace the selected PCM sample → App.execute | true | true | true | true | true | false |
+| samples.assign | samples | (menu only) | Assign selected PCM sample to an instrument (existing or new) → App.execute | true | true | false | true | true | true |
+| file.export_audio | global | (menu only) | Export WAV/MP3 with save browser and 0..99 extra loops → App.execute | true | true | false | true | true | true |
 | ui.automation_display | global | (menu only) | Switch between inline automation display 2 (default) and legacy window 1 → App.execute | true | true | false | true | true | true |
 | instrument.disarm_automation | instrument | (menu only) | Disarm automation from the instrument list, keeping the current take → App.disarm_pulse_recording | true | true | false | true | true | false |
 | instrument.record_pw | pattern, instrument | Ctrl+Shift+R | Open inline channel automation recording (A/D/S/R/PW); one armed channel → App.open_automation_recording | true | true | true | true | true | true |
@@ -44,7 +49,7 @@ The table inventories command groups and historical bindings. Some entries such 
 | future.system | global | Ctrl+F1 | System configuration → future.system | true | false | false | true | true | true |
 | future.palette | global | Ctrl+F12 | Colour themes → settings.theme | true | true | true | true | true | true |
 | future.font | global | Shift+F12 | Font settings → settings.font | true | true | true | true | true | true |
-| future.samples | global | Ctrl+F3 | Sample library → future.samples | true | false | false | true | true | true |
+| future.samples | global | Ctrl+F3 | Sample bank: PCM import, waveform trim and squeeze controls → App.change_page | true | true | true | true | true | true |
 | future.instruments | global | Ctrl+F4 | Instrument library → future.instruments | true | false | false | true | true | true |
 | future.play_song | global | F5 / Ctrl+F5 | Song playback → App.start_playback | true | true | true | true | true | true |
 | future.play_pattern | global | F6 | Pattern playback → App.start_playback | true | true | true | true | true | true |
@@ -52,14 +57,14 @@ The table inventories command groups and historical bindings. Some entries such 
 | future.play_cursor | global | F7 | Playback from cursor → App.start_playback | true | true | true | true | true | true |
 | future.pause | global | Shift+F8 | Pause/resume → App.execute | true | true | true | true | true | true |
 | future.logging | global | Ctrl+F11 | Logging view → future.logging | true | false | false | true | true | true |
-| future.psid | global | Ctrl+Shift+E | Export .sid (PSID); offer native project save → App.begin_export | true | true | true | true | true | true |
+| future.psid | global | Ctrl+Shift+E | Export SID-only PSID or PCM-enhanced RSID; offer native project save → App.begin_export | true | true | true | true | true | true |
 | future.prg | global | (menu only) | Export runnable C64 .prg; offer native project save → App.begin_export | true | true | false | true | true | true |
 | future.remap | global | (menu only) | SID remapping → future.remap | true | false | false | true | true | true |
 | future.macros | global | (menu only) | Macro editor → F4 Motion / tables | true | true | false | true | true | true |
 | future.programs | global | (menu only) | Instrument programs → F4 Motion / tables | true | true | false | true | true | true |
-| future.pcm | global | (menu only) | PCM sample import → future.pcm | true | false | false | true | true | true |
-| future.digi | global | (menu only) | Digi conversion → future.digi | true | false | false | true | true | true |
-| pattern.piano | pattern, instrument | Z S X D C V G B H N J M / Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P | Physical piano rows; Caps Lock auditions only → Editor.enter_note / AudioEngine.send | true | true | true | true | true | true |
+| future.pcm | global | (menu only) | PCM sample import → App.import_sample_browser | true | true | false | true | true | true |
+| future.digi | global | (menu only) | Squeeze selected PCM sample → App.open_sample_squeeze | true | true | false | true | true | true |
+| pattern.piano | pattern, instrument, samples | Z S X D C V G B H N J M / Q 2 W 3 E R 5 T 6 Y 7 U I 9 O 0 P | Physical piano rows; Caps Lock auditions only → Editor.enter_note / AudioEngine.send | true | true | true | true | true | true |
 | pattern.cut | pattern | 1 | Note cut → Editor.enter_note | true | true | true | true | true | true |
 | pattern.off | pattern | Grave / non-US hash | Note off → Editor.enter_note | true | true | true | true | true | true |
 | pattern.clear | pattern | . | Clear current field → Editor.clear_field | true | true | true | true | true | true |

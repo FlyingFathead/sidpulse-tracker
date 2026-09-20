@@ -1,0 +1,34 @@
+[
+  {
+    "version": 1,
+    "bytes": 31448,
+    "algorithm": "PCM-enhanced / v1 phrase bank",
+    "music_cycles": 7672,
+    "total_bound": 16716,
+    "sha256": "70bb2bed77f4b13a9e1dd0766aa45c82070d8e145a38cb8a6ae4c9b1d5e43498"
+  },
+  {
+    "version": 2,
+    "bytes": 30468,
+    "algorithm": "PCM-enhanced / v2 overlapping phrase bank",
+    "music_cycles": 7672,
+    "total_bound": 16716,
+    "sha256": "4ad22ce556093967dcc236e221cec12a824de3c79c333b1358a134bcae726b30"
+  },
+  {
+    "version": 201,
+    "bytes": 26677,
+    "algorithm": "PCM-enhanced / v2.0.1 phrase calls",
+    "music_cycles": 8357,
+    "total_bound": 18153,
+    "sha256": "13a1a9bb81ba16809a39248b04a0bc57af605c4e1cc1a98e0c610f9ee8b8dcdc"
+  },
+  {
+    "version": 202,
+    "bytes": 24918,
+    "algorithm": "PCM-enhanced / v2.0.2 dictionary IDs",
+    "music_cycles": 8385,
+    "total_bound": 18211,
+    "sha256": "4d9b11a1ec6634e27e9fc62f6756a2a32a5d51b5627f8321ce49c7c1d1954cea"
+  }
+]

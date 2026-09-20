@@ -24,9 +24,9 @@ def test_effect_nibbles_and_octave_column():
     e.row, e.column = 0, 1
     e.enter_digit("5")
     assert e.pattern.rows[0][0].note == 61
-    e.row, e.column = 0, 6
-    e.enter_digit("H")
     e.row, e.column = 0, 7
+    e.enter_digit("H")
+    e.row, e.column = 0, 8
     e.enter_digit("A")
     e.enter_digit("9")
     assert e.pattern.rows[0][0].effect == "H"
