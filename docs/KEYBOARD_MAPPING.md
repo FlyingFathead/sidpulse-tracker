@@ -18,6 +18,7 @@ offers two profiles; it is not an arbitrary per-key rebinding editor.
 | Roll selected fields down/up, F2 | Ctrl+Shift+Insert / Ctrl+Shift+Delete | Ctrl+Insert / Ctrl+Delete |
 | Raise/lower octave, F3/F4 | + / - | Keypad * / keypad /, or Alt+End / Alt+Home |
 | Reset octave to 4, F3/F4 | 0 | Mouse 0 button |
+| Previous / next song order, F5 Info | − / +, including keypad | − / +, including keypad |
 | Mouse octave controls | +1 / 0 / -1 | +1 / 0 / -1 |
 
 Other established bindings remain, including Alt+C/O, insert/mix paste,
@@ -30,6 +31,22 @@ zero also accept keypad equivalents. Num Lock and Caps Lock do not change these
 shortcuts. Modern +/-/0 overrides apply only in Instruments and Samples. In F2,
 digits retain note/parameter-entry behavior and +/- still navigate patterns.
 Numeric/text dialogs receive normal text input in both profiles.
+
+## Playback order navigation
+
+While a song is playing, **− / +** on the Info page visits the previous/next
+entry in the song order list, starting at row zero. Repeated pattern numbers
+remain separate order entries. The header's triangle buttons do the same thing;
+a button is disabled at its respective end, while stopped/paused, or in pattern
+loop mode. Navigation does not wrap around the order list. F2 pattern navigation
+and F3/F4 octave keys keep their existing meanings.
+
+The audio worker resolves navigation at the next tracker tick using the existing
+sample clock and order transition. It retains tempo, instrument memory and voices;
+destination notes/effects take effect normally. The device is not reopened and
+the song is not restarted. Any active automation take finishes before the jump.
+Already queued audio plays first, so response includes the configured buffer
+latency. Playback navigation does not edit the song or get written into exports.
 
 ## Visible octave controls
 

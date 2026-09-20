@@ -31,6 +31,16 @@ class AnalysisUpdate:
 def compile_worker(connection, song, options, kind, *, compare=False):
     """Spawn entry point; the pipe is private to this one analysis job."""
     try:
+        # Like sample fitting, compilation is throughput work. Let playback
+        # and the UI win CPU contention without changing their clocks or PCM.
+        # Only adjust a spawned child, never an embedding caller's process.
+        if mp.parent_process() is not None:
+            import os
+            if hasattr(os, 'nice'):
+                try:
+                    os.nice(5)
+                except OSError:
+                    pass
         from sidpulse.export.psid import compile_song
         from sidpulse.export.prg import compile_prg
 

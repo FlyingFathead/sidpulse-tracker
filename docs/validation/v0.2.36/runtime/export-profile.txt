@@ -1,0 +1,31 @@
+Diagnostic profile before compiler priority adjustment. Profiling overhead
+means these timings are not used in the matched benchmark tables.
+
+         14738244 function calls (13514949 primitive calls) in 4.938 seconds
+
+   Ordered by: cumulative time
+   List reduced from 506 to 20 due to restriction <20>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    4.990    4.990 analysis_job.py:31(compile_worker)
+        1    0.000    0.000    4.982    4.982 comparison.py:38(compile_comparison)
+        1    0.000    0.000    4.979    4.979 prg.py:41(compile_prg)
+        1    0.000    0.000    4.979    4.979 psid.py:175(compile_song)
+        3    0.001    0.000    4.969    1.656 psid.py:166(_memo)
+        1    0.000    0.000    3.593    3.593 psid.py:195(record_checked)
+        2    0.084    0.042    3.593    1.796 psid.py:77(_record_song)
+40986/13826    0.113    0.000    2.950    0.000 sequencer.py:245(_boundary)
+    13824    0.124    0.000    2.252    0.000 restart.py:31(prepare_restarts)
+954589/19745    0.678    0.000    1.452    0.000 copy.py:118(deepcopy)
+45387/33325    0.080    0.000    1.396    0.000 copy.py:247(_reconstruct)
+69967/19745    0.195    0.000    1.223    0.000 copy.py:217(_deepcopy_dict)
+        1    0.000    0.000    1.127    1.127 psid.py:221(<lambda>)
+        1    0.000    0.000    1.127    1.127 squeeze.py:406(optimized_stream_candidates)
+4076/3571    0.002    0.000    1.114    0.000 {built-in method builtins.sorted}
+        4    0.012    0.003    1.105    0.276 squeeze.py:422(<genexpr>)
+        4    0.226    0.057    1.093    0.273 stream_packer.py:30(pack_streams)
+     6668    0.049    0.000    0.909    0.000 sequencer.py:159(_row_start)
+    20004    0.037    0.000    0.842    0.000 voices.py:108(row)
+   162061    0.618    0.000    0.770    0.000 stream_packer.py:46(best)
+
+

@@ -1,0 +1,80 @@
+[
+  {
+    "size": [
+      640,
+      480
+    ],
+    "mode": "open",
+    "entries": 116,
+    "visible_rows": 10,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  },
+  {
+    "size": [
+      640,
+      480
+    ],
+    "mode": "save",
+    "entries": 116,
+    "visible_rows": 10,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  },
+  {
+    "size": [
+      640,
+      480
+    ],
+    "mode": "wav",
+    "entries": 116,
+    "visible_rows": 7,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  },
+  {
+    "size": [
+      1280,
+      900
+    ],
+    "mode": "open",
+    "entries": 116,
+    "visible_rows": 16,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  },
+  {
+    "size": [
+      1280,
+      900
+    ],
+    "mode": "save",
+    "entries": 116,
+    "visible_rows": 16,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  },
+  {
+    "size": [
+      1280,
+      900
+    ],
+    "mode": "wav",
+    "entries": 116,
+    "visible_rows": 13,
+    "keyboard": true,
+    "wheel": true,
+    "double_click": true,
+    "short_directory": true
+  }
+]

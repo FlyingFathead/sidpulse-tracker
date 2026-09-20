@@ -45,7 +45,9 @@ def draw(r, app, top, bottom):
     if show_dates:
         r.text(date_x, y, 'Modified', c.CREAM, 16)
     b.visible_rows = max(1, int(height - 1))
-    start = max(0, b.index - b.visible_rows + 1)
+    # Follow the selection through the middle, clamping at either end of the
+    # directory just like the instrument/sample banks, without blank padding.
+    start = max(0, min(len(b.entries) - b.visible_rows, b.index - b.visible_rows // 2))
     start = r.scroll_start('files',start,(str(b.directory),b.index),len(b.entries),b.visible_rows)
     for i, path in enumerate(b.entries[start:start + b.visible_rows], start):
         row = y + 1 + i - start

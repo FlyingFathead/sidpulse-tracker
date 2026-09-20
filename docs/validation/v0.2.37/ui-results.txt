@@ -1,0 +1,4 @@
+(480, 360) transport states and preset categories OK
+(640, 480) transport states and preset categories OK
+(960, 540) transport states and preset categories OK
+(1280, 900) transport states and preset categories OK

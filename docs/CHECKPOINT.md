@@ -1,3 +1,25 @@
+# SIDpulse Tracker v0.2.37 checkpoint
+
+Playback order navigation, centered file browsing and exact frozen drum presets
+are implemented. Windows FFmpeg installation/preflight is included; the actual
+Windows runner still requires a new Actions run. Sequencer navigation preserves
+the sample clock and existing voice programs. See [release notes](RELEASE_NOTES-v0.2.37.md),
+[validation](VALIDATION-v0.2.37.md) and [performance](PERFORMANCE-v0.2.37.md).
+
+# SIDpulse Tracker v0.2.36 checkpoint
+
+Source-driven drum fitting now distinguishes short attacks, bass pitch decay
+and noise content, using settled reSIDfp candidate renders. The reference kick
+and snare and native save-label change are validated. Host idle scheduling,
+redraws and metering are optimized; the sequencer and export algorithms, all
+SQUEEZER versions and both DIGI methods remain intact. Spawned compilers request
+lower POSIX priority. Runtime checks cover 2048 default / 512 stress buffers;
+512-sample export stress still has measured underruns and is not certified
+gap-free. See the raw results and limits in the performance report.
+See [release notes](RELEASE_NOTES-v0.2.36.md),
+[validation and performance](VALIDATION-v0.2.36.md), and
+[synthesis details](SAMPLE_SYNTHESIS.md).
+
 # SIDpulse Tracker v0.2.35 checkpoint
 
 Restored packed volume DIGI as method #1 and the export default. The display

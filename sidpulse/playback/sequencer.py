@@ -53,6 +53,7 @@ class Sequencer:
         self.warning = ''
         self.next_tick = Fraction(0)
         self.jump_order = self.break_row = None
+        self.order_skip_target = None
         self.pulse_recording = None
 
     def record_pulse(self, token, voice, value, field='pulse_width'):
@@ -106,6 +107,7 @@ class Sequencer:
         self.tick = self.frames = self.loops = 0
         self.next_tick = Fraction(0)
         self.jump_order = self.break_row = None
+        self.order_skip_target = None
         self.notes = [None] * 3
         self.instruments = [min(song.instruments, default=1)] * 3
         self.warning = ''
@@ -129,6 +131,29 @@ class Sequencer:
 
     def update_song(self, song):
         self.pending_song = song
+
+    def skip_order(self, direction):
+        """Visit the adjacent order at the next tick, retaining the sample clock.
+
+        Resolve repeated key presses here against the pending destination,
+        rather than the UI's asynchronously published playback position.
+        """
+        if self.status != 'playing' or self.mode != 'song' or direction not in (-1, 1):
+            return False
+        self._apply_update()
+        origin = self.order if self.order_skip_target is None else self.order_skip_target
+        target = max(0, min(len(self.song.orders) - 1, origin + direction))
+        if target == origin:
+            return False
+        self.finish_pulse_recording(reason='Playback order skipped')
+        if self.frames == 0:
+            self.order, self.pattern = target, self.song.orders[target]
+            self.row = self.tick = 0
+        else:
+            self.order_skip_target = self.jump_order = target
+            self.break_row = 0
+            self.tick = self.speed - 1
+        return True
 
     def _apply_update(self):
         if self.pending_song is None:
@@ -158,6 +183,7 @@ class Sequencer:
 
     def _row_start(self):
         self._apply_update()
+        self.order_skip_target = None
         # Envelope recording must reach the row before its note is triggered.
         # Preserve the established PW path after row processing.
         envelope_take = (not self._predicting and self.pulse_recording

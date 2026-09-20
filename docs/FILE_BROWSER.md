@@ -1,4 +1,4 @@
-# Shared file browser — v0.2.16
+# Shared file browser
 
 Load, Save / Save As, Export SID and Export PRG use the same directory-list page.
 There is no separate filename popup hiding the list. Native projects and the
@@ -9,7 +9,7 @@ shown, along with the existing optional modified-date column.
 
 **F9** opens Load. **F10** opens Save, including for an already named project.
 **Shift+F10 / Ctrl+Shift+S** opens the same Save As browser. The File menu's Save
-and Save As commands behave the same way. Nothing is written just by opening it.
+and **Save as .sidpulse...** commands behave the same way. Nothing is written just by opening it.
 
 The current project's latest successfully opened/saved filename is prefilled.
 A named project starts the browser in that project's directory, not in an old
@@ -50,6 +50,12 @@ never a hidden old filename. Shift+F10 moves focus back to the name.
 | Edit destination folder | Ctrl+L focuses/selects the directory field; Enter navigates |
 | Finish/cancel | Enter in Filename or action button; Escape or Cancel abandons operation |
 
+Keyboard and wheel navigation keep the selected row centered through the middle
+of the listing. Near the start/end, the list clamps to its first/last entry so
+there is no empty padding. Scrollbar dragging remains manual. A mouse selection
+stays under the pointer for double-clicking; the next keyboard/wheel movement
+resumes centered following.
+
 Click inside a text field to position the caret. Single-clicking a file selects
 its name; double-click or Enter opens it in Load mode. In Save/Export mode an
 explicit file choice places its name in the editable field, not an immediate
@@ -78,7 +84,7 @@ new native name chosen in Save + export becomes the proposed export basename.
 
 Exports do not replace the native project's path, mark unsaved edits as saved,
 or remove comments/instruments. Unsupported/oversized exports still fail with
-the existing explanation. This release does not add WAV/MP3 export.
+the existing explanation. WAV/MP3 export has its own format selector and does not save an editable project.
 
 An existing destination always asks before a browser-initiated overwrite,
 including the current native file. Cancel is the default. The existing atomic

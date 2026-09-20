@@ -1,0 +1,114 @@
+{
+  "kick": {
+    "fitting_seconds": 12.776,
+    "details": {
+      "version": 2,
+      "source_name": "sidpulse_sample_synthwave_kick.wav",
+      "source_sha256": "b847d657f8d8869aab4acd834a3a79d78b9e3156cf381586da0b750aae112d9b",
+      "root_note": 48,
+      "tempo": 125,
+      "model": "8580",
+      "clock": "PAL",
+      "kind": "tonal",
+      "candidates": 247,
+      "score": 0.0814000810870301,
+      "seconds": 0.2794583333333333,
+      "analysis": "multiresolution spectrum, transient envelope, least-squares pitch decay",
+      "pitch_decay": [
+        53.0174885705214,
+        316.1903218139435,
+        0.007296164014805421
+      ],
+      "percussive": true,
+      "impact_fit": true,
+      "onset_compensation_ms": 10.0,
+      "sample_slot": 1
+    },
+    "renders": {
+      "before": {
+        "first_20ms_rms": 321.37,
+        "peak_5ms_rms": 4326.26,
+        "peak_time_ms": 57.5,
+        "raw_peak": 4087
+      },
+      "after": {
+        "first_20ms_rms": 3056.03,
+        "peak_5ms_rms": 3775.08,
+        "peak_time_ms": 7.5,
+        "raw_peak": 3937
+      }
+    },
+    "mp3_sha256": "d76c3eb7c6ac355e38a9040646f597e75775a2aa31040c1c56d840f11ef0f1b5"
+  },
+  "snare": {
+    "fitting_seconds": 16.422,
+    "details": {
+      "version": 2,
+      "source_name": "sidpulse_sample_synthwave_snare.wav",
+      "source_sha256": "3c272de02c057a52ebb58521e95e66c141a022dabdb51afd3c6b1d5a70f9f44a",
+      "root_note": 48,
+      "tempo": 125,
+      "model": "8580",
+      "clock": "PAL",
+      "kind": "mixed",
+      "candidates": 274,
+      "score": 0.07935483867067097,
+      "seconds": 0.546375,
+      "analysis": "multiresolution spectrum, transient envelope, least-squares pitch decay",
+      "pitch_decay": [
+        93.98983724515841,
+        142.0900019308995,
+        0.017621868274958728
+      ],
+      "percussive": true,
+      "impact_fit": true,
+      "onset_compensation_ms": 10.0,
+      "sample_slot": 2
+    },
+    "renders": {
+      "before": {
+        "first_20ms_rms": 2391.54,
+        "peak_5ms_rms": 3540.19,
+        "peak_time_ms": 17.5,
+        "raw_peak": 3907
+      },
+      "after": {
+        "first_20ms_rms": 2905.75,
+        "peak_5ms_rms": 3524.78,
+        "peak_time_ms": 5.0,
+        "raw_peak": 3972
+      }
+    },
+    "mp3_sha256": "348966014e79a0446bea8d8d6d01f5cb0e2bf65b26b8a6435c1b89dae31c590f"
+  },
+  "exports": {
+    "1": {
+      "sid_bytes": 716,
+      "prg_bytes": 1029,
+      "ticks": 193,
+      "sid_sha256": "f7a4389422d180b0b2b4d80b323be9b1e60add2f27f0ade66dbdaf785452b82a",
+      "prg_sha256": "cb217ffe9e7c2aaa4e78b368ebf66617b28fa70a318f9b35b0a96b766e45ab95"
+    },
+    "2": {
+      "sid_bytes": 716,
+      "prg_bytes": 1029,
+      "ticks": 193,
+      "sid_sha256": "f7a4389422d180b0b2b4d80b323be9b1e60add2f27f0ade66dbdaf785452b82a",
+      "prg_sha256": "e386964736cb26dad3b9cb36d29fcef2ecb3186b650458a83e3751289a40173f"
+    },
+    "201": {
+      "sid_bytes": 716,
+      "prg_bytes": 1029,
+      "ticks": 193,
+      "sid_sha256": "f7a4389422d180b0b2b4d80b323be9b1e60add2f27f0ade66dbdaf785452b82a",
+      "prg_sha256": "45d4919b3bd47903b4e9a1f605567b611e02bdb8933a4982a9ae701e8727f1ac"
+    },
+    "202": {
+      "sid_bytes": 716,
+      "prg_bytes": 1029,
+      "ticks": 193,
+      "sid_sha256": "f7a4389422d180b0b2b4d80b323be9b1e60add2f27f0ade66dbdaf785452b82a",
+      "prg_sha256": "2bf0b8fef829d036da941114c2f66a9392ac0b5553d0906afe728c34fb8f8e91"
+    }
+  }
+}

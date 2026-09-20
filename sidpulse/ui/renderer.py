@@ -293,7 +293,11 @@ class Renderer:
             self.meter(audio, self.cols - 22, 5, 20, 2.5)
             status = (f"{playback.status.title()} {playback.mode}  Order {playback.order:03d}  Pattern {playback.pattern:02X}  Row {playback.row:03d}  Tick {playback.tick:02d}"
                       if playback.status != "stopped" else ("Keyboard jazz" if audio.active else "Stopped"))
-            self.text(2, 8, status, TEXT, self.cols - 27)
+            self.order_skip_buttons(app, 2, 7.9)
+            if playback.status != 'stopped' and len(status) > self.cols - 34:
+                status = (f'{playback.status.title()} {playback.mode}  O{playback.order:03d} '
+                          f'P{playback.pattern:02X} R{playback.row:03d} T{playback.tick:02d}')
+            self.text(9, 8, status, TEXT, self.cols - 34)
             self.text(self.cols - 23, 8, f"Time {playback.frames / 48000:7.2f}s", DIM)
             top = 12
         else:
@@ -302,6 +306,7 @@ class Renderer:
             self.text(1, 3, f"P{ed.pattern_id:02X} R{ed.row:03d} I{ed.instrument:02d} O{ed.octave}", TEXT, self.cols - 14)
             self.hit(10, 3, 3, 1, 'header_instrument', ed.instrument)
             self.octave_controls(app, 1, 4.3)
+            self.order_skip_buttons(app, self.cols - 9, 4.3)
             self.meter(audio, max(1, self.cols - 13), 2, 12, 2)
             top = 8
         self.footer_rows = 4 if app.helper_strip else 2
@@ -928,8 +933,25 @@ class Renderer:
         self.control_toggle(control_x,top,bottom-3)
         if bottom > top + 4:
             self.horizontal_rule(bottom - 2.25)
-            self.text(2, bottom - 2, state.warning or "F2: edit while playing | F8: stop | Shift+F8: pause/resume", TEXT)
+            self.text(2, bottom - 2, state.warning or "-/+: previous/next order | F2: edit | F8: stop | Shift+F8: pause", TEXT)
             self.text(2, bottom - 1, f"Audio gaps {app.audio.underruns} | late wakes {app.audio.late_wakes} | render peak {app.audio.peak_render_load:.0%} | over budget {app.audio.over_budget}", DIM)
+
+    def order_skip_buttons(self, app, x, y):
+        from sidpulse.ui.pressable import pressed
+        state = app.audio.playback
+        playing = state.status == 'playing' and state.mode == 'song'
+        for i, direction in enumerate((-1, 1)):
+            available = playing and 0 <= state.order + direction < len(app.editor.song.orders)
+            rect = button(self, x + i * 3, y, 2.5, '', 'skip_order', direction,
+                          selected=available and pressed(app, 'skip_order', direction))
+            if not available:
+                self.hits.pop()  # disabled controls have no click target
+            dx, dy = max(2, rect.width // 6), max(3, rect.height // 4)
+            cx, cy = rect.center
+            pg.draw.polygon(self.screen, TEXT if available else EDGE,
+                            [(cx + direction * dx, cy),
+                             (cx - direction * dx, cy - dy),
+                             (cx - direction * dx, cy + dy)])
 
     @staticmethod
     def filter_row_text(control):
@@ -1223,8 +1245,11 @@ class Renderer:
             button(self,x+19,y+5,16,'User presets','chooser_source','user',d['source']=='user')
             categories=list(dict.fromkeys(category for category,_ in d['presets']))
             current=d['presets'][d['preset_index']][0] if d['presets'] else None
+            category_step = min(1.5, (h - 10) / max(1, len(categories)))
             for i,category in enumerate(categories):
-                button(self,x+2,y+7+i*1.5,18,category,'preset_category',category,current==category)
+                caption = 'Wavetable drums' if category == '[Wavetable] Drums & Percussion' else category
+                button(self,x+2,y+7+i*category_step,18,caption,'preset_category',category,current==category,
+                       height=min(1.25, category_step))
             listing=[];previous=None
             for i,(category,inst) in enumerate(d['presets']):
                 if category!=previous:listing.append((None,category));previous=category

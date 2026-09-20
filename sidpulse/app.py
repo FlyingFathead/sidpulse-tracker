@@ -1087,6 +1087,11 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
             self.toggle_instrument_monitor(name, value)
         elif name == "play":
             self.start_playback(value)
+        elif name == 'skip_order':
+            state = self.audio.playback
+            if state.status == 'playing' and state.mode == 'song':
+                self.audio.send('skip_order', value)
+                ed.status = ('Next' if value > 0 else 'Previous') + ' song order | F8 stop'
         elif name == "pause":
             self.audio.send("pause")
         elif name == "playback_mark":
@@ -1519,7 +1524,7 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
                     elif action == "paste_special":
                         from sidpulse.ui.pressable import begin
                         begin(self, rect, Command('paste_special'), event.pos)
-                    elif action in ('octave','octave_reset','instrument_mute','instrument_solo','reset_automation','pulse_record_arm','pulse_record_disarm','pattern_arpeggio','pattern_select_all'):
+                    elif action in ('octave','octave_reset','instrument_mute','instrument_solo','reset_automation','pulse_record_arm','pulse_record_disarm','pattern_arpeggio','pattern_select_all','skip_order'):
                         from sidpulse.ui.pressable import begin
                         begin(self, rect, Command(action, value), event.pos)
                     elif action == 'bank_monitor_disabled':
@@ -1578,17 +1583,29 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
         self.start_services()
         clock = pg.time.Clock()
         count = 0
+        last_draw = 0
         while self.running and (frames is None or count < frames):
             if self.diagnostics: self.diagnostics.heartbeat(self)
-            for event in pg.event.get():
+            events = pg.event.get()
+            for event in events:
                 self.handle(event)
             self.sync_audio()
             self.update_pattern_selection(scroll=True)
             # Snapshot only when due; file serialization/fsync run off the UI thread.
             self.autosave.tick(self.editor, self.metadata, self.path)
             if self.autosave.warning and self.dialog is None:self.show_autosave_warning()
-            self.renderer.render(self)
-            pg.display.flip()
+            now = pg.time.get_ticks()
+            # Poll input/services at full rate; redraw a settled, unchanged
+            # window only five times a second (caret/status refresh). Events
+            # and active work retain immediate 60 Hz drawing.
+            dynamic = (not self.audio.idle or self.audio.test_active or
+                       self.media_jobs or self.export_jobs or self.button_press or
+                       self.pattern_drag or self.instrument_drag or self.sample_drag or
+                       (self.button_flash and time.monotonic() < self.button_flash[2]))
+            if events or dynamic or not count or now - last_draw >= 200:
+                self.renderer.render(self)
+                pg.display.flip()
+                last_draw = now
             self.poll_export_analysis()
             if self.media_jobs:self.poll_media_jobs()
             if self.audio.error:

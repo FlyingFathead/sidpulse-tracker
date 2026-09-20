@@ -36,7 +36,7 @@ MENUS = {
     "File Menu": [Item("New project", "new"),
                   Item("Clear all pattern data", "clear_patterns"),
                   Item("Clear all instruments", "clear_instruments"), Item("Load .sidpulse           F9", "open"),
-                  Item("Save .sidpulse          F10", "save"), Item("Save as...       Shift+F10", "save_as"),
+                  Item("Save .sidpulse          F10", "save"), Item("Save as .sidpulse...  Shift+F10", "save_as"),
                   Item("Export SID / RSID... Ctrl+Shift+E", "export"),
                   Item("Export PRG...", "export_prg"),
                   Item("Export WAV / MP3...", "export_audio"),

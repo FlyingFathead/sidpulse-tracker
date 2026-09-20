@@ -27,6 +27,16 @@ synthesis priority. The original roadmap and historical updates follow.
   and UI CPU separately, plus real-time gaps and late callbacks. Measure new
   toggles enabled and disabled; keep scopes enabled. Run no other heavy work
   alongside timed trials, and profile a material regression before optimizing.
+- Treat performance as a release requirement across the whole application,
+  not just idle. Keep **2048 samples as the default** and **512 as the stress
+  setting**. Include stopped/paused, SID and PCM playback, keyboard/sample
+  audition, editing/automation recording, fitting and background export.
+  Preserve scopes, sound quality and input responsiveness during comparison.
+  Use `scripts/benchmark_runtime.py`; repeat a material regression and profile
+  its actual hotspot before accepting a change. Reducing feature quality or
+  hiding underrun counters is not a performance fix. High CPU in a finite
+  export/fitting job is expected; prioritize uninterrupted foreground playback
+  over making the background job appear idle.
 - Record environment, inputs, raw measurements and limits. Preserve the input
   projects. Verify rendering, input, undo, save and playback semantics.
 - Deliver full and incremental ZIPs with SHA-256 checksums under the common

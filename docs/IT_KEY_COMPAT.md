@@ -34,7 +34,8 @@ Historical reference: [Impulse Tracker source](https://github.com/jthlim/impulse
 | Home / End | Field edge, then voice edge, then pattern edge |
 | PgUp/Down; Ctrl+PgUp/Down | 16 rows / pattern start and end |
 | Ctrl+Home/End | One row backward / forward |
-| +/-; Shift+keypad +/-; Ctrl +/- | One pattern / four patterns / order's pattern |
+| +/-; Shift+keypad +/-; Ctrl +/- | In F2: one pattern / four patterns / order's pattern |
+| -/+ on Info | Previous/next song order during song playback (keypad also works) |
 | Alt+0..9 | Row skip, including zero for stationary note entry |
 | Insert/Delete | Insert/delete current voice's row |
 | Alt+Insert/Delete | Insert/delete all three voices' row |

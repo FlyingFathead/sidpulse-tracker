@@ -17,6 +17,17 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e ".[dev]"
+      - name: Install FFmpeg for Windows media tests
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          choco install ffmpeg --yes --no-progress
+          if ($LASTEXITCODE -ne 0) {
+            throw "FFmpeg installation failed with exit code $LASTEXITCODE"
+          }
+          $ffmpeg = (Get-Command ffmpeg.exe -CommandType Application -ErrorAction Stop).Source
+          "SIDPULSE_FFMPEG=$ffmpeg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Rebuild and compare C64 replay images
         if: runner.os == 'Linux'
         run: |
@@ -24,6 +35,14 @@ jobs:
           sudo apt-get install -y 64tass ffmpeg
           python scripts/build_squeeze_players.py --check
           python scripts/build_pcm_player.py --check
+      - name: Verify FFmpeg before running tests
+        shell: python
+        run: |
+          import subprocess
+          from sidpulse.audio.media import ffmpeg_path
+          executable = ffmpeg_path()
+          print('FFmpeg:', executable, flush=True)
+          subprocess.run([executable, '-version'], check=True)
       - run: python -m pytest -q
       - run: python -m sidpulse --headless-smoke --example
       - run: python -m sidpulse --headless-smoke --play-welcome-song

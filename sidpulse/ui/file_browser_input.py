@@ -27,6 +27,13 @@ def handle_event(app, event):
                 continue
             if action == 'file':
                 b.index, b.focus = value, 'list'
+                # Keep a clicked row under the pointer for the second click.
+                # Keyboard/wheel movement resumes centered following.
+                view = app.renderer.scrollbars.states.get('files')
+                if view is not None:
+                    app.renderer.scroll_start('files', view['scroll'],
+                                              (str(b.directory), b.index),
+                                              len(b.entries), b.visible_rows)
                 if b.selected is not None and not b.selected.is_dir():
                     b.set_name(b.selected.name)
                 if getattr(event, 'clicks', 1) >= 2:

@@ -1,4 +1,4 @@
-"""Factory presets. Every call returns independent editable SID instruments."""
+"""Factory presets. Every call returns independent SID instruments."""
 from sidpulse.song.model import Instrument
 
 
@@ -66,6 +66,12 @@ def available_presets():
         ('Fifths',Instrument('Stacked triangle fifths',0x10,1,6,10,5,arpeggio=[0,7,12,19],arp_speed=2)),
         ('Fifths',Instrument('Driving saw fifth',0x20,0,5,9,3,arpeggio=[0,7,0,12],arp_speed=1,gate_ticks=16)),
     ])
+    import json
+    from pathlib import Path
+    from sidpulse.project.format import _construct
+    source = Path(__file__).resolve().parents[1] / 'assets' / 'wavetable_drums.json'
+    result.extend(('[Wavetable] Drums & Percussion', _construct(Instrument, raw))
+                  for raw in json.loads(source.read_text(encoding='utf-8')))
     return result
 
 
@@ -103,7 +109,7 @@ def save_user_preset(inst):
     return path
 
 
-CATEGORIES=('Melodic','Percussive','Bass','Leads','Major arps','Minor arps','Fifths','Noise','FX')
+CATEGORIES=('Melodic','Percussive','[Wavetable] Drums & Percussion','Bass','Leads','Major arps','Minor arps','Fifths','Noise','FX')
 
 
 def built_in_catalog():

@@ -38,6 +38,12 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command("mute" if key == pg.K_F9 else "solo")
     if page == "info" and not (alt or ctrl or shift) and key in (pg.K_q, pg.K_s):
         return Command("mute" if key == pg.K_q else "solo")
+    if page == 'info' and not (alt or ctrl):
+        text = getattr(event, 'unicode', '')
+        if key in (pg.K_PLUS, pg.K_KP_PLUS) or (key == pg.K_EQUALS and shift) or text == '+':
+            return Command('skip_order', 1)
+        if key == pg.K_KP_MINUS or (key == pg.K_MINUS and not shift) or text == '-':
+            return Command('skip_order', -1)
     if page == "pattern" and ctrl and shift and not alt and key == pg.K_v:
         return Command("paste_special")
     if ctrl and shift and key==pg.K_e:

@@ -28,6 +28,12 @@ with pulse width and envelope shaping. It is not a claim that a SID voice can
 faithfully reconstruct every sampled sound. Fit quality, especially drum
 transients and noise texture, remains the main area to improve.
 
+The frozen reference fits are also built-in F4 presets under
+**[Wavetable] Drums & Percussion** (sidebar: **Wavetable drums**). They are the
+exact recipes from `examples/synthesized-reference-drums.sidpulse`, requiring
+no sample bank or new fitting pass. Audition C-4 at tempo 125, PAL/8580 for the
+reference sound; Unfreeze makes their normal instrument controls editable.
+
 Use the unchanged [reference kick and snare](../examples/samples/README.md)
 for comparisons. Keep source audio, fitted audio and the settings together;
 judge the sound in the complete arrangement as well as solo. A low fitting
@@ -51,32 +57,49 @@ Freeze is an editor safeguard available to any instrument. Pattern automation
 can still shape playback, and unfreezing does not detach or corrupt a hidden
 sample engine. The generated instrument is self-contained.
 
-## What the prototype does
+## How the fitter works (v0.2.36)
 
-The worker decodes only the selected range and fits at most two seconds of
-mono audio. Fourier resampling supports analysis at 12 kHz without a new library.
-Windowed autocorrelation proposes pitch contours. Logarithmic spectral bands
-and an RMS envelope describe the target. The search renders candidates through
-the existing reSIDfp backend using the project's SID model, clock and tempo.
+The worker fits the selected range, up to two seconds, at 12 kHz. It measures
+an attack envelope in 5 ms windows every 2.5 ms and spectra at three resolutions.
+Long windows resolve the bass body; short windows locate the transient. Local
+pitch measurements seed a falling-pitch model `f(t) = b + a * exp(-t / tau)`.
+For each candidate decay time, weighted least squares solves the floor and sweep.
+Measured local pitches and autocorrelation supply alternative trajectories.
 
-It first tries tonal waveforms, pulse widths, pitch contours and noise, then
-adjusts ADSR, gate duration and tuning. A bounded pass tries different waveforms
-in successive regions, resolving the first eight ticks separately. Candidate
-noise regions also test a noise-appropriate frequency. The resulting waveform
-and pitch tables fit the existing 64-step instrument fields. Identical trailing
-steps are reduced because the engine already holds the last value.
+Percussive ranges may have up to 30 ms of quiet lead-in removed for fitting;
+the original markers and samples are untouched, and the amount is recorded.
+Fast-attack candidates combine tonal bodies and independently pitched noise.
+The loss compares spectrum, envelope, attack slope and high-frequency energy
+fraction, so a strong bass body cannot hide a missing snare noise burst. Drum
+attacks also compete against an absolute output-energy target calibrated with
+an ordinary fast SID pulse on the selected chip model. This is a synthesis
+constraint, not output normalization, compression or an added audio layer.
 
-All candidate audio, analysis and comparisons run in a cancellable media worker.
-No analysis runs per note or audio callback. Playback uses the existing native
-instrument programs and ordinary SID-only export when no PCM overrides remain.
-Freeze and provenance metadata do not enter synthesis or the C64 replay loop.
+Up to 320 candidates are rendered through reSIDfp with the project's model,
+clock and tempo. Each fresh chip settles for one second before note-on. The
+old 50 ms warm-up left a substantial external-filter startup decay in the
+measurement; the fitter could mistake that decay for the source's drum body.
+Subsonic bias is excluded from analysis only, with the same response applied
+to source and candidates. Actual playback and exported audio are not filtered
+by this analysis operation.
+
+The search refines ADSR, pulse width, pitch, gate and waveform stages, resolving
+the first eight ticks individually. It refits the envelope after stage changes.
+The frozen result uses existing waveform/pitch tables, each at most 64 steps,
+and normal gate/release handling. At tempo 125 a step lasts 20 ms. No new
+playback engine, register macros, audio effects or runtime dependencies are used.
+All analysis stays in the cancellable worker. The source sample remains intact.
+
+For the reference comparison, use the original 48 kHz WAVs with auto-squeeze
+on import disabled, or restore the retained original before fitting. The saved
+4 kHz / 4-bit auto-squeeze default remains available; fitting a squeezed source
+necessarily starts with its reduced bandwidth and quantization noise.
 
 ## Limits and observations
 
 A single SID voice cannot reproduce an arbitrary recording. A layered snare,
-room response, speech or chord may only yield a related timbre. The first
-prototype normalizes its comparison features, so the score describes relative
-shape and spectrum, not a promise of matched loudness. There is no perceptual
+room response, speech or chord may only yield a related timbre. Most comparison features are normalized; the separate attack-energy constraint
+penalizes weak drum onsets, but does not promise source-matched loudness. There is no perceptual
 "percent identical" claim. Always audition the result in the arrangement.
 
 Low, decaying kicks need care: a short analysis window weakens autocorrelation,

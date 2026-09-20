@@ -1,4 +1,4 @@
-# Instruments in 0.2.5
+# Instruments
 
 F4 keeps a bank of 99 numbered SID instrument slots. Empty slots are grey and
 scrollable with Up/Down or the wheel over the bank. Enter on an empty slot opens
@@ -11,9 +11,18 @@ instrument. Add instrument opens the chooser for an empty slot.
 Enter on an occupied slot, or Choose from presets, opens the catalog. Adding a
 preset creates an independent instrument in the selected empty slot or the first
 free slot; it never silently replaces an existing sound. The built-in list has
-39 sounds, separated into Melodic, Percussive, Bass, Leads, Major arps, Minor arps,
-Fifths, Noise and FX. Category buttons jump within one continuous list. Up/Down/Page keys
+41 sounds, separated into Melodic, Percussive, [Wavetable] Drums & Percussion,
+Bass, Leads, Major arps, Minor arps, Fifths, Noise and FX. Category buttons jump within one continuous list. Up/Down/Page keys
 browse sounds; F8 stops song playback so note keys can audition the selection.
+
+**[Wavetable] Drums & Percussion** contains **Reference kick / SID fit** and
+**Reference snare / SID fit**. Its sidebar button is labeled **Wavetable drums**.
+These are the exact fitted instruments in
+`examples/synthesized-reference-drums.sidpulse`, used for the v0.2.36 MP3 demos.
+Audition C-4 at tempo 125 with PAL/8580 for the reference sound. Other pitches,
+tempos and chip models alter the result normally. Each is a standalone SID
+instrument with waveform/pitch tables and its synthesis provenance. No sample
+bank or fitting pass is needed. They start frozen; use **Unfreeze** to edit.
 
 Presets and Manual parameters are raised tabs. Left/Right switches them when
 browsing; Tab cycles fields, source/category choices, and Add/Cancel buttons.

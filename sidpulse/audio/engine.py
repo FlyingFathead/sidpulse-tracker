@@ -4,8 +4,7 @@ A sample-clocked sequencer and audition share one native SID register
 interface. An SDL callback transports finished PCM; it never synthesizes the SID.
 """
 from copy import deepcopy
-from array import array
-import math
+import numpy as np
 from queue import Empty, SimpleQueue
 from threading import Event, Thread
 from sidpulse.preferences import DEFAULT_BUFFER
@@ -52,6 +51,8 @@ class AudioEngine:
             raise ValueError("Unsupported audio buffer size")
         self.commands = SimpleQueue()
         self.stop_event = Event()
+        self.wake_event = Event()
+        self.idle = not enabled
         self.thread = None
         self.error = None
         self.active = ()
@@ -85,6 +86,7 @@ class AudioEngine:
     def send(self, name, *values):
         if self.thread and not self.stop_event.is_set():
             self.commands.put((name, deepcopy(values)))
+            self.wake_event.set()
 
     def request(self, name, *values):
         self.request_serial += 1
@@ -100,13 +102,12 @@ class AudioEngine:
             self.thread.join(timeout=5)
 
     def measure(self, pcm):
-        samples = array("h", pcm)
-        if samples:
-            mean = sum(samples) / len(samples)
-            centered = [(s - mean) / 32768 for s in samples]
-            self.peak = min(1., max(abs(s) for s in centered))
-            self.rms = min(1., math.sqrt(sum(s * s for s in centered) / len(centered)))
-            self.waveform = tuple(centered[::max(1, len(samples) // 64)])
+        samples = np.frombuffer(pcm, dtype=np.int16)
+        if len(samples):
+            centered = (samples - samples.mean()) / 32768
+            self.peak = min(1., float(np.max(np.abs(centered))))
+            self.rms = min(1., float(np.sqrt(np.mean(centered * centered))))
+            self.waveform = tuple(float(v) for v in centered[::max(1, len(samples) // 64)])
 
     def _run(self):
         import time
@@ -148,9 +149,14 @@ class AudioEngine:
             audition_filter = deepcopy(self.startup.filter)
             self.ready = True
             last_wake = time.perf_counter()
+            release_frames = [0, 0, 0]
+            # Full-scale SID release times; allow rate-counter delay and a
+            # conservative margin before suspending analog residual leakage.
+            release_seconds = (.006, .024, .048, .072, .114, .168, .204, .240,
+                               .300, .750, 1.5, 2.4, 3., 9., 15., 24.)
             while not self.stop_event.is_set():
                 now = time.perf_counter()
-                if now - last_wake > self.buffer_frames / 48000:
+                if not self.idle and now - last_wake > self.buffer_frames / 48000:
                     self.late_wakes += 1
                 last_wake = now
                 for _ in range(256):
@@ -251,6 +257,8 @@ class AudioEngine:
                         last_wake = time.perf_counter()
                     elif name == 'pulse_record_start':
                         sequencer.record_pulse(*values)
+                    elif name == 'skip_order':
+                        sequencer.skip_order(values[0])
                     elif name == 'pulse_record_value':
                         sequencer.update_pulse_recording(*values)
                     elif name == 'pulse_record_end':
@@ -330,6 +338,7 @@ class AudioEngine:
                         monitor.apply(force=True)
                 self.muted = monitor.mask
                 if output.testing:
+                    self.idle = False
                     output.pump_test()
                     channel = output.channel
                     publish_output()
@@ -339,6 +348,9 @@ class AudioEngine:
                 if channel.callback_error is not None:
                     raise RuntimeError('Audio callback failed') from channel.callback_error
                 self.playback = sequencer.state
+                self.idle = (sequencer.status == 'paused' or
+                             (sequencer.status == 'stopped' and
+                              conditioner.target == 0 and conditioner.gain == 0))
                 self.pulse_capture = sequencer.pulse_recording.snapshot if sequencer.pulse_recording else None
                 self.activity = activity.snapshot(
                     sequencer.programs if sequencer.status != "stopped" else audition,
@@ -348,20 +360,53 @@ class AudioEngine:
                                     and sid.registers[v * 7 + 4] & 0xF0)
                 self.levels = tuple(int(v in self.active) for v in range(3))
                 if sequencer.status != "paused":
-                    channel.expect_audio = sequencer.status == "playing" or bool(allocator.held)
+                    channel.expect_audio = sequencer.status == "playing" or (bool(allocator.held) and not self.idle)
                     self.underruns = channel.gaps
                     self.missing_frames = getattr(channel, 'missing_frames', 0)
                     self.late_callbacks = getattr(channel, 'late_callbacks', 0)
                     self.callback_count = getattr(channel, 'callback_count', 0)
                     self.max_callback_interval = getattr(channel, 'max_callback_interval', 0.0)
                     if channel.needs_block():
+                        if self.idle:
+                            # Keep the device/queue ready, but do no emulation,
+                            # conditioning, metering or scope work for silence.
+                            channel.write(bytes(self.buffer_frames * 2))
+                            self.peak = self.rms = self.render_load = 0.0
+                            self.waveform = (0.0,) * 64
+                            self.voice_waveforms = ((0.0,) * 128,) * 3
+                            continue
                         began = time.perf_counter()
                         was_playing = sequencer.status == "playing"
+                        gates_before = tuple(v.gate for v in audition.voices)
                         pcm = sequencer.render(self.buffer_frames) if was_playing else audition.render(self.buffer_frames)
                         if was_playing and sequencer.status == "stopped":
                             conditioner.target = 0.0
                         pcm = conditioner.process(pcm)
                         self.measure(pcm)
+                        # Preserve the complete possible release, including
+                        # quiet long tails. Both chip models can leak oscillator
+                        # energy after envelope zero, so amplitude alone cannot
+                        # reliably decide that an audition has finished.
+                        released = True
+                        for voice, state in enumerate(audition.voices):
+                            if state.instrument is not None and state.instrument.sample_override:
+                                # One-shot sample previews keep their input
+                                # token until Stop/next preview. An exhausted
+                                # PCM stream no longer needs a running worker.
+                                if getattr(audition, 'pcm', [None]*3)[voice] is not None:
+                                    released = False
+                                continue
+                            if state.gate or gates_before[voice]:
+                                release_frames[voice] = 0
+                            else:
+                                release_frames[voice] += self.buffer_frames
+                            limit = .05 + 1.2 * release_seconds[sid.registers[voice*7+6] & 15]
+                            if state.note is not None and (state.gate or release_frames[voice] < limit*48000):
+                                released = False
+                        if (sequencer.status == 'stopped' and
+                                not any(getattr(audition, 'pcm', ())) and
+                                released):
+                            conditioner.target = 0.0
                         if sid.voice_scopes is not None:
                             self.voice_waveforms = sid.voice_scopes.snapshot()
                         ratio = (time.perf_counter() - began) / (self.buffer_frames / 48000)
@@ -377,7 +422,13 @@ class AudioEngine:
                             sid.registers, self.muted,
                             enabled=sequencer.status != "paused" and conditioner.target > 0)
                         continue  # prime both queue slots before waiting
-                self.stop_event.wait(.001)
+                if self.idle:
+                    # The command receiver wakes this immediately for a note,
+                    # transport or device change. No polling latency is added.
+                    self.wake_event.wait(.01)
+                    self.wake_event.clear()
+                else:
+                    self.stop_event.wait(.001)
         except Exception as exc:
             from sidpulse.diagnostics import record_exception
             record_exception('Audio worker failed', exc)

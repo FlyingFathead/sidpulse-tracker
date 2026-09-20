@@ -41,6 +41,7 @@ def isolation_worker(connection, song, options, kind):
 @pytest.mark.parametrize('kind', ['sid', 'prg'])
 @pytest.mark.parametrize('squeeze', [False, True])
 def test_real_spawn_matches_direct_export_and_never_writes_files(tmp_path, monkeypatch, kind, squeeze):
+    priority = os.getpriority(os.PRIO_PROCESS, 0) if hasattr(os, 'getpriority') else None
     song = Song()
     before = deepcopy(song)
     options = SqueezeOptions(enabled=squeeze)
@@ -57,6 +58,8 @@ def test_real_spawn_matches_direct_export_and_never_writes_files(tmp_path, monke
         assert update.result == expected
         assert update.source == song == before and update.source is not song
         assert not list(tmp_path.iterdir())
+        if priority is not None:
+            assert os.getpriority(os.PRIO_PROCESS, 0) == priority
     finally:
         assert job.close()
 

@@ -7108,6 +7108,92 @@
       "visible_in_help": true,
       "visible_in_menu": true,
       "reason": ""
+    },
+    {
+      "id": "playback.next_order",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "+",
+        "Numpad +"
+      ],
+      "description": "Next song order during playback",
+      "command": "skip_order",
+      "value": 1,
+      "target": "App.execute",
+      "key_rules": [
+        {
+          "key": "K_PLUS",
+          "modifiers": []
+        },
+        {
+          "key": "K_KP_PLUS",
+          "modifiers": []
+        },
+        {
+          "key": "K_EQUALS",
+          "modifiers": [
+            "shift"
+          ]
+        },
+        {
+          "key": "K_PLUS",
+          "modifiers": [
+            "shift"
+          ]
+        },
+        {
+          "key": "K_KP_PLUS",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "F5 Info view, song playback; clamps at the first/last order."
+    },
+    {
+      "id": "playback.previous_order",
+      "contexts": [
+        "info"
+      ],
+      "shortcuts": [
+        "-",
+        "Numpad -"
+      ],
+      "description": "Previous song order during playback",
+      "command": "skip_order",
+      "value": -1,
+      "target": "App.execute",
+      "key_rules": [
+        {
+          "key": "K_MINUS",
+          "modifiers": []
+        },
+        {
+          "key": "K_KP_MINUS",
+          "modifiers": []
+        },
+        {
+          "key": "K_KP_MINUS",
+          "modifiers": [
+            "shift"
+          ]
+        }
+      ],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": "F5 Info view, song playback; clamps at the first/last order."
     }
   ]
 }

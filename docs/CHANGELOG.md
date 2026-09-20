@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.2.37
+
+- Centered file browser selection, with stable mouse double-click targeting.
+- F5 Info −/+ and header triangle buttons skip song orders without restarting audio.
+- Exact frozen reference kick/snare in the built-in Wavetable drums category.
+- Install/check FFmpeg before Windows CI media tests.
+- Matched 2048/512 performance checks; see RELEASE_NOTES-v0.2.37.md.
+
+## v0.2.36
+
+- Suspend redundant stopped-state synthesis and redraws, preserve release tails
+  and command wake-up, and vectorize display metering during playback.
+- Add serial baseline/candidate runtime checks with 2048 default / 512 stress.
+- Lower spawned compiler priority on POSIX during export contention; retain
+  measured 512-sample export underruns in the performance report.
+- Settle offline SID candidates before fitting; exclude the startup decay.
+- Fit drum pitch decay with weighted least squares and compare short attacks,
+  multi-resolution spectra, native onset energy and snare noise/body balance.
+- Keep generated instruments frozen and compatible with normal SID/PRG replay.
+- Rename native project Save As to **Save as .sidpulse...**.
+- Introduce the tracker before development priorities in README, and document
+  both Git-clone and release-ZIP installation.
+- Include the fitted reference drum project and measurements; preserve both
+  DIGI methods and all four SQUEEZER versions, defaulting to v2.0.2.
+
 ## v0.2.35
 
 - Restore packed volume DIGI as method #1 and the default, preserving display enables.

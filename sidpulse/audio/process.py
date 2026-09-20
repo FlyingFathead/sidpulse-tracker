@@ -20,6 +20,7 @@ STATE_FIELDS = (
     'output_device', 'output_devices', 'output_notice', 'output_list_error',
     'output_result', 'test_result', 'test_active',
     'pulse_capture',
+    'idle',
 )
 
 
@@ -32,6 +33,7 @@ def audio_process(connection, stop, song, frames, output_device=None):
             while not stop.is_set():
                 if connection.poll(.05):
                     engine.commands.put(connection.recv())
+                    engine.wake_event.set()
         except (EOFError, BrokenPipeError, OSError):
             stop.set()
     # Receiving remains independent of status writes: a UI stall can fill the
@@ -42,14 +44,16 @@ def audio_process(connection, stop, song, frames, output_device=None):
     worker.start()
     try:
         next_snapshot = 0.0
+        last_idle = None
         while worker.is_alive() and not stop.is_set():
             now = time.monotonic()
-            if now >= next_snapshot:
+            if now >= next_snapshot or engine.idle != last_idle:
                 # The parent continuously drains this one small state message.
                 # The audio worker never waits on serialization or pipe writes.
                 connection.send(tuple(getattr(engine, key) for key in STATE_FIELDS))
-                next_snapshot = now + 1 / 60
-            stop.wait(.001)
+                last_idle = engine.idle
+                next_snapshot = now + (0.1 if engine.idle else 1 / 60)
+            stop.wait(.005 if engine.idle else .001)
     except (EOFError, BrokenPipeError, OSError):
         stop.set()
     finally:
@@ -92,7 +96,8 @@ def bridge(engine):
                 if not engine.error:
                     engine.error = f'Audio process exited unexpectedly ({process.exitcode}).'
                 break
-            engine.stop_event.wait(.001)
+            engine.wake_event.wait(.005 if engine.idle else .001)
+            engine.wake_event.clear()
     except Exception as exc:
         if not engine.stop_event.is_set():
             from sidpulse.diagnostics import record_exception

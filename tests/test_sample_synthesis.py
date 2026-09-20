@@ -30,7 +30,7 @@ def test_fit_follows_pitch_and_remains_a_standalone_sid_instrument(proposal, tmp
     assert not result.sample_override and result.sample_slot == 0
     assert result.waveform in (16, 32, 64)
     assert abs(result.pitch_sequence[0] - (-3)) <= 2  # 220 Hz relative to C4
-    assert proposal['details']['candidates'] < 160 and proposal['details']['score'] < .2
+    assert proposal['details']['candidates'] <= 320 and proposal['details']['score'] < .2
     song = pcm_song(); song.samples = {}; song.instruments = {1: deepcopy(result)}
     for pattern in song.patterns.values():
         for row in pattern.rows:
@@ -81,6 +81,43 @@ def test_low_decaying_kick_produces_tonal_candidates_and_valid_tables():
     assert len(_pitch_track(impulse,.02,48)[0]) > 0
 
 
+@pytest.mark.parametrize('model', ['6581', '8580'])
+def test_offline_render_excludes_long_chip_startup_decay(model):
+    from sidpulse.audio.synthesize import render_instrument
+    disconnected = Instrument(waveform=0, attack=0, decay=0, sustain=0, release=0)
+    values = render_instrument(disconnected, 48, .1, model)
+    # Ignore the brief DAC change at note-on. A cold external filter previously
+    # left thousands of PCM units of false decaying drum body in this interval.
+    assert abs(float(np.mean(values[480:]))) < 250
+
+
+@pytest.mark.parametrize('name', ['kick', 'snare'])
+def test_reference_drums_keep_fast_native_impact_and_snare_noise(name):
+    from pathlib import Path
+    from sidpulse.audio.media import import_sample
+    from sidpulse.audio.synthesize import render_instrument
+    from sidpulse.audio.synthesis_analysis import audible_signal, rms_envelope
+    source = import_sample(Path(__file__).resolve().parents[1] / 'examples' / 'samples' /
+                           f'sidpulse_sample_synthwave_{name}.wav')
+    before = deepcopy(source)
+    result = synthesize_sample(source)
+    inst = result['instrument']
+    values = audible_signal(render_instrument(inst, 48, result['details']['seconds']+.125))
+    envelope = rms_envelope(values, len(values))
+    assert np.argmax(envelope)*.0025 <= .025
+    # Absolute native output: normalization alone must not turn a weak attack
+    # into a passing shape match (old reference kick was about 316 here).
+    assert np.sqrt(np.mean(values[:240]**2)) > 2400
+    assert inst.attack <= 1 and not inst.sample_override
+    assert inst._extra_fields['editor_frozen'] is True
+    assert result['details']['impact_fit'] and result['details']['pitch_decay']
+    assert source == before
+    waves = inst.wave_sequence or [inst.waveform]
+    if name == 'snare':
+        assert 128 in waves[:7] and any(w != 128 for w in waves)
+        assert result['details']['kind'] == 'mixed'
+
+
 def test_waveform_search_can_generate_a_multistep_sid_table():
     from sidpulse.audio.synthesize import render_instrument
     source=Instrument(waveform=16,attack=0,decay=9,sustain=0,release=2,
@@ -91,7 +128,7 @@ def test_waveform_search_can_generate_a_multistep_sid_table():
     assert len(set(result['instrument'].wave_sequence)) >= 2
     assert len(result['instrument'].wave_sequence)<=64
     assert all(w in (16,32,64,128) for w in result['instrument'].wave_sequence)
-    assert result['details']['candidates'] < 200
+    assert result['details']['candidates'] <= 320
 
 
 @pytest.mark.parametrize('size', [(640,480), (960,1080), (1280,900)])

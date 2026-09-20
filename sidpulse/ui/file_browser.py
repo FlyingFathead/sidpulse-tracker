@@ -12,7 +12,7 @@ SUFFIXES = {'open': '.sidpulse', 'save': '.sidpulse', 'sid': '.sid', 'prg': '.pr
             'wav': '.wav', 'mp3': '.mp3', 'sample': '.wav'}
 LABELS = {'open': 'Open', 'save': 'Save', 'sid': 'Export SID', 'prg': 'Export PRG',
           'wav': 'Export WAV', 'mp3': 'Export MP3', 'sample': 'Import sample'}
-TITLES = {'open': 'Load Project (F9)', 'save': 'Save Project / Save As (F10)',
+TITLES = {'open': 'Load Project (F9)', 'save': 'Save as .sidpulse... (F10)',
           'sid': 'Export .sid (PSID / RSID)', 'prg': 'Export .prg (C64 program)',
           'wav': 'Export audio / WAV', 'mp3': 'Export audio / MP3', 'sample': 'Import PCM sample'}
 FOCI = ('list', 'name', 'directory', 'action', 'cancel')

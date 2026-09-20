@@ -1,0 +1,38 @@
+[
+  {
+    "song": "autumn-at-five-synthwave-mix_v9-pw-sweep.sidpulse",
+    "clock": "PAL",
+    "events": 473,
+    "sha256": "39eab738736df90079e8988a6d2a41fda0542d4efbd1efc9e28379c9949b93ad"
+  },
+  {
+    "song": "autumn-at-five-synthwave-mix_v9-pw-sweep.sidpulse",
+    "clock": "NTSC",
+    "events": 469,
+    "sha256": "72f17bc6263ce51b2b0ce3fcb5cb6bab1725c69acd4a827f46ffff03c71bfc68"
+  },
+  {
+    "song": "autumn-at-five-synthwave-pcm-drums.sidpulse",
+    "clock": "PAL",
+    "events": 458,
+    "sha256": "6c722563da2a25abf659f6302afb343ee1f526460354fd059561ddc67419da63"
+  },
+  {
+    "song": "autumn-at-five-synthwave-pcm-drums.sidpulse",
+    "clock": "NTSC",
+    "events": 455,
+    "sha256": "3d9e75d07c7741f7f21966c18b2e22d76d54d754ad357db676d19d59c7499a4c"
+  },
+  {
+    "song": "synthesized-reference-drums.sidpulse",
+    "clock": "PAL",
+    "events": 116,
+    "sha256": "c8daab16a7981b8e0dd3bdc58842c7a796f6eb94c34df16997300b8cc0f4d5e0"
+  },
+  {
+    "song": "synthesized-reference-drums.sidpulse",
+    "clock": "NTSC",
+    "events": 110,
+    "sha256": "e06b28670d91312c41e7ce52077af7e55f65a104f180b217a9146dba0a19790c"
+  }
+]
