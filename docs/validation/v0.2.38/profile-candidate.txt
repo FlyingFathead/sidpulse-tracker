@@ -1,0 +1,39 @@
+Separate renderer profile; not a timing trial.
+
+         2568389 function calls (2325976 primitive calls) in 1.474 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1808 to 29 due to restriction <'renderer.py'>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      232    0.011    0.000    0.862    0.004 renderer.py:245(render)
+      232    0.043    0.000    0.560    0.002 renderer.py:435(pattern)
+    12760    0.013    0.000    0.292    0.000 renderer.py:127(rect)
+    14848    0.017    0.000    0.111    0.000 renderer.py:603(cached_voice_cell)
+    25220    0.030    0.000    0.110    0.000 renderer.py:109(text)
+     1856    0.003    0.000    0.108    0.000 renderer.py:178(well)
+      232    0.050    0.000    0.095    0.000 renderer.py:1109(helper)
+      232    0.002    0.000    0.095    0.000 renderer.py:591(control_toggle)
+     1392    0.002    0.000    0.044    0.000 renderer.py:168(header_field)
+      464    0.002    0.000    0.029    0.000 renderer.py:1024(monitor_buttons)
+     2331    0.009    0.000    0.023    0.000 renderer.py:132(control_text)
+      232    0.001    0.000    0.020    0.000 renderer.py:203(configure_page)
+      232    0.007    0.000    0.020    0.000 renderer.py:186(meter)
+      232    0.006    0.000    0.019    0.000 renderer.py:74(configure)
+     6496    0.006    0.000    0.010    0.000 renderer.py:200(hit)
+      232    0.001    0.000    0.007    0.000 renderer.py:835(octave_controls)
+      232    0.002    0.000    0.005    0.000 renderer.py:941(order_skip_buttons)
+      464    0.001    0.000    0.004    0.000 renderer.py:173(horizontal_rule)
+        1    0.000    0.000    0.004    0.004 renderer.py:1(<module>)
+       36    0.001    0.000    0.003    0.000 renderer.py:622(voice_cell)
+      232    0.000    0.000    0.002    0.000 renderer.py:379(scroll_bar)
+      232    0.000    0.000    0.001    0.000 renderer.py:376(scroll_start)
+        1    0.000    0.000    0.001    0.001 renderer.py:53(__init__)
+      232    0.000    0.000    0.000    0.000 renderer.py:1072(context_status)
+     1624    0.000    0.000    0.000    0.000 renderer.py:446(<genexpr>)
+       72    0.000    0.000    0.000    0.000 renderer.py:633(<genexpr>)
+        1    0.000    0.000    0.000    0.000 renderer.py:52(Renderer)
+        1    0.000    0.000    0.000    0.000 renderer.py:47(__post_init__)
+        1    0.000    0.000    0.000    0.000 renderer.py:41(Layout)
+
+

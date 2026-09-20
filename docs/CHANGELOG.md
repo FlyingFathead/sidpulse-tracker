@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.38
+
+- Fix whole-page font shrinking on entry to F2/F5 when fitting extra channels.
+- Preserve the selected font when a complete voice and essential rows fit;
+  narrower pattern views follow the selected channel automatically.
+- Retain the minimum-size fallback for small windows and large zoom.
+- Rendering-only hotfix; audio, sequencing, fitting and exports are unchanged.
+
 ## v0.2.37
 
 - Centered file browser selection, with stable mouse double-click targeting.

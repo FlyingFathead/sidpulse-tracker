@@ -168,7 +168,7 @@ def test_w_column_mouse_keyboard_layout_and_legacy_cursor_restore(size):
         app.restore_metadata({'column':6,'pattern_columns_version':2});assert app.editor.column==6
         assert app.metadata()['pattern_columns_version']==2
         app.renderer.render(app)
-        assert len(app.renderer.pattern_geometry['voices'])==(2 if size==(640,480) else 3)
+        assert len(app.renderer.pattern_geometry['voices'])==(3 if size==(1920,1080) else 2)
         for voice,_,_ in app.renderer.pattern_geometry['voices']:
             assert any(a=='select_field' and v==(voice,14) and app.screen.get_rect().contains(r)
                        for r,a,v in app.renderer.hits)

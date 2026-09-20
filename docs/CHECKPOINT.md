@@ -1,3 +1,10 @@
+# SIDpulse Tracker v0.2.38 checkpoint
+
+UI scale hotfix for F2/F5. Extra channels no longer force the whole page into a
+smaller font. The existing horizontal channel-follow behavior handles overflow.
+Minimum fitting remains only for essential editing space. See
+[release notes](RELEASE_NOTES-v0.2.38.md) and [validation](VALIDATION-v0.2.38.md).
+
 # SIDpulse Tracker v0.2.37 checkpoint
 
 Playback order navigation, centered file browsing and exact frozen drum presets

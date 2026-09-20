@@ -1,0 +1,26 @@
+{
+  "python": "3.12.14",
+  "pygame": "2.5.7",
+  "pyresidfp": "0.17.0",
+  "platform": "Linux x86_64",
+  "drivers": "SDL dummy video and audio",
+  "affinity_available": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "gui_affinity_count": 1,
+  "live_affinity_count": 2,
+  "song": "examples/autumn-at-five-synthwave-mix_v9-pw-sweep.sidpulse",
+  "song_sha256": "6e986430e09f6b01121fd68a8530b53d75be2bf76e5331e1c4ace789c9364804",
+  "gui_repetitions": 3,
+  "gui_frames": 200,
+  "live_repetitions": 2,
+  "live_seconds_per_trial": 5
+}

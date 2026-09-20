@@ -230,14 +230,16 @@ class Renderer:
         if app.page == 'pattern' and app.control_focus:
             self.control_visible = True
         if app.page in ("pattern", "info"):
-            # Keep the previous number of complete voice rows with W present.
-            # Fit only this page; preserve the user's zoom and CTRL pane.
+            # Keep the requested font size when at least one voice fits.
+            # The grid already follows the selected voice horizontally; fitting
+            # extra voices here shrinks the entire UI on entry to F2/F5.
+            # Retain only the minimum-size fallback for a complete voice.
             overhead = 32 if self.control_visible else 12
-            voices = max(1, min(3, (self.cols - overhead) // 28))
-            minimum = max(63 if self.control_visible else 102, overhead + voices * 30)
+            minimum = overhead + 30
             for _ in range(3):
-                if self.cols >= minimum:break
-                self.configure(app.screen, self.signature[2] * self.cols / minimum * .96, app.appearance)
+                fit = min(1.0, self.cols / minimum, self.lines / 18)
+                if fit >= 1:break
+                self.configure(app.screen, self.signature[2] * fit * .96, app.appearance)
         self.page_layout_cache = (key, self.signature[2], self.control_visible)
 
     def render(self, app):

@@ -48,14 +48,16 @@ in the song. The result uses ordinary SID waveform/pitch tables. Improving
 these fits, with the included kick and snare as reference sounds, is the
 priority. [How it works and current limits](docs/SAMPLE_SYNTHESIS.md).
 
-## v0.2.37: playback navigation and drum presets
+## v0.2.38: UI scale hotfix
 
-Use **− / +** on the F5 Info page, or the **previous/next triangle buttons**
-beside the playback position, to skip through song orders. The file browser
-now follows the highlighted row through the center of the list.
-F4 presets include the frozen reference kick and snare under
-**[Wavetable] Drums & Percussion**. Windows CI installs and checks FFmpeg before
-the media tests. [Release notes and checks](docs/RELEASE_NOTES-v0.2.37.md).
+F2 and F5 keep the requested UI size instead of shrinking the entire page to
+fit extra pattern channels. Narrow pattern views follow the selected channel;
+very small windows retain a minimum-fit fallback to keep editing accessible.
+[Release notes and checks](docs/RELEASE_NOTES-v0.2.38.md).
+
+The previous update added centered file browsing, **− / +** and triangle
+playback navigation, frozen **[Wavetable] Drums & Percussion** presets, and the
+Windows FFmpeg CI setup. [v0.2.37 details](docs/RELEASE_NOTES-v0.2.37.md).
 
 ## Drum attacks and sample fitting
 
@@ -94,14 +96,14 @@ cd sidpulse-tracker
 ### Option 2: install a release ZIP
 
 Download the **full ZIP** and matching **SHA256SUMS** file for the release.
-For this version, they are `sidpulse-tracker-v0.2.37-full.zip` and
-`SHA256SUMS-v0.2.37.txt`.
+For this version, they are `sidpulse-tracker-v0.2.38-full.zip` and
+`SHA256SUMS-v0.2.38.txt`.
 
 **Linux**, from the download directory:
 
 ```bash
-sha256sum --check --ignore-missing SHA256SUMS-v0.2.37.txt &&
-unzip sidpulse-tracker-v0.2.37-full.zip &&
+sha256sum --check --ignore-missing SHA256SUMS-v0.2.38.txt &&
+unzip sidpulse-tracker-v0.2.38-full.zip &&
 cd sidpulse-tracker &&
 ./run.sh
 ```
@@ -109,7 +111,7 @@ cd sidpulse-tracker &&
 **Windows:** [verify and extract the full ZIP](#windows), then double-click
 `run.cmd` inside `sidpulse-tracker`. Accept the first-run setup when prompted.
 For an existing ZIP installation, use the
-[v0.2.37 incremental update instructions](docs/APPLY-v0.2.37.md).
+[v0.2.38 incremental update instructions](docs/APPLY-v0.2.38.md).
 
 Press **F5** to play, **F2** to edit patterns, **F4** for instruments and **F8**
 to stop. Keep the launcher terminal open while the tracker runs.
@@ -261,12 +263,12 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.37 full ZIP and SHA-256 checksum file** from the same release.
+Download the **v0.2.38 full ZIP and SHA-256 checksum file** from the same release.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.37-full.zip"
-$checksums = ".\SHA256SUMS-v0.2.37.txt"
+$zip = ".\sidpulse-tracker-v0.2.38-full.zip"
+$checksums = ".\SHA256SUMS-v0.2.38.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
     $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.36-full\.zip$'
 })
