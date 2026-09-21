@@ -6925,6 +6925,24 @@
       "reason": ""
     },
     {
+      "id": "display.pattern_fit_three",
+      "contexts": [
+        "global"
+      ],
+      "shortcuts": [],
+      "description": "Fit all three F2 voice channels; enabled by default and saved in preferences",
+      "command": "pattern_fit_three_toggle",
+      "target": "App.toggle_pattern_fit_three",
+      "key_rules": [],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": false,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": true,
+      "reason": ""
+    },
+    {
       "id": "display.control_panel",
       "contexts": [
         "global"

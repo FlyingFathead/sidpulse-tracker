@@ -102,6 +102,7 @@ GUIDE = [
         ('Ctrl+F12 / Shift+F12', 'Colour themes / Font settings'),
         ('F12 > File timestamps', 'Show or hide modification dates in the file browser; enabled by default.'),
         ('Filter-column triangle', 'Expand/collapse CTRL CH / FILTER in pattern and Info views. Narrow defaults favor three voices.'),
+        ('UI Settings > Fit 3 voice channels (F2)', 'On by default. Fits the F2 grid only; toolbar and row spacing stay unchanged. Tiny windows keep a minimum font and follow the selected voice.'),
         ('preferences.json', 'Edit colours, font, file_browser_show_modified and pattern_clipboard_buttons. control_panel_visible saves the filter-column choice.'),
     ]),
     ('FILTER ROWS', [

@@ -149,9 +149,11 @@ def test_waveform_entry_mask_clipboard_reset_and_undo():
 
 
 @pytest.mark.parametrize('size',[(640,480),(960,1080),(1280,900),(1920,1080)])
-def test_w_column_mouse_keyboard_layout_and_legacy_cursor_restore(size):
+@pytest.mark.parametrize('fit', [True, False])
+def test_w_column_mouse_keyboard_layout_and_legacy_cursor_restore(size, fit):
     app=App(modulation_song(),audio=False,size=size)
     try:
+        app.pattern_fit_three = fit
         app.renderer.render(app);before=deepcopy(app.editor.song)
         rect=next(r for r,a,v in app.renderer.hits if a=='select_field' and v==(0,6))
         assert app.screen.get_rect().contains(rect)
@@ -168,7 +170,7 @@ def test_w_column_mouse_keyboard_layout_and_legacy_cursor_restore(size):
         app.restore_metadata({'column':6,'pattern_columns_version':2});assert app.editor.column==6
         assert app.metadata()['pattern_columns_version']==2
         app.renderer.render(app)
-        assert len(app.renderer.pattern_geometry['voices'])==(3 if size==(1920,1080) else 2)
+        assert len(app.renderer.pattern_geometry['voices'])==(3 if fit or size==(1920,1080) else 2)
         for voice,_,_ in app.renderer.pattern_geometry['voices']:
             assert any(a=='select_field' and v==(voice,14) and app.screen.get_rect().contains(r)
                        for r,a,v in app.renderer.hits)

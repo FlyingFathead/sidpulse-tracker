@@ -61,6 +61,8 @@ class Renderer:
         self.pattern_hit_cache = None
         self.dirty_display_cache = None
         self.page_layout_cache = None
+        from sidpulse.ui.pattern_layout import PatternGridLayout
+        self.pattern_layout = PatternGridLayout()
         self.logo_cache = {}
         self.welcome_font_cache = {}
         from sidpulse.ui.scrollbar import Scrollbars
@@ -95,6 +97,7 @@ class Renderer:
             if custom:
                 try:pg.font.Font(str(Path(custom).expanduser()),16);font_path=str(Path(custom).expanduser())
                 except (OSError,pg.error):pass
+            self.font_path = font_path
             self.font = pg.font.Font(font_path, self.layout.font_size)
             self.font.set_bold(self.appearance['font_bold'])
             self.small_font = pg.font.Font(font_path, max(12, round(self.layout.font_size * .8)))
@@ -422,6 +425,7 @@ class Renderer:
                           'instrument_monitor_buttons':app.instrument_monitor_buttons,
                           'confirm_cut_toggle':app.confirm_cut,
                           'channel_visualizers_toggle':app.channel_visualizers,
+                          'pattern_fit_three_toggle':app.pattern_fit_three,
                           'helper_toggle':app.helper_strip}.get(item.command)
                 if toggle is not None:
                     label = label.replace('on / off', 'ON' if toggle else 'OFF')
@@ -445,6 +449,26 @@ class Renderer:
                      (12 if compact else 22,'Reset all' if compact else 'Reset all automation','reset_automation','reset_automation',None)]
         wrapped = 7 + sum(w+1 for w,_,_,_,_ in controls) > self.cols-2
         if wrapped:top+=2
+        reset_x = 7
+        toolbar_y=top-1.25-(2 if wrapped else 0)
+        for w,label,action,name,value in controls:
+            if reset_x+w>self.cols-2:
+                reset_x=7;toolbar_y+=2
+            button(self,reset_x,toolbar_y,w,label,action,selected=pressed(app,name,value))
+            reset_x+=w+1
+        description_x = reset_x + 1
+        if self.cols >= description_x + 23:
+            button(self,description_x,top-1.25,22,'Record automation','pulse_record_arm',
+                   selected=app.pulse_record_armed,fill=REC_ARM if app.pulse_record_armed else None)
+            description_x += 24
+        grid_end = self.cols - (25 if self.control_visible else 5)
+        if grid_end > description_x + 4:
+            self.text(description_x,top-1.15,ed.selection_description(),DIM,grid_end-description_x-1)
+        with self.pattern_layout.fitted(self, app.pattern_fit_three) as font_size:
+            self.pattern_grid(app, top, bottom, font_size)
+
+    def pattern_grid(self, app, top, bottom, font_size):
+        ed = app.editor
         sidebar = 23 if self.control_visible else 3
         grid_end = self.cols - sidebar - 2
         available = max(1, grid_end - 7)
@@ -465,24 +489,11 @@ class Renderer:
             self.top_row = ed.row - rows_visible + 1
         self.top_row = self.scroll_start('pattern',self.top_row,(ed.pattern_id,ed.row),len(ed.pattern.rows),rows_visible)
         self.pattern_geometry = {
+            'cw':self.cw, 'rh':self.rh, 'font_size':font_size,
             'left':7*self.cw, 'right':grid_end*self.cw,
             'top':(top+2)*self.rh, 'bottom':bottom*self.rh,
             'last_row':min(len(ed.pattern.rows)-1,self.top_row+rows_visible-1),
             'voices':[(self.first_voice+view,(7+view*channel_w)*self.cw,channel_w*self.cw) for view in range(count)]}
-        reset_x = 7
-        toolbar_y=top-1.25-(2 if wrapped else 0)
-        for w,label,action,name,value in controls:
-            if reset_x+w>self.cols-2:
-                reset_x=7;toolbar_y+=2
-            button(self,reset_x,toolbar_y,w,label,action,selected=pressed(app,name,value))
-            reset_x+=w+1
-        description_x = reset_x + 1
-        if self.cols >= description_x + 23:
-            button(self,description_x,top-1.25,22,'Record automation','pulse_record_arm',
-                   selected=app.pulse_record_armed,fill=REC_ARM if app.pulse_record_armed else None)
-            description_x += 24
-        if grid_end > description_x + 4:
-            self.text(description_x,top-1.15,ed.selection_description(),DIM,grid_end-description_x-1)
         self.well(5, top + 1, grid_end - 5, bottom - top - 1)
         self.hit(7,top+2,grid_end-7,rows_visible,'pattern_grid',None)
         self.text(1, top, "ROW", DIM)

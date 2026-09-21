@@ -42,6 +42,7 @@
   },
   "audio_underrun_detection": true,
   "pattern_clipboard_buttons": true,
+  "pattern_fit_three": true,
   "confirm_cut": true,
   "instrument_monitor_buttons": true,
   "center_selection": true,

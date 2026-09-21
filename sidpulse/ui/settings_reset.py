@@ -97,6 +97,7 @@ def commit(app):
     app.file_browser_show_modified = True
     app.restart_on_f5 = False
     app.pattern_clipboard_buttons = True
+    app.pattern_fit_three = True
     app.confirm_cut = True
     app.instrument_monitor_buttons = True
     app.sample_auto_squeeze = True

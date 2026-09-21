@@ -1,4 +1,4 @@
-"""Page changes must not shrink the UI just to display extra pattern voices."""
+"""Grid fitting must preserve page fonts; manual zoom still follows voices."""
 from copy import deepcopy
 
 import pygame as pg
@@ -42,6 +42,7 @@ def test_f2_and_info_keep_requested_font_and_cached_glyphs(size, zoom):
 def test_fewer_visible_voices_still_follow_every_channel_and_field(size, zoom):
     app = App(audio=False, size=size, zoom=zoom)
     try:
+        app.pattern_fit_three = False
         app.change_page('pattern')
         for voice in range(3):
             app.editor.voice = voice

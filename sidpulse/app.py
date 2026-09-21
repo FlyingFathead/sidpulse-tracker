@@ -92,6 +92,8 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
         self.helper_strip = True
         from sidpulse.preferences import load_pattern_clipboard_buttons, load_control_panel_visibility, load_channel_visualizers
         self.pattern_clipboard_buttons = load_pattern_clipboard_buttons()
+        from sidpulse.preferences import load_pattern_fit_three
+        self.pattern_fit_three = load_pattern_fit_three()
         from sidpulse.preferences import load_confirm_cut
         self.confirm_cut = load_confirm_cut()
         from sidpulse.preferences import load_instrument_monitor_buttons
@@ -1014,6 +1016,8 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
             self.toggle_instrument_monitor_buttons()
         elif name == "channel_visualizers_toggle":
             self.toggle_channel_visualizers()
+        elif name == "pattern_fit_three_toggle":
+            self.toggle_pattern_fit_three()
         elif name == "control_panel_toggle":
             self.toggle_control_panel()
         elif name == "pattern_clipboard_buttons":

@@ -9,10 +9,8 @@ from sidpulse.preferences import load_control_panel_visibility, load_pattern_cli
 from sidpulse.ui.keyboard import Command
 
 
-@pytest.mark.parametrize('size,initial_voices', [
-    ((960,1080), {0,1}), ((960,540), {0,1,2}), ((800,600), {0,1}),
-])
-def test_narrow_default_keeps_font_and_follows_all_voices(size, initial_voices):
+@pytest.mark.parametrize('size', [(960,1080), (960,540), (800,600)])
+def test_narrow_default_fits_three_voices_and_keeps_page_font(size):
     app=App(audio=False,size=size)
     try:
         app.change_page('orders')
@@ -23,7 +21,7 @@ def test_narrow_default_keeps_font_and_follows_all_voices(size, initial_voices):
         app.change_page('pattern')
         app.renderer.render(app)
         assert not app.renderer.control_visible
-        assert {v[1] for r,a,v in app.renderer.hits if a=='cell'}==initial_voices
+        assert {v[1] for r,a,v in app.renderer.hits if a=='cell'}=={0,1,2}
         toggle=next(r for r,a,v in app.renderer.hits if a=='control_panel_toggle')
         assert app.screen.get_rect().contains(toggle)
         assert not any(a=='control_focus' for _,a,_ in app.renderer.hits)

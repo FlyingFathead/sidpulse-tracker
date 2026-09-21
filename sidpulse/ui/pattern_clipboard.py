@@ -64,9 +64,9 @@ class PatternClipboardActions:
         x, y = pos
         voices = grid['voices']
         voice, left, width = min(voices, key=lambda item: max(item[1]-x, x-(item[1]+item[2]), 0))
-        offset = (x-left)/self.renderer.cw
+        offset = (x-left)/grid['cw']
         column = min(range(len(FIELDS)), key=lambda i: abs(offset-(COLUMN_OFFSETS[i]+(.8 if i == 0 else .5))))
-        row = self.renderer.top_row + int((y-grid['top'])//self.renderer.rh)
+        row = self.renderer.top_row + int((y-grid['top'])//grid['rh'])
         row = max(self.renderer.top_row, min(row, grid['last_row']))
         return row, voice, column
 
@@ -125,6 +125,12 @@ class PatternClipboardActions:
         save_preferences({'confirm_cut': value})
         self.confirm_cut = value
         self.editor.status = 'Confirm before Cut: ' + ('ON' if value else 'OFF')
+
+    def toggle_pattern_fit_three(self):
+        value = not self.pattern_fit_three
+        save_preferences({'pattern_fit_three': value})
+        self.pattern_fit_three = value
+        self.editor.status = 'F2 fit 3 voice channels: ' + ('ON' if value else 'OFF')
 
     def toggle_control_panel(self):
         value = not getattr(self.renderer, "control_visible", self.control_panel_visible if self.control_panel_visible is not None else True)

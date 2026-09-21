@@ -74,6 +74,7 @@ MENUS = {
                       Item("Pattern clipboard buttons: on / off", "pattern_clipboard_buttons"),
                       Item("Confirm before Cut: on / off", "confirm_cut_toggle"),
                       Item("Instrument/sample M/S: on / off", "instrument_monitor_buttons"),
+                      Item("Fit 3 voice channels (F2): on / off", "pattern_fit_three_toggle"),
                       Item("Control/filter column: show / hide", "control_panel_toggle"),
                       Item("Channel visualizers: on / off", "channel_visualizers_toggle"),
                       Item("Zoom in       Ctrl+Alt +", "zoom", 1),

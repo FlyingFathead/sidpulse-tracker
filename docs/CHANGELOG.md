@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.2.39
+
+- F2 fits three voice channels by default using an independently cached grid font.
+  Header, toolbar and row spacing remain stable; F5 keeps its existing layout.
+- Added the saved **Fit 3 voice channels (F2)** toggle under UI Settings. Disabling
+  it preserves the selected grid font size and horizontal voice following.
+- The fourth control/filter channel remains independently collapsible. Tiny
+  windows stop at an 8-pixel grid font and keep the selected voice accessible.
+- Carries forward the v0.2.38 CI dialog fix and corrected layout/preset checks.
+- See [validation](VALIDATION-v0.2.39.md) and [performance](PERFORMANCE-v0.2.39.md).
+
 ## v0.2.38
 
 - CI repair checkpoint: fit dialogs from the already-rendered page scale;

@@ -64,6 +64,23 @@ together. Legacy whole-cell mix retains its whole-cell emptiness check. Roll,
 transpose and block instrument commands also respect the selection: transposing
 a PW-only block cannot change the notes.
 
+## Three-channel fit
+
+**Settings Menu > UI Settings > Fit 3 voice channels (F2)** is on by default,
+including when upgrading from a configuration without `pattern_fit_three`.
+The choice is saved in `preferences.json`; Reset all settings restores it to on.
+
+F2 reduces only the grid font and horizontal spacing as needed to fit voices
+1–3. The song header, clipboard toolbar, footer and row spacing retain their
+normal sizes. CTRL CH / FILTER is the fourth channel and remains independently
+collapsible. Expanding it gives the voice grid less room; collapsing it permits
+a larger grid font. F5's existing layout is independent of this setting.
+
+Turn the setting off to retain the selected grid font size and follow the
+current voice horizontally. Even with fitting on, extremely narrow windows
+stop at an 8-pixel grid font and follow the selected voice when all three cannot
+fit. No fields are removed. Custom fonts can reach this limit at different widths.
+
 ## Paste Special
 
 | Choice | Fields affected |

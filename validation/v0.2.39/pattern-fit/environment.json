@@ -1,0 +1,17 @@
+{
+  "python": "3.12.14",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "packages": {
+    "pygame-ce": "2.5.7",
+    "pyresidfp": "0.17.0",
+    "numpy": "2.5.3"
+  },
+  "cpus": [
+    0
+  ],
+  "drivers": "SDL dummy audio/video; simulated playback for drawing cost",
+  "input": "autumn-at-five-synthwave-mix_v9-pw-sweep.sidpulse",
+  "input_sha256": "6e986430e09f6b01121fd68a8530b53d75be2bf76e5331e1c4ace789c9364804",
+  "repetitions": 5,
+  "iterations": 200
+}

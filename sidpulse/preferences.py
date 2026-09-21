@@ -235,6 +235,14 @@ def load_automation_display():
         return 2
 
 
+def load_pattern_fit_three():
+    try:
+        value = json.loads(config_path().read_text()).get('pattern_fit_three', True)
+        return value if type(value) is bool else True
+    except (OSError, ValueError, AttributeError):
+        return True
+
+
 def load_control_panel_visibility():
     try:
         value = json.loads(config_path().read_text()).get("control_panel_visible")

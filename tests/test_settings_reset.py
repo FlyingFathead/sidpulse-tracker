@@ -23,7 +23,7 @@ def app(tmp_path):
         'audio_underrun_detection': False, 'theme': 'High contrast', 'font_size': 22,
         'font_bold': False, 'colors': {'TEXT': [1, 2, 3]}, 'restart_on_f5': True,
         'file_browser_show_modified': False, 'pattern_clipboard_buttons': False,
-        'control_panel_visible': True, 'channel_visualizers': False,
+        'control_panel_visible': True, 'channel_visualizers': False, 'pattern_fit_three': False,
         'hide_welcome_on_startup': True, 'export_squeeze': {'enabled': False},
         'autosave_enabled': False, 'autosave_minutes': 17, 'autosave_directory': str(tmp_path / 'copies')})
     result = App(audio=False, size=(960, 540))
@@ -63,6 +63,7 @@ def test_confirm_applies_defaults_preserves_song_history_presets_and_recovery_fi
     assert app.audio_buffer == 2048 and app.audio_output_device is None and app.audio_underrun_detection
     assert app.appearance == preferences.APPEARANCE and not app.restart_on_f5
     assert app.file_browser_show_modified and app.channel_visualizers and app.pattern_clipboard_buttons
+    assert app.pattern_fit_three and preferences.load_pattern_fit_three()
     assert app.control_panel_visible is None and app.autosave.enabled and app.autosave.minutes == 5
     assert welcome.show_on_startup() and preferences.load_squeeze_options() == SqueezeOptions()
     assert app.editor.song == original and app.editor.history.revision == revision and app.editor.dirty
