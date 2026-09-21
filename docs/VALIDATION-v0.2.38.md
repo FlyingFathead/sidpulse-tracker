@@ -1,5 +1,11 @@
 # v0.2.38 validation
 
+The original focused checks below missed four full-suite failures. The
+[CI repair checkpoint](CI-v0.2.38-checkpoint-001.md) records their causes,
+corrections and complete-suite results.
+
+## Original hotfix checks
+
 111 focused tests passed in 6.52 seconds (six unrelated tests deselected).
 
 ```sh

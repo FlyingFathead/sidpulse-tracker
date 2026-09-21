@@ -1294,7 +1294,9 @@ class Renderer:
         minimum_lines = 26 if dialog.get('kind') in ('sample_synthesis','sample_synthesis_batch','pcm_export_confirm') else 23 if dialog.get('kind') == 'audio_buffer' else 22 if dialog.get('kind') in ('automation_recording','sample_squeeze') else 18
         if self.cols < 54 or self.lines < minimum_lines:
             fit = min(self.cols / 54, self.lines / minimum_lines) * .9
-            self.configure(app.screen, app.zoom * fit, app.appearance)
+            # These dimensions already include the page's minimum-fit fallback.
+            # Applying their ratio to the requested zoom can enlarge the dialog.
+            self.configure(app.screen, self.signature[2] * fit, app.appearance)
         if dialog.get('kind') == 'pcm_export_confirm':
             from sidpulse.ui.batch_synthesis import draw_confirm
             draw_confirm(self,app);return

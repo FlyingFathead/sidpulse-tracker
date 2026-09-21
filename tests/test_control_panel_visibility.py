@@ -9,16 +9,36 @@ from sidpulse.preferences import load_control_panel_visibility, load_pattern_cli
 from sidpulse.ui.keyboard import Command
 
 
-@pytest.mark.parametrize('size',[(960,1080),(960,540),(800,600)])
-def test_narrow_default_shows_all_three_voice_columns_and_expand_triangle(size):
+@pytest.mark.parametrize('size,initial_voices', [
+    ((960,1080), {0,1}), ((960,540), {0,1,2}), ((800,600), {0,1}),
+])
+def test_narrow_default_keeps_font_and_follows_all_voices(size, initial_voices):
     app=App(audio=False,size=size)
     try:
+        app.change_page('orders')
+        app.renderer.render(app)
+        font=app.renderer.font
+        metrics=(app.renderer.cw,app.renderer.rh)
+        before=deepcopy(app.editor.song)
+        app.change_page('pattern')
         app.renderer.render(app)
         assert not app.renderer.control_visible
-        assert {v[1] for r,a,v in app.renderer.hits if a=='cell'}=={0,1,2}
-        assert any(a=='control_panel_toggle' for _,a,_ in app.renderer.hits)
+        assert {v[1] for r,a,v in app.renderer.hits if a=='cell'}==initial_voices
+        toggle=next(r for r,a,v in app.renderer.hits if a=='control_panel_toggle')
+        assert app.screen.get_rect().contains(toggle)
         assert not any(a=='control_focus' for _,a,_ in app.renderer.hits)
         assert app.control_panel_visible is None
+        for voice in (2,1,0):
+            app.editor.voice=voice
+            app.renderer.render(app)
+            cells=[(r,v[2]) for r,a,v in app.renderer.hits
+                   if a=='cell' and v[:2]==(app.editor.row,voice)]
+            assert {column for _,column in cells}==set(range(17))
+            assert all(app.screen.get_rect().contains(r) for r,_ in cells)
+            assert app.renderer.font is font
+            assert (app.renderer.cw,app.renderer.rh)==metrics
+            assert not app.renderer.control_visible
+        assert app.zoom==1 and app.editor.song==before
     finally:app.close()
 
 

@@ -305,7 +305,13 @@ def test_empty_slot_chooser_targets_slot_and_user_presets_persist(app):
     assert app.editor.instrument==27 and app.editor.song.instruments[27].name=='My pulse ä'
     assert list(dict.fromkeys(c for c,_ in built_in_catalog()))==list(CATEGORIES)
     for _,preset in built_in_catalog():validate(Song(instruments={1:preset}))
-    assert len(built_in_catalog())==39
+    catalog=built_in_catalog()
+    drums=[preset for category,preset in catalog
+           if category=='[Wavetable] Drums & Percussion']
+    assert len(catalog)-len(drums)==39
+    assert {preset.name for preset in drums}=={
+        'Reference kick / SID fit', 'Reference snare / SID fit',
+    }
 
 
 def test_playing_still_allows_f2_note_edit_without_audition(app):

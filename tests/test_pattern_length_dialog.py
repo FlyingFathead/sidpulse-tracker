@@ -96,5 +96,14 @@ def test_centered_field_and_controls_fit_after_resize(app,size,zoom):
     value=next(r for r,a,_ in hits if a=='length_value')
     assert abs(track.centerx-value.centerx)<=1 and value.top>track.bottom
     assert all(not value.colliderect(r) for r,a,_ in hits if a=='length_button')
+    app.renderer.render(app)
+    assert app.renderer.hits==hits and app.zoom==zoom
+    # The lower edge of the number must edit it, not activate a button beneath it.
+    pos=(value.centerx,value.bottom-2)
+    app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=pos))
+    app.handle(pg.event.Event(pg.MOUSEBUTTONUP,button=1,pos=pos))
+    assert app.dialog['editing'] and len(app.editor.pattern.rows)==64
     key(app,pg.K_END);key(app,pg.K_ESCAPE)
+    app.renderer.render(app)
+    assert app.zoom==zoom
     assert app.dialog is None and len(app.editor.pattern.rows)==64

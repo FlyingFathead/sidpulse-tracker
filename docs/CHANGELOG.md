@@ -2,6 +2,9 @@
 
 ## v0.2.38
 
+- CI repair checkpoint: fit dialogs from the already-rendered page scale;
+  update narrow-window and factory-preset checks. See
+  [diagnosis and validation](CI-v0.2.38-checkpoint-001.md).
 - Fix whole-page font shrinking on entry to F2/F5 when fitting extra channels.
 - Preserve the selected font when a complete voice and essential rows fit;
   narrower pattern views follow the selected channel automatically.

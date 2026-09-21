@@ -54,6 +54,8 @@ F2 and F5 keep the requested UI size instead of shrinking the entire page to
 fit extra pattern channels. Narrow pattern views follow the selected channel;
 very small windows retain a minimum-fit fallback to keep editing accessible.
 [Release notes and checks](docs/RELEASE_NOTES-v0.2.38.md).
+The [CI repair checkpoint](docs/CI-v0.2.38-checkpoint-001.md) fixes small-window
+dialog scaling and updates the layout and factory-preset regression checks.
 
 The previous update added centered file browsing, **− / +** and triangle
 playback navigation, frozen **[Wavetable] Drums & Percussion** presets, and the
