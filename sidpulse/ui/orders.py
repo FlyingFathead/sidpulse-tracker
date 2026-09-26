@@ -33,6 +33,21 @@ def open_pattern(app):
     app.change_page('pattern')
 
 
+def edit_length(app, pattern_id=None, step=0):
+    if not commit_entry(app): return
+    from sidpulse.ui.pattern_length import open_dialog, resize_pattern
+    bank_ids(app)
+    pid = app.bank_pattern if pattern_id is None else pattern_id
+    app.order_focus = 'bank'
+    app.bank_pattern = pid
+    if step:
+        target = len(app.editor.song.patterns[pid].rows) + step
+        error = resize_pattern(app, pid, target)
+        if error: app.editor.status = error
+    else:
+        open_dialog(app, pid)
+
+
 def begin_entry(app, index=None):
     app.order_focus = 'orders'
     app.order_entry_index = app.order_entry_index if index is None else index
@@ -162,7 +177,7 @@ def draw(r, app, top, bottom):
             r.hit(1,y,split-1,1,'order',i)
         if i <= len(ed.song.orders): r.hit(5,y,6,1,'order_value',i)
     r.scroll_bar('orders',split-1.5,y0,visible,min(256,len(ed.song.orders)+1),visible)
-    ids = bank_ids(app); rowx = r.cols-8
+    ids = bank_ids(app); rowx = r.cols-11
     if not compact:
         r.text(right,top+2,'Pat   Name',c['TEXT'],width-6)
         r.text(rowx,top+2,'Rows',c['TEXT'],4)
@@ -177,9 +192,18 @@ def draw(r, app, top, bottom):
         color = c['CREAM'] if selected else c['ACCENT']
         pattern = ed.song.patterns[number]
         r.control_text(pg.Rect(box.x,box.y,round(5*r.cw),box.height),f'{number:03d}',c['YELLOW'])
-        r.text(right+5,y,pattern.name or '(unnamed)',color,width-13)
+        r.text(right+5,y,pattern.name or '(unnamed)',color,max(1,rowx-right-7))
         r.text(rowx,y,f'{len(pattern.rows):3d}',color,4)
         r.hit(right,y,width,1,'bank_pattern',number)
+        r.hit(rowx,y,4,1,'bank_length',(number,0))
+        if selected:
+            # Keep the entire row selectable; the small controls take precedence.
+            for x,direction in ((rowx-2,-1),(rowx+4,1)):
+                cx=round((x+.65)*r.cw); cy=round((y+.5)*r.rh)
+                radius=max(2,min(r.cw//3,r.rh//3))
+                points=[(cx+direction*radius,cy),(cx-direction*radius,cy-radius),(cx-direction*radius,cy+radius)]
+                pg.draw.polygon(r.screen,c['YELLOW'] if 1 <= len(pattern.rows)+direction <= 256 else c['DIM'],points)
+                r.hit(x,y,1.5,1,'bank_length',(number,direction))
     r.scroll_bar('patterns',r.cols-2.5,y0,visible,len(ids),visible)
     chosen = ed.song.patterns[app.bank_pattern]
     y = y0+visible+(.2 if compact else .65)

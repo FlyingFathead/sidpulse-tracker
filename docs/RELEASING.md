@@ -15,9 +15,9 @@ artifacts, not public release assets.
 
 `VERSION`, `pyproject.toml` and `sidpulse/__init__.py` must match the release
 version. README filenames, CHANGELOG, docs/CHECKPOINT.md and release notes should agree
-with that version. Do not advertise unimplemented WAV/MP3 export, PCM/digi playback or a native
-instrument/table sequencer. Compact trace-derived encoding is documented in
-SQUEEZER.md; its candidate validation gates still apply.
+with that version. Describe export and playback features according to their current documented
+limits. Compact trace-derived encoding is documented in SQUEEZER.md; its
+candidate validation gates still apply.
 
 The source tree currently has no project-wide `LICENSE`. Choosing one is an owner
 decision and is separate from the release mechanics described here.
@@ -59,9 +59,9 @@ git diff --check
 
 If the generated references change, review those changes and rerun validation.
 Also do a short interactive desktop check of the current release's user-facing
-changes. For v0.2.17 that includes the startup **New song / Play demo song** choice,
-verifying New song/Escape opens a blank Untitled project and Play demo song keeps
-the bundled demo, plus a short sanity check of file browsing and actual audio playback.
+changes. For v0.2.40, inspect the F11 row count double-click and step arrows, a protected
+shorten, the F4 clear confirmations and backup, and valid/invalid project drops.
+Also check file browsing and actual audio playback.
 
 The stable checklist lives in `docs/VALIDATION.md`.
 
@@ -70,11 +70,12 @@ The stable checklist lives in `docs/VALIDATION.md`.
 Stage only reviewed paths, inspect the staged diff, then commit:
 
 ```bash
-git add -A
+git add -p
+# Add each reviewed new file explicitly with git add -- its/path
 git diff --cached --check
 git diff --cached --name-status
 git diff --cached --stat
-git commit -m "Release v0.2.17"
+git commit -m "Release v0.2.40"
 git push origin main
 ```
 
@@ -113,18 +114,18 @@ the Windows launcher path.
 
 ## 5. Tag the verified commit
 
-Make sure `v0.2.17` does not already point somewhere else:
+Make sure `v0.2.40` does not already point somewhere else:
 
 ```bash
-git show-ref --tags --verify --quiet refs/tags/v0.2.17 && git show v0.2.17 || true
-git ls-remote --tags origin refs/tags/v0.2.17
+git show-ref --tags --verify --quiet refs/tags/v0.2.40 && git show v0.2.40 || true
+git ls-remote --tags origin refs/tags/v0.2.40
 ```
 
 If no conflicting tag exists:
 
 ```bash
-git tag -a v0.2.17 -m "SIDpulse Tracker v0.2.17" "$commit"
-git push origin v0.2.17
+git tag -a v0.2.40 -m "SIDpulse Tracker v0.2.40" "$commit"
+git push origin v0.2.40
 ```
 
 Do not move or force-update an existing release tag. Check the tag-triggered CI
@@ -140,19 +141,19 @@ set -euo pipefail
 git archive \
   --format=zip \
   --prefix=sidpulse-tracker/ \
-  --output=../sidpulse-tracker-v0.2.17-full.zip \
-  v0.2.17
+  --output=../sidpulse-tracker-v0.2.40-full.zip \
+  v0.2.40
 
 cd ..
-sha256sum sidpulse-tracker-v0.2.17-full.zip > sidpulse-tracker-v0.2.17-SHA256SUMS.txt
-sha256sum -c sidpulse-tracker-v0.2.17-SHA256SUMS.txt
+sha256sum sidpulse-tracker-v0.2.40-full.zip > sidpulse-tracker-v0.2.40-SHA256SUMS.txt
+sha256sum -c sidpulse-tracker-v0.2.40-SHA256SUMS.txt
 ```
 
 Inspect the tagged tree and archive before publishing:
 
 ```bash
-git -C sidpulse-tracker ls-tree -r --name-only v0.2.17 | less
-unzip -l sidpulse-tracker-v0.2.17-full.zip | less
+git -C sidpulse-tracker ls-tree -r --name-only v0.2.40 | less
+unzip -l sidpulse-tracker-v0.2.40-full.zip | less
 ```
 
 Extract the ZIP into a fresh temporary directory and verify `VERSION`, launchers,
@@ -164,13 +165,13 @@ under an already-published immutable release identity.
 From the directory containing the two assets:
 
 ```bash
-gh release create v0.2.17 \
-  sidpulse-tracker-v0.2.17-full.zip \
-  sidpulse-tracker-v0.2.17-SHA256SUMS.txt \
+gh release create v0.2.40 \
+  sidpulse-tracker-v0.2.40-full.zip \
+  sidpulse-tracker-v0.2.40-SHA256SUMS.txt \
   --verify-tag \
   --draft \
-  --title "SIDpulse Tracker v0.2.17" \
-  --notes-file sidpulse-tracker/docs/RELEASE_NOTES-v0.2.17.md
+  --title "SIDpulse Tracker v0.2.40" \
+  --notes-file sidpulse-tracker/docs/RELEASE_NOTES-v0.2.40.md
 ```
 
 Review the draft target, notes and the two uploaded assets before publishing.

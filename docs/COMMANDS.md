@@ -86,6 +86,7 @@ The table inventories command groups and historical bindings. Some entries such 
 | pattern.center | pattern | Ctrl+C | Center the selected pattern row; instrument and sample lists always center and clamp at both ends → App.execute(center) | true | true | true | true | true | true |
 | pattern.highlight | pattern | Ctrl+H | Highlight → Editor.highlight | true | true | true | true | true | true |
 | pattern.pattern_length | pattern | Ctrl+F2 | Pattern length → Editor pattern rows | true | true | true | true | true | true |
+| orders.pattern_length | orders | Ctrl+F2 (pattern bank) | Edit selected pattern length → F11 pattern bank slider and number field | true | true | true | true | true | false |
 | pattern.snapshot | pattern | Alt+Enter | Snapshot → Editor.stored_pattern | true | true | true | true | true | true |
 | pattern.restore | pattern | Alt+Backspace | Restore → Editor.edit | true | true | true | true | true | true |
 | pattern.start | pattern | Alt+B | Mark whole-voice block start → Editor.mark | true | true | true | true | true | true |
@@ -278,6 +279,7 @@ The table inventories command groups and historical bindings. Some entries such 
 | app.about | global | (menu only) | About SIDpulse Tracker / vector logo → App about dialog | true | true | false | true | true | true |
 | pattern.paste_special | pattern | Ctrl+Shift+V | Paste notes, automation or both from the copied fields → App.open_paste_special | true | true | true | true | true | true |
 | display.clipboard_buttons | global | (menu only) | Show/hide pattern clipboard buttons; saved in preferences → App.toggle_pattern_clipboard_buttons | true | true | false | true | true | true |
+| display.pattern_fit_three | global | (menu only) | Fit all three F2 voice channels; enabled by default and saved in preferences → App.toggle_pattern_fit_three | true | true | false | true | true | true |
 | display.control_panel | global | (menu only) | Expand/collapse shared filter column; saved across views → App.toggle_control_panel | true | true | false | true | true | true |
 | display.channel_visualizers | global | (menu only) | Show/hide channel visualizers and enable/disable display-only scope processing → App.toggle_channel_visualizers | true | true | false | true | true | true |
 | settings.reset_defaults | global | (menu only) | Reset user preferences after confirmation; Cancel selected by default → settings_reset.open_dialog | true | true | false | true | true | true |
@@ -288,5 +290,7 @@ The table inventories command groups and historical bindings. Some entries such 
 | pattern.reset_automation | pattern | PW: type RAL (current cell) / Reset all automation button (selection) | Reset all A D S R PW to instrument defaults; preserve notes, instruments and FX → App.execute | true | true | true | true | true | true |
 | display.instrument_monitor_buttons | global | (menu only) | Enable instrument/sample M/S buttons and instrument monitoring; on by default → App.toggle_instrument_monitor_buttons | true | true | false | true | true | true |
 | settings.confirm_cut | global | (menu only) | Confirm before Cut; on by default; available in UI Settings → App.toggle_confirm_cut | true | true | false | true | true | true |
+| playback.next_order | info | + / Numpad + | Next song order during playback → App.execute | true | true | true | true | true | false |
+| playback.previous_order | info | - / Numpad - | Previous song order during playback → App.execute | true | true | true | true | true | false |
 
 Schism reference: https://github.com/schismtracker/schismtracker/tree/84d2c46c1d3b5660edbc3eca259bf1219e59623e/helptext

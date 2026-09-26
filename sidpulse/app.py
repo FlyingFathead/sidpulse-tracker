@@ -423,6 +423,36 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
             self.dialog = {"title": "Unsaved .sidpulse project", "message": "Save your edits before continuing?",
                            "hint": "S: save | D: discard | Esc: cancel", "discard": callback}
 
+    def prompt_dropped_project(self, path):
+        path = Path(path).expanduser()
+        try:
+            # Parse and validate before offering to replace the current project.
+            load(path)
+        except (OSError, ValueError) as exc:
+            self.notice('Dropped project cannot be opened', f'{path.name}: {exc}')
+            return
+
+        def open_checked():
+            try:
+                # Recheck at acceptance in case the source changed while prompting.
+                self.open_project(path)
+            except (OSError, ValueError) as exc:
+                self.notice('Dropped project cannot be opened', f'{path.name}: {exc}')
+
+        self.finish_instrument_drag()
+        self.release_audition()
+        self.after_save = None
+        if self.editor.dirty:
+            self.dialog = {'title': 'Open dropped project?',
+                           'message': f'Open {path.name} and replace the current project? Save your unsaved edits first?',
+                           'discard': open_checked, 'save_label': 'Save & open',
+                           'discard_label': 'Open without saving',
+                           'hint': 'S: save & open | D: open without saving | Esc: cancel'}
+        else:
+            self.dialog = {'title': 'Open dropped project?',
+                           'message': f'Open {path.name} and replace the current project?',
+                           'yes': open_checked, 'confirm_label': 'Open project'}
+
     def confirm_action(self, title, message, callback):
         self.finish_instrument_drag()
         self.release_audition()
@@ -455,6 +485,34 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
             self.instrument_slot = ed.instrument
             self.instrument_focus = 'list'
 
+    def backup_and_clear_instruments(self):
+        from datetime import datetime, timezone
+        from uuid import uuid4
+        folder = self.autosave.directory / 'manual-backups'
+        stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+        snapshot = folder / f'before-clear-instruments-{stamp}-{uuid4().hex[:8]}.sidpulse'
+        try:
+            save(snapshot, self.editor.song, self.metadata())
+        except (OSError, ValueError, TypeError) as exc:
+            self.notice('Instrument clear cancelled', f'Could not save a project backup: {exc}')
+            return
+        self.clear_project_data('clear_instruments')
+        self.editor.status = f'Cleared instruments. Backup: {snapshot}'
+
+    def confirm_clear_instruments(self):
+        if not self.editor.song.instruments:
+            self.editor.status = 'The instrument list is already empty.'
+            return
+        def final_warning():
+            self.confirm_action('Really clear all instruments?',
+                                'This will leave the project with no instruments. A separate project backup is saved before clearing. Undo also restores the list.',
+                                self.backup_and_clear_instruments)
+            self.dialog['confirm_label'] = 'Back up & clear'
+        self.confirm_action('Clear all instruments?',
+                            f'Delete all {len(self.editor.song.instruments)} instruments in this project? '
+                            'Pattern notes and instrument numbers remain, but their empty slots play silently.',
+                            final_warning)
+
     def save_project(self, destination=None):
         if destination is None and self.path is None:
             self.browse("save")
@@ -471,6 +529,7 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
                 callback, self.after_save = self.after_save, None
                 callback()
         except (OSError, ValueError) as exc:
+            self.after_save = None
             self.editor.status = f"Save failed: {exc}"
             raise
 
@@ -1073,6 +1132,9 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
         elif name == "pattern_length":
             from sidpulse.ui.pattern_length import open_dialog
             open_dialog(self)
+        elif name == "bank_pattern_length":
+            from sidpulse.ui.orders import edit_length
+            if self.order_focus == 'bank': edit_length(self)
         elif name == "zoom":
             self.zoom = 1.0 if value == 0 else max(.5, min(3., round(self.zoom + value * .25, 2)))
         elif name == "fullscreen":
@@ -1168,10 +1230,9 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
         elif name in ("clear_patterns", "clear_instruments"):
             if name == "clear_patterns":
                 message = "Clear notes, effects and filter rows in every pattern? Instruments, pattern lengths and the order list stay intact. This can be undone."
+                self.confirm_action('Clear all pattern data?', message, lambda: self.clear_project_data(name))
             else:
-                message = "Delete all instruments? Patterns and their instrument numbers stay intact, but empty slots are silent. This can be undone."
-            self.confirm_action("Clear all pattern data?" if name == "clear_patterns" else "Clear all instruments?",
-                                message, lambda: self.clear_project_data(name))
+                self.confirm_clear_instruments()
         elif name == "escape":
             if self.page == "files":
                 self.cancel_browser()
@@ -1455,7 +1516,7 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
                     if entry_key(self,event): return
                 self.execute(dispatch(event, self.page, self.editor.column, self.keyboard_mapping), event)
             elif event.type == pg.DROPFILE:
-                self.confirm_discard(lambda: self.open_project(event.file))
+                self.prompt_dropped_project(event.file)
             elif event.type == pg.MOUSEWHEEL:
                 if pg.key.get_mods() & pg.KMOD_CTRL:
                     self.execute(Command("zoom", 1 if event.y > 0 else -1))
@@ -1554,12 +1615,18 @@ class App(MediaActions, PatternClipboardActions, PulseRecordingActions, Instrume
                     elif action == 'song_loop':
                         from sidpulse.ui.orders import toggle_loop
                         toggle_loop(self)
-                    elif action in ('order_focus','bank_pattern','bank_open','order','order_value'):
-                        from sidpulse.ui.orders import commit_entry, begin_entry, open_pattern
+                    elif action in ('order_focus','bank_pattern','bank_open','bank_length','order','order_value'):
+                        from sidpulse.ui.orders import commit_entry, begin_entry, open_pattern, edit_length
                         if not commit_entry(self): break
                         if action == 'order_value': begin_entry(self,value)
                         elif action == 'order_focus': self.order_focus = value
                         elif action == 'bank_open': open_pattern(self)
+                        elif action == 'bank_length':
+                            if value[1] or getattr(event,'clicks',1)>=2:
+                                edit_length(self,*value)
+                            else:
+                                self.order_focus = 'bank'
+                                self.bank_pattern = value[0]
                         elif action == 'bank_pattern':
                             self.order_focus = 'bank'
                             self.bank_pattern = value

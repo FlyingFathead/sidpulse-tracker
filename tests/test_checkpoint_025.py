@@ -62,7 +62,13 @@ def test_empty_bank_roundtrip_all_pages_audition_and_restoration(app,tmp_path):
     from sidpulse.export.psid import compile_song, ExportError
     from sidpulse.sid.backend_residfp import ReSIDfpBackend
     before=deepcopy(app.editor.song)
+    app.autosave.settings['autosave_directory']=str(tmp_path)
     app.execute(Command('clear_instruments'));click(app,'dialog_button',pg.K_y)
+    assert choices(app.dialog)[focus(app.dialog)][0]=='Cancel'
+    assert app.editor.song==before
+    click(app,'dialog_button',pg.K_y)
+    backups=list((tmp_path/'manual-backups').glob('before-clear-instruments-*.sidpulse'))
+    assert len(backups)==1 and load(backups[0])[0]==before
     assert app.editor.song.instruments=={}
     expected=deepcopy(before);expected.instruments={}
     assert app.editor.song==expected
@@ -173,3 +179,21 @@ def test_confirmation_buttons_stay_visible_after_resize(app,size):
     buttons=[r for r,a,v in app.renderer.hits if a=='dialog_button']
     assert len(buttons)==2 and all(app.renderer.screen.get_rect().contains(r) for r in buttons)
     assert choices(app.dialog)[focus(app.dialog)][0]=='Cancel'
+
+
+def test_f4_bulk_clear_two_cancel_default_steps_and_failed_backup(app,tmp_path,monkeypatch):
+    app.change_page('instrument');app.renderer.render(app)
+    assert any(action=='clear_instruments' for _,action,_ in app.renderer.hits)
+    before=deepcopy(app.editor.song)
+    click(app,'clear_instruments')
+    click(app,'dialog_button',pg.K_y)
+    key(app,pg.K_RETURN)
+    assert app.dialog is None and app.editor.song==before
+    app.autosave.settings['autosave_directory']=str(tmp_path)
+    from sidpulse import app as app_module
+    monkeypatch.setattr(app_module,'save',lambda *args: (_ for _ in ()).throw(OSError('disk unavailable')))
+    app.execute(Command('clear_instruments'))
+    click(app,'dialog_button',pg.K_y)
+    click(app,'dialog_button',pg.K_y)
+    assert app.editor.song==before and app.dialog['kind']=='notice'
+    assert not list(tmp_path.rglob('*.sidpulse'))

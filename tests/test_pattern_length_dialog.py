@@ -69,7 +69,7 @@ def test_invalid_number_cannot_resize(app,invalid):
     assert app.dialog is None and len(app.editor.pattern.rows)==32
 
 
-def test_shorten_correct_pattern_preserves_others_and_undo_restores_controls(app):
+def test_shorten_refuses_populated_rows_and_controls_without_changing_song(app):
     app.editor.song.patterns[1]=Pattern(name='Other pattern')
     app.editor.pattern.rows[50][2]=Cell(60,1)
     app.editor.pattern.controls[50]=ControlCell(cutoff=123)
@@ -78,11 +78,63 @@ def test_shorten_correct_pattern_preserves_others_and_undo_restores_controls(app
     # Playback-follow may switch the visible pattern while the modal is open.
     app.editor.select_pattern(1)
     click(app,'length_button','ok')
-    assert len(app.editor.song.patterns[0].rows)==32 and not app.editor.song.patterns[0].controls
+    assert app.dialog['error'].startswith('Row 050 has data')
+    assert app.editor.song==before and not app.editor.history.undo_stack
+    # Removing the note alone still leaves the filter control protected.
+    app.editor.song.patterns[0].rows[50][2]=Cell()
+    click(app,'length_button','ok')
+    assert app.dialog['error'].startswith('Row 050 has data')
+    assert len(app.editor.song.patterns[0].rows)==64
+    app.editor.song.patterns[0].controls.clear()
+    click(app,'length_button','ok')
+    assert app.dialog is None and len(app.editor.song.patterns[0].rows)==32
     assert app.editor.song.patterns[1]==before.patterns[1]
+    app.execute(Command('undo'))
+    assert len(app.editor.song.patterns[0].rows)==64
+
+
+def test_f11_arrows_resize_immediately_and_only_double_click_opens_dialog(app):
+    app.editor.song.patterns[1]=Pattern(name='Unused')
+    app.change_page('orders');app.bank_pattern=1
+    app.renderer.render(app)
+    step=next(r for r,a,v in app.renderer.hits if a=='bank_length' and v==(1,1))
+    assert app.screen.get_rect().contains(step)
+    click(app,'bank_length',(1,1))
+    assert app.dialog is None
+    assert len(app.editor.song.patterns[1].rows)==65
+    assert len(app.editor.song.patterns[0].rows)==64
+    app.renderer.render(app)
+    click(app,'bank_length',(1,-1))
+    assert app.dialog is None and len(app.editor.song.patterns[1].rows)==64
+    count=next(r for r,a,v in app.renderer.hits if a=='bank_length' and v==(1,0))
+    app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=count.center,clicks=1))
+    app.handle(pg.event.Event(pg.MOUSEBUTTONUP,button=1,pos=count.center,clicks=1))
+    assert app.dialog is None and len(app.editor.song.patterns[1].rows)==64
+    app.handle(pg.event.Event(pg.MOUSEBUTTONDOWN,button=1,pos=count.center,clicks=2))
+    assert app.dialog['pattern_id']==1 and app.dialog['value']==64
+    key(app,pg.K_ESCAPE)
+    key(app,pg.K_F2,mod=pg.KMOD_CTRL)
+    assert app.dialog['pattern_id']==1 and app.dialog['value']==64
+
+
+def test_f11_shrink_protects_tail_and_each_successful_click_can_be_undone(app,tmp_path):
+    from sidpulse.project.format import save, load
+    app.editor.song.patterns[1]=Pattern(name='Tail data')
+    app.editor.song.patterns[1].rows[62][2]=Cell(60,1)
+    app.editor.song.patterns[1].controls[62]=ControlCell(cutoff=321)
+    app.change_page('orders');app.bank_pattern=1
+    click(app,'bank_length',(1,-1))
+    assert len(app.editor.song.patterns[1].rows)==63
+    click(app,'bank_length',(1,-1))
+    assert len(app.editor.song.patterns[1].rows)==63
+    assert app.editor.status.startswith('Row 062 has data')
     assert len(app.editor.history.undo_stack)==1
-    app.execute(Command('undo'));assert app.editor.song==before
-    app.execute(Command('redo'));assert len(app.editor.song.patterns[0].rows)==32
+    saved=save(tmp_path/'safe.sidpulse',app.editor.song)
+    assert load(saved)[0].patterns[1].rows[62][2].note==60
+    assert load(saved)[0].patterns[1].controls[62].cutoff==321
+    app.execute(Command('undo'))
+    assert len(app.editor.song.patterns[1].rows)==64
+    assert app.editor.song.patterns[1].rows[62][2].note==60
 
 
 @pytest.mark.parametrize('size,zoom',[((1280,900),1),((480,360),3),((800,600),.5)])

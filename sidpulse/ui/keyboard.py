@@ -46,6 +46,8 @@ def _dispatch_unchecked(event, page="pattern", column=0):
             return Command('skip_order', -1)
     if page == "pattern" and ctrl and shift and not alt and key == pg.K_v:
         return Command("paste_special")
+    if page == "orders" and ctrl and not (shift or alt) and key == pg.K_F2:
+        return Command("bank_pattern_length")
     if ctrl and shift and key==pg.K_e:
         return Command("export")
     if ctrl and not (shift or alt) and key==pg.K_F3:

@@ -79,8 +79,12 @@ once per tick and holds the final value. Wave sequences remain editable tables.
 Delete instrument / Del asks for OK or Cancel, with Cancel selected. Deleting a
 referenced instrument explicitly tells you which remaining instrument receives
 its pattern references. Notes remain; the bank and references undo together.
-Individual deletion retains at least one populated instrument. File Menu >
-Clear all instruments removes the entire bank after a Cancel-default confirmation.
+Individual deletion retains at least one populated instrument. File Menu and
+F4 have Clear all instruments, with the F4 button under individual deletion. It
+asks twice, with Cancel selected each time. Before clearing, it saves a separate
+project snapshot in the configured autosave folder's `manual-backups` directory;
+if saving fails, the bank stays intact. The second warning cannot be skipped.
+Clear all instruments removes the entire bank after both confirmations.
 It preserves patterns and instrument numbers; empty slots play silently. The
 whole operation is undoable, and format 6 saves empty banks losslessly. Save user
 preset sits on a solid dock below the instrument list and requires a populated slot.

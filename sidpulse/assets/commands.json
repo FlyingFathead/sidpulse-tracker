@@ -1900,6 +1900,22 @@
       "reason": ""
     },
     {
+      "id": "orders.pattern_length",
+      "contexts": ["orders"],
+      "shortcuts": ["Ctrl+F2 (pattern bank)"],
+      "description": "Edit selected pattern length",
+      "command": "bank_pattern_length",
+      "target": "F11 pattern bank slider and number field",
+      "key_rules": [{"key": "K_F2", "modifiers": ["ctrl"]}],
+      "applicable": true,
+      "implemented": true,
+      "keybind_in_use": true,
+      "visible": true,
+      "visible_in_help": true,
+      "visible_in_menu": false,
+      "reason": ""
+    },
+    {
       "id": "pattern.snapshot",
       "contexts": [
         "pattern"

@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.2.40
+
+- F11 pattern-bank row counts open the slider and numeric field on double-click;
+  the triangles resize one row immediately. Shortening stops at populated
+  notes, effects, automation or filter controls rather than discarding them.
+  Successful steps remain undoable. Ctrl+F2 opens the dialog in F2/F11.
+- The octave buttons read **−1, 0, +1** from left to right.
+- Opening a project stamped with an older app version displays a compatibility
+  notice. Existing newer-format and unknown-field warnings remain.
+
+- F4 can clear every instrument after two Cancel-default confirmations and a
+  verified pre-clear project backup. Undo restores the bank.
+- Dropped `.sidpulse` files are validated before an explicit replacement prompt.
+  Unsaved work offers Save & open, Open without saving, or Cancel; the dropped
+  source is checked again at acceptance.
+- See [release notes](RELEASE_NOTES-v0.2.40.md) and
+  [local validation](VALIDATION-v0.2.40.md).
+
 ## v0.2.39
 
 - F2 fits three voice channels by default using an independently cached grid font.

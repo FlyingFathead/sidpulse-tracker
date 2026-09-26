@@ -487,6 +487,7 @@ class InstrumentActions:
             else:self.open_new_instrument(value)
         elif action=='save_user_preset':self.save_instrument_preset()
         elif action=='delete_instrument':self.confirm_delete_instrument()
+        elif action=='clear_instruments':self.confirm_clear_instruments()
         elif action=='instrument_tab':
             if self.instrument_slot in self.editor.song.instruments:self.choose_instrument_tab(value)
         elif action=='pulse_record_arm':self.open_automation_recording()

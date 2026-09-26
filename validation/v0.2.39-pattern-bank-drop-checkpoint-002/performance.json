@@ -1,0 +1,200 @@
+{
+  "serial_offline": {
+    "environment": {
+      "python": "3.12.14",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "pygame": "2.5.7",
+      "audio_frames": 2048,
+      "audio_seconds": 2,
+      "gui_frames": 120,
+      "input": "autumn-at-five.sidpulse",
+      "SDL_video": "dummy",
+      "SDL_audio": "dummy",
+      "affinity": [
+        0
+      ]
+    },
+    "measurements": [
+      {
+        "trial": 0,
+        "label": "baseline",
+        "case": "offline-2048",
+        "cpu_ms": 7.524240063829788,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 0,
+        "label": "candidate",
+        "case": "offline-2048",
+        "cpu_ms": 7.813490382978723,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 0,
+        "label": "baseline",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.81623765,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 0,
+        "label": "candidate",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.838081125,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 0,
+        "label": "baseline",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.064018191666667,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 0,
+        "label": "candidate",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.3700858166666667,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 1,
+        "label": "candidate",
+        "case": "offline-2048",
+        "cpu_ms": 7.394918936170213,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 1,
+        "label": "baseline",
+        "case": "offline-2048",
+        "cpu_ms": 7.440989574468085,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 1,
+        "label": "candidate",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.7929968583333333,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 1,
+        "label": "baseline",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.7991290666666667,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 1,
+        "label": "candidate",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.2223208416666664,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 1,
+        "label": "baseline",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.1699483416666667,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 2,
+        "label": "baseline",
+        "case": "offline-2048",
+        "cpu_ms": 7.428154617021277,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 2,
+        "label": "candidate",
+        "case": "offline-2048",
+        "cpu_ms": 7.535973234042554,
+        "over_budget_blocks": 0
+      },
+      {
+        "trial": 2,
+        "label": "baseline",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.7400992750000001,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 2,
+        "label": "candidate",
+        "case": "orders-(480, 360)",
+        "cpu_ms": 0.8589235333333334,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 2,
+        "label": "baseline",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.122748841666667,
+        "over_budget_blocks": null
+      },
+      {
+        "trial": 2,
+        "label": "candidate",
+        "case": "instrument-(1280, 900)",
+        "cpu_ms": 3.2231401416666667,
+        "over_budget_blocks": null
+      }
+    ]
+  },
+  "live_2048": [
+    {
+      "trial": 0,
+      "label": "checkpoint-001",
+      "ui_cpu_s": 0.3001906489999999,
+      "wall_s": 3.000111969999125,
+      "frames": 180,
+      "gaps": 0,
+      "late_callbacks": 0,
+      "late_wakes": 0,
+      "max_callback_interval": 0.043367395001041587,
+      "error": null,
+      "ready": true
+    },
+    {
+      "trial": 0,
+      "label": "checkpoint-002",
+      "ui_cpu_s": 0.32466002299999985,
+      "wall_s": 3.0001551670011395,
+      "frames": 180,
+      "gaps": 0,
+      "late_callbacks": 0,
+      "late_wakes": 0,
+      "max_callback_interval": 0.049189733999810414,
+      "error": null,
+      "ready": true
+    },
+    {
+      "trial": 1,
+      "label": "checkpoint-002",
+      "ui_cpu_s": 0.28732293100000006,
+      "wall_s": 3.0001055499997165,
+      "frames": 180,
+      "gaps": 0,
+      "late_callbacks": 0,
+      "late_wakes": 0,
+      "max_callback_interval": 0.04337478100023873,
+      "error": null,
+      "ready": true
+    },
+    {
+      "trial": 1,
+      "label": "checkpoint-001",
+      "ui_cpu_s": 0.2916555780000001,
+      "wall_s": 3.0001058380003087,
+      "frames": 180,
+      "gaps": 0,
+      "late_callbacks": 0,
+      "late_wakes": 0,
+      "max_callback_interval": 0.043456974999571685,
+      "error": null,
+      "ready": true
+    }
+  ]
+}

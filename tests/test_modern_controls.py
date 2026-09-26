@@ -168,6 +168,10 @@ def test_octave_buttons_show_current_value_and_work_in_both_modes(app,page,size)
     app.screen=pg.display.set_mode(size);app.change_page(page);before=deepcopy(app.editor.song)
     for profile in ('modern','classic'):
         app.set_keyboard_mapping(profile);app.editor.octave=4
+        left=rect_for(app,'octave',-1)
+        middle=rect_for(app,'octave_reset',None)
+        right=rect_for(app,'octave',1)
+        assert left.centerx < middle.centerx < right.centerx
         for action,value,expected in [('octave',1,5),('octave_reset',None,4),('octave',-1,3)]:
             rect=rect_for(app,action,value)
             assert app.screen.get_rect().contains(rect)

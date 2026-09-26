@@ -11,6 +11,19 @@ shown, along with the existing optional modified-date column.
 **Shift+F10 / Ctrl+Shift+S** opens the same Save As browser. The File menu's Save
 and **Save as .sidpulse...** commands behave the same way. Nothing is written just by opening it.
 
+Dropping a `.sidpulse` file on the window validates its format and project data
+before asking to open it. An invalid or unreadable file displays an error and
+leaves the current project intact. A valid drop asks before replacing the current
+project; with unsaved edits, choose **Save & open**, **Open without saving**, or
+**Cancel**. Saving an unnamed project opens the Save browser first. The dropped
+file is checked again when opened in case it changed while the prompt was shown.
+Native saves record both a project format and the app version that wrote them.
+When that version is older or newer than this build, opening shows a compatibility
+notice after a successful load. Older supported formats are migrated in memory;
+unfamiliar future fields are retained in native saves but cannot be promised to
+work in playback/export. A file with no recorded app version cannot be assigned
+to a particular release.
+
 The current project's latest successfully opened/saved filename is prefilled.
 A named project starts the browser in that project's directory, not in an old
 export directory. A new, unsaved project starts with `untitled.sidpulse` in the

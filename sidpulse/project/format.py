@@ -201,6 +201,9 @@ def compatibility_warnings(song):
     saved, current = version(song._saved_with), version(__version__)
     if saved and current and saved > current:
         messages.append(f'Saved with newer SIDpulse Tracker {song._saved_with}; this is {__version__}.')
+    elif saved and current and saved < current:
+        messages.append(f'Saved with older SIDpulse Tracker {song._saved_with}; this is {__version__}. '
+                        'The project loaded successfully. Save a separate copy before editing if you need the original.')
     if song._source_format > CURRENT_FORMAT:
         messages.append(f'Newer project format {song._source_format}; this build understands formats 1..{CURRENT_FORMAT}.')
     unknown = []
@@ -219,7 +222,7 @@ def compatibility_warnings(song):
     if unknown:
         messages.append(f'{len(unknown)} unfamiliar field(s) preserved, but not interpreted: '
                         + ', '.join(unknown[:4]) + (' ...' if len(unknown) > 4 else ''))
-    if messages:
+    if (saved and current and saved > current) or song._source_format > CURRENT_FORMAT or unknown:
         messages.append('Known data has been loaded. Playback/export uses supported features; unfamiliar data stays in native saves. '
                         'Keep the original when editing future features: deleting their owning row, pattern or instrument also deletes its data.')
     return tuple(messages)

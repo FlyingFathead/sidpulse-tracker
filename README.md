@@ -48,6 +48,16 @@ in the song. The result uses ordinary SID waveform/pitch tables. Improving
 these fits, with the included kick and snare as reference sounds, is the
 priority. [How it works and current limits](docs/SAMPLE_SYNTHESIS.md).
 
+## v0.2.40: pattern bank and project safety
+
+F11 shows each pattern's length; double-click its Rows count for the slider and
+number field, or use the triangles to change one row immediately. A populated
+trailing row cannot be shortened away. F4 can clear the instrument bank after
+two warnings and a separate project backup. Dropped `.sidpulse` projects are
+validated and ask before replacing the current song, with save choices for
+unsaved work. Projects saved by an older app version show a compatibility notice.
+[Release notes](docs/RELEASE_NOTES-v0.2.40.md).
+
 ## v0.2.39: fit three voices in F2
 
 F2 now fits all three voice channels by default, scaling only the pattern grid's
@@ -96,14 +106,14 @@ cd sidpulse-tracker
 ### Option 2: install a release ZIP
 
 Download the **full ZIP** and matching **SHA256SUMS** file for the release.
-For this version, they are `sidpulse-tracker-v0.2.39-full.zip` and
-`SHA256SUMS-v0.2.39.txt`.
+For this version, they are `sidpulse-tracker-v0.2.40-full.zip` and
+`sidpulse-tracker-v0.2.40-SHA256SUMS.txt`.
 
 **Linux**, from the download directory:
 
 ```bash
-sha256sum --check --ignore-missing SHA256SUMS-v0.2.39.txt &&
-unzip sidpulse-tracker-v0.2.39-full.zip &&
+sha256sum --check sidpulse-tracker-v0.2.40-SHA256SUMS.txt &&
+unzip sidpulse-tracker-v0.2.40-full.zip &&
 cd sidpulse-tracker &&
 ./run.sh
 ```
@@ -111,7 +121,7 @@ cd sidpulse-tracker &&
 **Windows:** [verify and extract the full ZIP](#windows), then double-click
 `run.cmd` inside `sidpulse-tracker`. Accept the first-run setup when prompted.
 For an existing ZIP installation, use the
-[v0.2.39 update instructions](docs/APPLY-v0.2.39.md).
+[v0.2.40 update instructions](docs/APPLY-v0.2.40.md).
 
 Press **F5** to play, **F2** to edit patterns, **F4** for instruments and **F8**
 to stop. Keep the launcher terminal open while the tracker runs.
@@ -183,6 +193,9 @@ Example: `380 A 2 10 F -3` routes voice 2 through a resonant low-pass filter and
 lowers cutoff by three units each tick. Tab returns to voice editing. Ctrl+F2
 continues to edit pattern length. Alt+Insert/Delete moves all voices and filter
 rows together; voice/block editing operates on its selected voice lanes.
+In F11, double-click a pattern's Rows number for the length dialog, or use its
+left/right triangles to resize by one row. A populated row cannot be shortened
+away accidentally.
 
 **Shift+F9** opens song notes. Shift+Enter inserts a line; Enter commits. Notes
 remain in `.sidpulse`, including Unicode and line breaks.
@@ -208,9 +221,13 @@ runtime package on your machine.
 ## Clear commands and file dates
 
 Escape > File starts with New project, Clear all pattern data, and Clear all
-instruments. Each asks for OK / Cancel and defaults to Cancel. Clearing patterns
-empties their voice cells and filter rows while keeping pattern numbers, names,
-lengths, the order list, instruments and song notes. Clearing instruments removes
+instruments. F4 also has a Clear all instruments button. New project and Clear
+all pattern data ask for OK / Cancel and default to Cancel. Clearing instruments
+asks twice, defaults to Cancel each time, and saves a separate pre-clear project
+backup before modifying the bank. If the backup cannot be saved, nothing is
+cleared. Clearing patterns empties their voice cells and filter rows while keeping
+pattern numbers, names, lengths, the order list, instruments and song notes.
+Clearing instruments removes
 the whole bank while retaining patterns and their instrument numbers. Both are
 single undoable edits. Empty slots play silently until repopulated. PSID export
 reports an empty bank or a used empty slot instead of silently omitting its notes;
@@ -220,6 +237,8 @@ The file browser's Modified column uses local time, `YYYY-MM-DD HH:MM`, for file
 and folders. Its default is on. Toggle **File timestamps** in F12, or set
 `"file_browser_show_modified": false` in preferences.json. Narrow views hide the
 date column to keep filenames readable. Selected dates stay green on black.
+Dropping a `.sidpulse` file validates it before an Open/Cancel prompt. With
+unsaved edits, the prompt also offers Save & open or Open without saving.
 
 ## Audio buffers and diagnostics
 
@@ -263,14 +282,14 @@ muted; a 5 Hz DC blocker and 5 ms transport ramps condition host PCM only.
 
 ## Windows
 
-Download the **v0.2.39 full ZIP and SHA-256 checksum file** from the same release.
+Download the **v0.2.40 full ZIP and SHA-256 checksum file** from the same release.
 In PowerShell, verify the ZIP before extracting:
 
 ```powershell
-$zip = ".\sidpulse-tracker-v0.2.39-full.zip"
-$checksums = ".\SHA256SUMS-v0.2.39.txt"
+$zip = ".\sidpulse-tracker-v0.2.40-full.zip"
+$checksums = ".\sidpulse-tracker-v0.2.40-SHA256SUMS.txt"
 $lines = @(Get-Content -LiteralPath $checksums -ErrorAction Stop | Where-Object {
-    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.36-full\.zip$'
+    $_ -match '^[0-9a-fA-F]{64} [ *]sidpulse-tracker-v0\.2\.40-full\.zip$'
 })
 if ($lines.Count -ne 1) { throw "Missing or ambiguous full-ZIP checksum." }
 $expected = ($lines[0] -split '\s+')[0]

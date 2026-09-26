@@ -1,3 +1,12 @@
+# SIDpulse Tracker v0.2.40 checkpoint
+
+F11 pattern length is accessible from the bank with data-safe one-row arrows;
+F4 can clear the instrument bank after two confirmations and a verified backup.
+Dropped native projects are validated and require replacement confirmation.
+Older-version projects now show a compatibility notice; octave controls run
+left to right as -1 / 0 / +1. See [release notes](RELEASE_NOTES-v0.2.40.md)
+and [local validation](VALIDATION-v0.2.40.md).
+
 # SIDpulse Tracker v0.2.38 checkpoint
 
 UI scale hotfix for F2/F5. Extra channels no longer force the whole page into a

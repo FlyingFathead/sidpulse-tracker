@@ -58,6 +58,27 @@ def test_newer_app_without_unknown_data_still_warns_and_loads():
     assert song == Song()
 
 
+def test_older_app_version_warns_but_current_schema_stays_compatible(tmp_path):
+    raw = encode(Song())
+    raw['editor']['saved_with_version'] = '0.2.38'
+    path = tmp_path/'older.sidpulse'
+    path.write_text(json.dumps(raw))
+    before = path.read_bytes()
+    song, _ = load(path)
+    assert song == Song()
+    warnings = compatibility_warnings(song)
+    assert 'older SIDpulse Tracker 0.2.38' in warnings[0]
+    app = App(audio=False)
+    try:
+        app.open_project(path)
+        assert app.dialog['title'] == 'Project compatibility'
+        assert 'Save a separate copy' in app.dialog['message']
+        assert app.editor.song == Song()
+        assert path.read_bytes() == before and not app.editor.dirty
+    finally:
+        app.close()
+
+
 def test_ordinary_saves_use_original_v6_cell_shape_and_stamp_app_version():
     document = encode(Song())
     assert document['format_version'] == 6

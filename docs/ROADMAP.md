@@ -51,6 +51,17 @@ synthesis priority. The original roadmap and historical updates follow.
 > remain distinct work. See [SQUEEZER.md](SQUEEZER.md) and
 > [candidate validation](SQUEEZER_VALIDATION-v0.2.18.md).
 
+> UI update (v0.2.40): F11 exposes per-pattern row length through
+> the existing slider/number dialog and selected-row step controls. F4 exposes
+> bulk instrument clearing with two confirmations and a pre-clear backup. A
+> dropped native project is validated before asking to replace the current one,
+> with a save choice when edits are unsaved.
+
+> Follow-up (2026-09-26): F11 row counts open on double-click and the triangle
+> buttons resize immediately. Populated trailing rows are protected from
+> accidental truncation. The octave buttons read -1 / 0 / +1 from left to
+> right. Opening a project saved by an older app version now gives a notice.
+
 # SIDpulse Tracker
 ## Canonical Project Roadmap
 

@@ -6,11 +6,13 @@ from sidpulse.ui.instrument_graphs import button, slider_thumb
 from sidpulse.ui.themes import palette
 
 
-def open_dialog(app):
+def open_dialog(app, pattern_id=None, value=None):
     app.release_audition()
     pg.key.stop_text_input()
+    pid = app.editor.pattern_id if pattern_id is None else pattern_id
+    length = len(app.editor.song.patterns[pid].rows)
     app.dialog = {'kind':'pattern_length', 'title':'Pattern length',
-                  'pattern_id':app.editor.pattern_id, 'value':len(app.editor.pattern.rows),
+                  'pattern_id':pid, 'value':length if value is None else max(1, min(256, value)),
                   'focus':0, 'editing':False, 'text':'', 'select_all':False, 'drag_rect':None}
 
 
@@ -40,6 +42,27 @@ def accept_text(d):
     return True
 
 
+def resize_pattern(app, pid, length):
+    """Resize without silently discarding any populated trailing row."""
+    pattern = app.editor.song.patterns[pid]
+    current = len(pattern.rows)
+    length = max(1, min(256, length))
+    if length == current:
+        return None
+    if length < current:
+        blocked = next((row for row in range(length, current)
+                        if any(cell != Cell() for cell in pattern.rows[row])
+                        or row in pattern.controls), None)
+        if blocked is not None:
+            return f'Row {blocked:03d} has data; move or clear it first.'
+    rows = deepcopy(pattern.rows[:length])
+    rows.extend([[Cell() for _ in range(3)] for _ in range(length-len(rows))])
+    app.editor.edit('Resize pattern', [
+        (('patterns',pid,'rows'),rows),
+        (('patterns',pid,'controls'),{r:c for r,c in pattern.controls.items() if r<length})])
+    return None
+
+
 def activate(app, action):
     d = app.dialog
     if action == 'cancel':
@@ -47,13 +70,9 @@ def activate(app, action):
         app.dialog = None
     elif action == 'ok' and accept_text(d):
         pid, length = d['pattern_id'], d['value']
-        pattern = app.editor.song.patterns[pid]
-        rows = deepcopy(pattern.rows[:length])
-        rows.extend([[Cell() for _ in range(3)] for _ in range(length-len(rows))])
-        app.editor.edit('Resize pattern', [
-            (('patterns',pid,'rows'),rows),
-            (('patterns',pid,'controls'),{r:c for r,c in pattern.controls.items() if r<length})])
-        app.dialog = None
+        error = resize_pattern(app, pid, length)
+        if error: d['error'] = error
+        else: app.dialog = None
 
 
 def slide(d, x, rect):
@@ -130,7 +149,7 @@ def draw(r,app):
     r.hits.append((field,'length_value',None))
     if d['focus']==1:pg.draw.rect(r.screen,c['CREAM'],field.inflate(4,4),1)
     r.control_text(pg.Rect(field.x,round((y+7.8)*r.rh),field.width,r.rh),'rows',c['TEXT'])
-    r.text(x+2,y+9.2,d.get('error','Shortening removes later rows. Undo restores them.'),c['TEXT'],w-4)
+    r.text(x+2,y+9.2,d.get('error','Populated rows cannot be shortened away.'),c['TEXT'],w-4)
     bw=(w-5)/2
     for i,(label,action) in enumerate((('OK','ok'),('Cancel','cancel'))):
         button(r,x+2+i*(bw+1),y+h-3,bw,label,'length_button',action,d['focus']==i+2)

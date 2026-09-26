@@ -58,6 +58,16 @@ Paste clips at the final pattern row or third voice and creates one undo step.
 
 Paste insert shifts only the copied fields down within the fixed pattern length;
 values moved past the bottom are dropped. Other fields keep their positions.
+
+Pattern length is 001..256 rows. In F11, double-click a bank row's count to
+open the linked slider and numeric field; a single click selects that pattern.
+The small triangles immediately shorten or extend by one row. Ctrl+F2 opens
+the dialog from F2 or the selected F11 bank row. A shorten is refused when
+any row it would remove contains notes, effects, automation or filter controls;
+move or clear that data first. Successful resizes can be undone. Alt+Q
+and Alt+A transpose selected notes one semitone up or down; Shift adds an octave.
+The note column's 4 auditions the current cell, and 8 auditions the current row.
+
 Paste mix writes only to empty destination fields; NOTE/IN/FX/automation are
 checked independently for field selections. FX command and parameter are checked
 together. Legacy whole-cell mix retains its whole-cell emptiness check. Roll,

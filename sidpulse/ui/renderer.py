@@ -677,12 +677,13 @@ class Renderer:
         if left > 1:
             button(self,1,top,29,"Add instrument","add_instrument")
             button(self,1,top+1.5,29,"Delete instrument","delete_instrument")
-            button(self,1,top+3,29,"Choose from presets","choose_presets")
+            button(self,1,top+3,29,"Clear all instruments","clear_instruments")
+            button(self,1,top+4.5,29,"Choose from presets","choose_presets")
             extra = 2 if app.pulse_record_armed else 0
             if extra:
-                self.disarm_button(app,1,top+4.5,29)
-            count=max(1,int(bottom-top-8-extra))
-            list_top = top + 5 + extra
+                self.disarm_button(app,1,top+6,29)
+            count=max(1,int(bottom-top-9.5-extra))
+            list_top = top + 6.5 + extra
             list_bottom = list_top + count
             self.well(4, list_top, 26, count)
             self.rect(1,list_bottom+.15,29,max(0,bottom-list_bottom-.3),PANEL)
@@ -715,16 +716,17 @@ class Renderer:
         if left==1:
             button(self,1,top,18,"Add instrument","add_instrument")
             button(self,20,top,20,"Delete instrument","delete_instrument")
-            button(self,1,top+1.5,25,"Choose from presets","choose_presets")
-            self.activity_dot(28,top+1.5,self.instrument_levels.get(app.instrument_slot,0.),'instrument',app.instrument_slot)
-            self.bank_monitor_buttons(app, 'instrument', app.instrument_slot, 30, top+1.5,
+            button(self,1,top+1.5,25,"Clear all instruments","clear_instruments")
+            button(self,1,top+3,25,"Choose from presets","choose_presets")
+            self.activity_dot(28,top+3,self.instrument_levels.get(app.instrument_slot,0.),'instrument',app.instrument_slot)
+            self.bank_monitor_buttons(app, 'instrument', app.instrument_slot, 30, top+3,
                                       app.instrument_slot in app.editor.song.instruments)
-            button(self,1,top+3,20,'Copy instrument','copy_instrument',selected=pressed(app,'copy_instrument'))
-            button(self,22,top+3,21,'Paste instrument','paste_instrument',selected=pressed(app,'paste_instrument'))
+            button(self,1,top+4.5,20,'Copy instrument','copy_instrument',selected=pressed(app,'copy_instrument'))
+            button(self,22,top+4.5,21,'Paste instrument','paste_instrument',selected=pressed(app,'paste_instrument'))
             if app.pulse_record_armed:
-                self.disarm_button(app,1,top+4.5,29)
+                self.disarm_button(app,1,top+6,29)
                 top+=2
-            top+=4.5
+            top+=6
         if app.instrument_slot not in app.editor.song.instruments and not app.inline_recording_visible:
             button(self,left,top,min(27,self.cols-left-2),'Record automation','pulse_record_arm')
             top+=1.5
@@ -845,7 +847,7 @@ class Renderer:
 
     def octave_controls(self, app, x, y):
         self.text(x,y,f'Oct: {app.editor.octave}',TEXT)
-        for offset,label,action,value in ((8,'+1','octave',1),(13,'0','octave_reset',None),(18,'-1','octave',-1)):
+        for offset,label,action,value in ((8,'-1','octave',-1),(13,'0','octave_reset',None),(18,'+1','octave',1)):
             button(self,x+offset,y-.05,4,label,action,value,pressed(app,action,value),height=.95)
 
     def samples(self, app, top, bottom):
